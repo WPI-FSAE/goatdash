@@ -1,7 +1,12 @@
 {
-  "name": "electron-react-demo",
+  "name": "FSAE-Dashboard",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "WPI FSAE",
+    "email": "efclifford@wpi.edu"
+  },
+  "homepage": "https://wp.wpi.edu/wpifsae/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -21,7 +26,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "concurrently -k \"npm start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3000 && electron ."
+    "electron": "wait-on tcp:3000 && electron .",
+    "electron:package:linux": "npm run build && npx electron-builder -l"
   },
   "eslintConfig": {
     "extends": [
@@ -40,6 +46,24 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "appId": "com.electron.dashboard",
+    "productName": "FSAE Dashboard",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "linux": {
+      "target": "deb"
+    },
+    "extends": null,
+    "extraMetadata": {
+      "main": "build/electron.js"
+    }
   },
   "devDependencies": {
     "concurrently": "^7.4.0",
