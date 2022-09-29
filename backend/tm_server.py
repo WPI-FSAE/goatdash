@@ -1,6 +1,7 @@
 import websockets
 import asyncio
 import json
+from can_config.main import getConfiguration
 import random
 
 async def handler(websocket):
