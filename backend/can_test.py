@@ -8,3 +8,5 @@ from can.interface import Bus
 
 bus = Bus()
 
+for msg in bus:
+    print(msg.data)
