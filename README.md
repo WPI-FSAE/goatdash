@@ -16,6 +16,7 @@ The backend is a python websocket server that reads telemetry off the can bus an
 
 ### Setup
 
-1. Instally Python 3
+1. Install Python 3
+2. Install CAN Configuration ```git submodule init && git submodule update```
 2. Run ```pip install -r requirements.txt```
 3. Run ```python tm_server.py``` to start server
