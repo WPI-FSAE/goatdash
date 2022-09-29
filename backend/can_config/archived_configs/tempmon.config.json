@@ -1,0 +1,284 @@
+
+{
+    "Messages": [
+        {   
+           "canID": 1000,
+            "extendedID": true,
+            "name": "CellTemp1A",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1001,
+            "extendedID": true,
+            "name": "CellTemp1B",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1002,
+            "extendedID": true,
+            "name": "CellTemp1C",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1003,
+            "extendedID": true,
+            "name": "CellTemp1D",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1004,
+            "extendedID": true,
+            "name": "CellTemp1E",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1005,
+            "extendedID": true,
+            "name": "CellTemp1F",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1006,
+            "extendedID": true,
+            "name": "CellTemp1G",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1007,
+            "extendedID": true,
+            "name": "CellTemp1H",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1008,
+            "extendedID": true,
+            "name": "CellTemp2A",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1009,
+            "extendedID": true,
+            "name": "CellTemp2B",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1010,
+            "extendedID": true,
+            "name": "CellTemp2C",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1011,
+            "extendedID": true,
+            "name": "CellTemp2D",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1012,
+            "extendedID": true,
+            "name": "CellTemp2E",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1013,
+            "extendedID": true,
+            "name": "CellTemp2F",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1014,
+            "extendedID": true,
+            "name": "CellTemp2G",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1015,
+            "extendedID": true,
+            "name": "CellTemp2H",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1016,
+            "extendedID": true,
+            "name": "CellTemp3A",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1017,
+            "extendedID": true,
+            "name": "CellTemp3B",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1018,
+            "extendedID": true,
+            "name": "CellTemp3C",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1019,
+            "extendedID": true,
+            "name": "CellTemp3D",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1020,
+            "extendedID": true,
+            "name": "CellTemp3E",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1021,
+            "extendedID": true,
+            "name": "CellTemp3F",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1022,
+            "extendedID": true,
+            "name": "CellTemp3G",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1023,
+            "extendedID": true,
+            "name": "CellTemp3H",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1024,
+            "extendedID": true,
+            "name": "CellTemp4A",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1025,
+            "extendedID": true,
+            "name": "CellTemp4B",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1026,
+            "extendedID": true,
+            "name": "CellTemp4C",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1027,
+            "extendedID": true,
+            "name": "CellTemp4D",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1028,
+            "extendedID": true,
+            "name": "CellTemp4E",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1029,
+            "extendedID": true,
+            "name": "CellTemp4F",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1030,
+            "extendedID": true,
+            "name": "CellTemp4G",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1031,
+            "extendedID": true,
+            "name": "CellTemp4H",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1032,
+            "extendedID": true,
+            "name": "CellTemp5A",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1033,
+            "extendedID": true,
+            "name": "CellTemp5B",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1034,
+            "extendedID": true,
+            "name": "CellTemp5C",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1035,
+            "extendedID": true,
+            "name": "CellTemp5D",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1036,
+            "extendedID": true,
+            "name": "CellTemp5E",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1037,
+            "extendedID": true,
+            "name": "CellTemp5F",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1038,
+            "extendedID": true,
+            "name": "CellTemp5G",
+            "schema": "TempMonMessage"
+        },
+        {
+            "canID": 1039,
+            "extendedID": true,
+            "name": "CellTemp5H",
+            "schema": "TempMonMessage"
+        }
+    ],
+    "Schemas": {
+        "TempMonMessage": {
+            "length": 8,
+            "body": [
+                {
+                    "type": "uint16",
+                    "name": "cell1",
+                    "start": 0
+                },
+                {
+                    "type": "uint16",
+                    "name": "cell2",
+                    "start": 2
+                },
+                {
+                    "type": "uint16",
+                    "name": "cell3",
+                    "start": 4
+                },
+                {
+                    "type": "uint16",
+                    "name": "cell4",
+                    "start": 6
+                }
+            ]
+        }
+    },
+    "Types": {
+        "uint8": {
+            "length": 1,
+            "ctype": "uint8_t",
+            "pythonStructType": "<B"
+        },
+        "uint16": {
+            "length": 2,
+            "ctype": "uint16_t",
+            "pythonStructType": "<H"
+        }
+    }
+}
