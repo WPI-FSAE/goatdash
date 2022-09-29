@@ -1,17 +1,23 @@
 import websockets
 import asyncio
-import time
+import json
 import random
 
 async def handler(websocket):
     async for message in websocket:
-        print(message)
-        while True:
-            await asyncio.sleep(1)
-            await websocket.send(f'{await get_tm()}')
+        print(f'RECEIVED: {message}')
+
+        if message == 'START':
+            while True:
+                await asyncio.sleep(.1)
+                await websocket.send(f'{await get_tm()}')
 
 async def get_tm():
-    return random.randint(0, 10);
+    speed = random.randint(0, 10)
+    batt = random.randint(0, 10)
+    power = random.randint(0, 10)
+
+    return json.dumps({'speed': speed, 'batt': batt, 'power': power})
 
 async def main():
     async with websockets.serve(handler, "localhost", 8000):
