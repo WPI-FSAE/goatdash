@@ -28,7 +28,7 @@ function App() {
     ws.addEventListener('message', (event) => {
       let tm = JSON.parse(event.data);  
       console.log('recv tm: ', tm);
-      setSpeed(tm['speed']);
+      setSpeed(Math.abs(tm['speed']));
       setAvgCell(tm['avg_cell']);
       setMaxCell(0);
       setMinCell(tm['min_cell']);
