@@ -1,6 +1,14 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 
+function padDecimal(val) {
+  if (val.toString().includes('.')) {
+    return val.toString();
+  } else {
+    return val.toString() + ".0";
+  }
+}
+
 function App() {
   const [speed, setSpeed] = useState(0);
   const [avgCell, setAvgCell] = useState(0);
@@ -39,7 +47,7 @@ function App() {
       </header>
 
       <div id="speedo">
-        <h1><i>{speed}</i></h1> <p id="mph"><i>MPH</i></p>
+        <h1><i>{padDecimal(speed)}</i></h1> <p id="mph"><i>MPH</i></p>
       </div>
 
       <div id="battery">
