@@ -1,3 +1,5 @@
+import sys, os
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/can_config")
 from can_config.main import getConfiguration
 import bitstruct
 from operator import attrgetter

@@ -1,5 +1,4 @@
 import can
-from can_config.main import getConfiguration
 from parser import Parser
 
 can.rc['interface'] = 'socketcan'
