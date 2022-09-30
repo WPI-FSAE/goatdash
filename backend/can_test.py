@@ -11,8 +11,7 @@ bus = Bus()
 parser = Parser()
 
 for msg in bus:
-    # print(msg.arbitration_id)
     msgdef = parser.getMsg(msg.arbitration_id)
-    print(msgdef)
-    msg = parser.parse(msg)
-    print(msg)
+    if hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryA':
+        msg = parser.parse(msg)
+        print(msg)
