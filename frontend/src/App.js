@@ -39,9 +39,7 @@ function App() {
       </header>
 
       <div id="speedo">
-        <grid-speed>
-          {speed} MPH
-        </grid-speed>
+        <h1><i>{speed}</i></h1> <p id="mph"><i>MPH</i></p>
       </div>
 
       <div id="battery">
