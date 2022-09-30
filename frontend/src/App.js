@@ -31,31 +31,25 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-
-	<div id="speedo">
-	  <grid-speed>
-	    {speed} MPH
-	  </grid-speed>
-	</div>
-
-
-
-
-  
-
-	<div id="speedo-label">
-	  <h2>
-	  mph
-	  </h2>
-	</div>
-
-        <p>
-          The car battery is at {batt} %.
-        </p>
-        <p>
-          The car is producing {power} watts. 
-        </p>
       </header>
+
+      <div id="speedo">
+        <grid-speed>
+          {speed} MPH
+        </grid-speed>
+      </div>
+
+      <div id="battery">
+        <p>
+          Battery: {batt}%
+        </p>
+      </div>
+
+      <div id="power">
+        <p>
+          Power: {power}w 
+        </p>
+      </div>
     </div>
   );
 }
