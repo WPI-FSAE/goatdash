@@ -3,16 +3,36 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #FFFFFF;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
-.App-link {
-  color: #61dafb;
+h1 {
+  font-size: 4em;
 }
+
+p {
+  font-size: 2em;
+}
+
+#speedo {
+  position: fixed;
+  top: 50;
+  right: 50;
+}
+
+.grid-speed {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  font-size: 60px;
+  text-align: center;
+  font-family:Fantasy;
+  Color: Red;
+} 

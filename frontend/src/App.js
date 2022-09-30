@@ -31,9 +31,24 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          The car is going {speed} mph.
-        </p>
+
+	<div id="speedo">
+	  <grid-speed>
+	    {speed} MPH
+	  </grid-speed>
+	</div>
+
+
+
+
+  
+
+	<div id="speedo-label">
+	  <h2>
+	  mph
+	  </h2>
+	</div>
+
         <p>
           The car battery is at {batt} %.
         </p>
