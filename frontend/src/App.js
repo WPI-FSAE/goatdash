@@ -10,6 +10,7 @@ function padDecimal(val) {
 }
 
 function App() {
+  const [isConnected, setIsConnected] = useState('Disconnected');
   const [speed, setSpeed] = useState(0);
   const [avgCell, setAvgCell] = useState(0);
   const [maxCell, setMaxCell] = useState(0);
@@ -23,6 +24,7 @@ function App() {
     ws.addEventListener('open', (event) => {
         console.log("opening conn...");
         ws.send('START');
+	setIsConnected('Connected');
     });
 
     ws.addEventListener('message', (event) => {
@@ -34,10 +36,12 @@ function App() {
       setMinCell(tm['min_cell']);
       setInvVolts(tm['inv_volts']);
       setDcAmps(tm['dc_amps']);
+      setIsConnected('Connected');
     });
 
     ws.addEventListener('close', (event) => {
-        console.log(event);
+      console.log(event);
+      setIsConnected('Disconnected');
     });
   }, []);
 
@@ -46,28 +50,34 @@ function App() {
       <header className="App-header">
       </header>
 
+      <div id="status">
+	<p>
+	  Status: <b>{isConnected}</b>
+	</p>
+      </div>
+
       <div id="speedo">
         <h1><i>{padDecimal(speed)}</i></h1> <p id="mph"><i>MPH</i></p>
       </div>
 
       <div id="battery">
         <p id="avg">
-          Avg Cell: {avgCell}v
+          Avg Cell: <b>{avgCell}V</b>
         </p>
         <p>
-          Max Cell: {maxCell}v
+          Max Cell: <b>{maxCell}V</b>
         </p>
         <p>
-          Min Cell: {minCell}v
+          Min Cell: <b>{minCell}V</b>
         </p>
       </div>
 
       <div id="power">
         <p>
-          Sys Voltage: {invVolts}v
+          Sys Voltage: <b>{invVolts}V</b>
         </p>
         <p>
-          Sys Amps: {dcAmps}a
+          Sys Amps: <b>{dcAmps}A</b>
         </p>
       </div>
     </div>

@@ -1,5 +1,5 @@
 .App {
-  background-color: #FFFFFF;
+  background-color: #eb85f8;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,10 +11,11 @@
 }
 
 h1 {
-  font-size: 6em;
-  font-family: fantasy;
+  font-size: 9em;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   display: inline;
   margin: 0;
+  background-color:rgb(240, 128, 240)
 }
 
 p {
@@ -24,8 +25,14 @@ p {
 
 p#mph {
   display: inline;
-  font-family: fantasy;
+  font-family: sans-serif;
 
+}
+
+#status {
+  position: fixed;
+  top: 0;
+  right: 0;
 }
 
 #speedo {
