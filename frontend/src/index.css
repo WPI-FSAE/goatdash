@@ -6,14 +6,3 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-grid-speed {
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 40px;
-  font-size: 60px;
-  text-align: center;
-  font-family:Fantasy;
-  Color: Red;
-} 
-
