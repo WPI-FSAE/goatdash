@@ -1,5 +1,5 @@
 .App {
-  background-color: #eb85f8;
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@ h1 {
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   display: inline;
   margin: 0;
-  background-color:rgb(240, 128, 240)
+  background-color:rgb(255, 255, 255)
 }
 
 p {

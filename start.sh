@@ -2,6 +2,6 @@
 
 cd ./frontend && npm run dev &
 
-cd ./backend && python3 tm_server.py
+cd ./backend && python3 tm_server.py &
 
-pkill -f npm
+chromium-browser --noerrdialogs --disable-infobars --incognito --kiosk http://localhost:3000/wpifsae &

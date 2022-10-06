@@ -17,6 +17,7 @@ function App() {
   const [minCell, setMinCell] = useState(0);
   const [invVolts, setInvVolts] = useState(0);
   const [dcAmps, setDcAmps] = useState(0);
+  const [odometer, setOdometer] = useState(0);
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000');
@@ -32,16 +33,20 @@ function App() {
       console.log('recv tm: ', tm);
       setSpeed(Math.abs(tm['speed']));
       setAvgCell(tm['avg_cell']);
-      setMaxCell(0);
+      setMaxCell(tm['max_cell']);
       setMinCell(tm['min_cell']);
       setInvVolts(tm['inv_volts']);
       setDcAmps(tm['dc_amps']);
+      setOdometer(tm['odometer']);
       setIsConnected('Connected');
     });
 
     ws.addEventListener('close', (event) => {
       console.log(event);
       setIsConnected('Disconnected');
+      setTimeout(function() {
+        window.location.reload()
+      }, 3000);
     });
   }, []);
 
@@ -52,7 +57,8 @@ function App() {
 
       <div id="status">
 	<p>
-	  Status: <b>{isConnected}</b>
+	  Status: <b>{isConnected}</b> <br />
+    Odometer: <b>{odometer}</b>
 	</p>
       </div>
 
@@ -63,9 +69,6 @@ function App() {
       <div id="battery">
         <p id="avg">
           Avg Cell: <b>{avgCell}V</b>
-        </p>
-        <p>
-          Max Cell: <b>{maxCell}V</b>
         </p>
         <p>
           Min Cell: <b>{minCell}V</b>
