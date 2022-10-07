@@ -63,7 +63,19 @@ function App() {
       </div>
 
       <div id="speedo">
-        <h1><i>{padDecimal(speed)}</i></h1> <p id="mph"><i>MPH</i></p>
+      <h1><i>{padDecimal(speed)}</i></h1> <p id="mph"><i>MPH</i></p>        
+      </div>
+
+      <div class ="outer">
+          <div class ="inner">
+          
+          </div>
+          <div class ="bar-top">
+
+          </div>
+          <div class ="bar">
+             speed bar goes here, also this ^^ is a placeholder color
+            </div>
       </div>
 
       <div id="battery">
