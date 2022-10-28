@@ -1,5 +1,6 @@
 import './App.css';
 import { useEffect, useState } from 'react';
+import { internalIpV4 } from 'internal-ip';
 
 function padDecimal(val) {
   if (val.toString().includes('.')) {
@@ -18,10 +19,15 @@ function App() {
   const [invVolts, setInvVolts] = useState(0);
   const [dcAmps, setDcAmps] = useState(0);
   const [odometer, setOdometer] = useState(0);
+  const [ip, setIp] = useState("");
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000');
-      
+
+    internalIpV4().then(ip => {
+      setIp(ip)
+    });
+
     ws.addEventListener('open', (event) => {
         console.log("opening conn...");
         ws.send('START');
@@ -92,6 +98,12 @@ function App() {
         </p>
         <p>
           Sys Amps: <b>{dcAmps}A</b>
+        </p>
+      </div>
+
+      <div id="network">
+        <p id="ip">
+          IP: {ip}
         </p>
       </div>
     </div>
