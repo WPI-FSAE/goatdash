@@ -30,7 +30,6 @@ function App() {
 
     ws.addEventListener('message', (event) => {
       let tm = JSON.parse(event.data);  
-      console.log('recv tm: ', tm);
       setSpeed(Math.abs(tm['speed']));
       setAvgCell(tm['avg_cell']);
       setMaxCell(tm['max_cell']);
@@ -66,7 +65,7 @@ function App() {
       <h1><i>{padDecimal(speed)}</i></h1> <p id="mph"><i>MPH</i></p>        
       </div>
 
-      <div class ="outer">
+      {/*<div class ="outer">
           <div class ="inner">
           
           </div>
@@ -76,7 +75,7 @@ function App() {
           <div class ="bar">
              speed bar goes here, also this ^^ is a placeholder color
             </div>
-      </div>
+      </div>*/}
 
       <div id="battery">
         <p id="avg">
