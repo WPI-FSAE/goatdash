@@ -1,22 +1,21 @@
 # FSAE 2022-23 Vehicle Dashboard
 
+Repository for the live telemetry server and dashboard interface for the 2022-2023 FSAE EV.
+
+This software runs on the Pi to consume CAN telemetry data and drive the dashboard display.
+
 ## Frontend
 
-The frontend is an Electron application using React as the GUI framework.
+The frontend is an Electron application using React as the GUI framework. This interface is driven by the Pi and displays information on the EV dashboard display. It connects to an internal telemetry server to fetch information.
 
 ### Setup
 
-1. Install Node.js
-2. Run ```npm i``` to install necessary packages
-3. Run ```npm run dev``` to start development server
+See [README](./frontend/README.md)
 
 ## Backend
 
-The backend is a python websocket server that reads telemetry off the can bus and mirrors it to the frontend.
+The backend is a Python websocket server that parses telemetry from the CAN network. This server should only support one client: the onboard dashboard. For additional live telemetry, a seperate process should be used. This is to prioritize serving TM to the dashboard.
 
 ### Setup
 
-1. Install Python 3
-2. Install CAN Configuration ```git submodule init && git submodule update```
-2. Run ```pip install -r requirements.txt```
-3. Run ```python tm_server.py``` to start server
+See [README](./backend/README.md)
