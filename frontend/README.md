@@ -13,23 +13,54 @@ The dashboard is an [Electron](https://www.electronjs.org/) application built in
 ## Development
 
 1. Install necessary [npm](https://www.npmjs.com/) packages with 
-    ```> npm i```
+
+```
+npm i
+```
 
 You will need to install [Node.js](https://nodejs.org/en/) on your system in order to run a development build. It is recommended to install Node in order to run all scripts in this project.
 
 2. Start the ```react-scripts``` development server with
-    ```> npm run dev```
+
+```
+npm run dev
+```
 
 This creates a build that will update as source files are changed. The electron application will refresh as you continue to develop. You can pop out a Chrome like development tools window from the Electron window View tab, or Ctrl+Shift+I
+
+### Developing on the car
+
+Some situations may call for writing software directly on the car. In this case, you will have to run a ```react-scripts``` server to support hot recompilation.
+
+Start Node:
+
+```
+npm run start
+```
+
+(In a new terminal window after Node finishes compiling) Start Electron as dev:
+
+```
+npx electron .
+```
+
+This opens an Electron application on the display with a developer window. This developer window can be disabled in ```electron.js```. Any updates to source files should be reflected in this window.
 
 ## Building
 
 Since this project is written in React, it will need to be compiled into CommonJS. This is done using ```react-scripts```, which is installed with ```npm i```.
 
 1. Install necessary [npm](https://www.npmjs.com/) packages with 
-    ```> npm i```
+
+```
+npm i
+```
+    
 2. Build the project with
-    ```> npm run build```
+
+```
+npm run build
+```
 
 This creates a build directory that has CommonJS files. You can serve this build folder with a webserver, or package it as an Electron application
 
@@ -42,20 +73,73 @@ Packaging for Electron is currently done using the ```electron-build``` tools. P
 In order to create the ```.deb``` file on a Windows system, you can use Docker. 
 
 1. Build the application if you have not already
-    ```> npm run build```
+
+```
+npm run build
+```
+    
 2. Build the Docker container
-    ```> docker build -t electron-builder .```
+
+```
+docker build -t electron-builder .
+```
+    
 3. Run the ```electron-builder``` tool inside this container
-    ```docker run --rm -it --workdir /workspace -v "<current directory>:/workspace" electron-builder --linux deb --armv7l```
+
+```
+docker run --rm -it --workdir /workspace -v "<current directory>:/workspace" electron-builder --linux deb --armv7l
+```
 
 You will need to subsitute your project directory into the above command in order to map it to the workspace.
 
-This will create a ```dist/``` directory that will have the ```.deb``` package that can run on the Pi
+This will create a ```dist/``` directory that will have the ```.deb``` package that can run on the Pi.
 
 ### Packaging on Windows for Windows
 
-Not currently supported
+Creating a production build for Windows is not necessary, but can be done with:
+
+```
+npm run electron:package:win
+```
 
 ### Packaging on ARM for ARM
+   
+This method is not currently supported on the Pi. It is reccommended to package the application on Windows using Docker and copy the ```.deb``` to the Pi for installation.
 
-```npm run electron:package:linux``` (untested)
+```
+npm run electron:package:linux
+``` 
+
+## Running the Packaged Application
+
+Once the package has been built as a ```.deb```, it can be installed as a package on the Linux system.
+
+1. Copy the ```FSAE-Dashboard_x.x.x_armv7l.deb``` to the Pi using SSH or another file share method.
+
+2. Install the package with:
+
+```
+sudo apt install ./FSAE-Dashboard_x.x.x_armv7l.deb```
+```
+
+This will install or upgrade the package ```fsae-dashboard```
+
+3. Run the dashboard
+
+```
+fsae-dashboard
+```
+
+You may need to set the ```$DISPLAY``` environment variable to ```:0``` to allow Electron to identify the default display.
+
+## Changelog
+
+Notable changes will be recorded here. Major version changes should be tagged and released.
+
+### [0.1.0]
+
+Initial version with basic display functionality:
+
+* Speedometer & Odometer
+* Battery and power levels
+* Device IP
