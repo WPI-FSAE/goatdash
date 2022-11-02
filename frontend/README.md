@@ -119,7 +119,7 @@ Once the package has been built as a ```.deb```, it can be installed as a packag
 2. Install the package with:
 
 ```
-sudo apt install ./FSAE-Dashboard_x.x.x_armv7l.deb```
+sudo apt install ./FSAE-Dashboard_x.x.x_armv7l.deb
 ```
 
 This will install or upgrade the package ```fsae-dashboard```
