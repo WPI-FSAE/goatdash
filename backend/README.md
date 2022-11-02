@@ -27,3 +27,5 @@ python tm_server.py
 ## Configuring Server to Run on Start
 
 This can be done multiple ways, see this StackExchange question for more details: [How to Start an Application Automatically on Boot](https://unix.stackexchange.com/questions/56957/how-to-start-an-application-automatically-on-boot)
+
+Currently, the ```../start.sh``` script is configured to run on boot, and starts a TM server in the background.
