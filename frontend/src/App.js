@@ -29,9 +29,9 @@ function App() {
     });
 
     ws.addEventListener('open', (event) => {
-        console.log("opening conn...");
-        ws.send('START');
-	setIsConnected('Connected');
+      console.log("opening conn...");
+      ws.send('START_DASH');
+      setIsConnected('Connected');
     });
 
     ws.addEventListener('message', (event) => {
