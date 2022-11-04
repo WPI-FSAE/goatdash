@@ -1,8 +1,9 @@
 import './Styles/App.css';
 import { useEffect, useState } from 'react';
 import { internalIpV4 } from 'internal-ip';
-import Speedometer from './Components/Speedometer'
-import BatteryStatus from './Components/BatteryStatus'
+import Speedometer from './Components/Speedometer';
+import BatteryStatus from './Components/BatteryStatus';
+import VehicleStatus from './Components/VehicleStatus';
 
 
 function App() {
@@ -44,9 +45,9 @@ function App() {
     ws.addEventListener('close', (event) => {
       console.log(event);
       setIsConnected(false);
-      setTimeout(function() {
-        window.location.reload()
-      }, 3000);
+      // setTimeout(function() {
+      //   window.location.reload()
+      // }, 3000);
     });
   }, []);
 
@@ -55,24 +56,12 @@ function App() {
       <header className="App-header">
       </header>
 
-      <div id="status">
-        <p>
-          Status: <b>{isConnected ? 'Connected' : 'Disconnected'}</b> <br />
-          Odometer: <b>{odometer}</b>
-        </p>
-      </div>
-
+      <VehicleStatus isConnected={isConnected} odometer={odometer} ip={ip}/>
       <Speedometer speed={speed}/>
       <BatteryStatus avgCell={avgCell} minCell={minCell}/>
 
 
-      {<div class ="rows">
-      
-      
-      </div>}
-
-
-      {<div class ="outer">
+      {/*<div class ="outer">
                     
           <div class ="inner">
           
@@ -83,13 +72,7 @@ function App() {
           <div class ="bar">
              speed bar goes here, also this ^^ is a placeholder color
             </div>
-      </div>}
-
-      {<div class ="rows">
-      
-      
-      </div>}
-
+      </div>*/}
 
       <div id="power">
         <p>
@@ -97,12 +80,6 @@ function App() {
         </p>
         <p>
           Sys Amps: <b>{dcAmps}A</b>
-        </p>
-      </div>
-
-      <div id="network">
-        <p id="ip">
-          IP: {ip}
         </p>
       </div>
     </div>

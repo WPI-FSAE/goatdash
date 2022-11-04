@@ -1,0 +1,18 @@
+h1 {
+    font-size: 9em;
+    font-family: 'Russo One', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: inline;
+    margin: 0;
+}
+
+h2 {
+    font-size: 3em;
+    font-family: 'Russo One', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: inline;
+    translate: -10px;
+}
+
+p#mph {
+    display: inline;
+    font-family: 'Rajdhani Medium';
+}
