@@ -58,7 +58,7 @@ function App() {
 
       <VehicleStatus isConnected={isConnected} odometer={odometer} ip={ip}/>
       <Speedometer speed={speed}/>
-      <BatteryStatus avgCell={avgCell} minCell={minCell}/>
+      <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}/>
 
 
       {/*<div class ="outer">
@@ -74,14 +74,14 @@ function App() {
             </div>
       </div>*/}
 
-      <div id="power">
+      {/* <div id="power">
         <p>
           Sys Voltage: <b>{invVolts}V</b>
         </p>
         <p>
           Sys Amps: <b>{dcAmps}A</b>
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }
