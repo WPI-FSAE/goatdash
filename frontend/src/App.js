@@ -71,7 +71,15 @@ function App() {
       <h1><i>{padDecimal(speed)}</i></h1> <p id="mph"><i>MPH</i></p>        
       </div>
 
-      {/*<div class ="outer">
+
+      {<div class ="rows">
+      
+      
+      </div>}
+
+
+      {<div class ="outer">
+                    
           <div class ="inner">
           
           </div>
@@ -81,7 +89,13 @@ function App() {
           <div class ="bar">
              speed bar goes here, also this ^^ is a placeholder color
             </div>
-      </div>*/}
+      </div>}
+
+      {<div class ="rows">
+      
+      
+      </div>}
+
 
       <div id="battery">
         <p id="avg">
