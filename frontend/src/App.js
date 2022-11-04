@@ -65,7 +65,15 @@ function App() {
       <Speedometer speed={speed}/>
       <BatteryStatus avgCell={avgCell} minCell={minCell}/>
 
-      {/*<div class ="outer">
+
+      {<div class ="rows">
+      
+      
+      </div>}
+
+
+      {<div class ="outer">
+                    
           <div class ="inner">
           
           </div>
@@ -75,7 +83,13 @@ function App() {
           <div class ="bar">
              speed bar goes here, also this ^^ is a placeholder color
             </div>
-      </div>*/}
+      </div>}
+
+      {<div class ="rows">
+      
+      
+      </div>}
+
 
       <div id="power">
         <p>
