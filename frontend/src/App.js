@@ -1,17 +1,10 @@
-import './App.css';
+import './Styles/App.css';
 import { useEffect, useState } from 'react';
 import { internalIpV4 } from 'internal-ip';
-
-function padDecimal(val) {
-  if (val.toString().includes('.')) {
-    return val.toString();
-  } else {
-    return val.toString() + ".0";
-  }
-}
+import Speedometer from './Components/Speedometer'
 
 function App() {
-  const [isConnected, setIsConnected] = useState('Disconnected');
+  const [isConnected, setIsConnected] = useState(false);
   const [speed, setSpeed] = useState(0);
   const [avgCell, setAvgCell] = useState(0);
   const [maxCell, setMaxCell] = useState(0);
@@ -29,9 +22,9 @@ function App() {
     });
 
     ws.addEventListener('open', (event) => {
-        console.log("opening conn...");
-        ws.send('START');
-	setIsConnected('Connected');
+      console.log("opening conn...");
+      ws.send('START_DASH');
+      setIsConnected(true);
     });
 
     ws.addEventListener('message', (event) => {
@@ -43,12 +36,12 @@ function App() {
       setInvVolts(tm['inv_volts']);
       setDcAmps(tm['dc_amps']);
       setOdometer(tm['odometer']);
-      setIsConnected('Connected');
+      setIsConnected(true);
     });
 
     ws.addEventListener('close', (event) => {
       console.log(event);
-      setIsConnected('Disconnected');
+      setIsConnected(false);
       setTimeout(function() {
         window.location.reload()
       }, 3000);
@@ -61,15 +54,13 @@ function App() {
       </header>
 
       <div id="status">
-	<p>
-	  Status: <b>{isConnected}</b> <br />
-    Odometer: <b>{odometer}</b>
-	</p>
+        <p>
+          Status: <b>{isConnected ? 'Connected' : 'Disconnected'}</b> <br />
+          Odometer: <b>{odometer}</b>
+        </p>
       </div>
 
-      <div id="speedo">
-      <h1><i>{padDecimal(speed)}</i></h1> <p id="mph"><i>MPH</i></p>        
-      </div>
+      <Speedometer speed={speed}/>
 
 
       {<div class ="rows">
