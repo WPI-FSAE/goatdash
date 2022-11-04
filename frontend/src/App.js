@@ -2,6 +2,8 @@ import './Styles/App.css';
 import { useEffect, useState } from 'react';
 import { internalIpV4 } from 'internal-ip';
 import Speedometer from './Components/Speedometer'
+import BatteryStatus from './Components/BatteryStatus'
+
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -61,6 +63,7 @@ function App() {
       </div>
 
       <Speedometer speed={speed}/>
+      <BatteryStatus avgCell={avgCell} minCell={minCell}/>
 
       {/*<div class ="outer">
           <div class ="inner">
@@ -73,15 +76,6 @@ function App() {
              speed bar goes here, also this ^^ is a placeholder color
             </div>
       </div>*/}
-
-      <div id="battery">
-        <p id="avg">
-          Avg Cell: <b>{avgCell}V</b>
-        </p>
-        <p>
-          Min Cell: <b>{minCell}V</b>
-        </p>
-      </div>
 
       <div id="power">
         <p>
