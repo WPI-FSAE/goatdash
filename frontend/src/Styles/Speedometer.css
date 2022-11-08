@@ -1,6 +1,7 @@
 h1 {
-    font-size: 9em;
-    font-family: 'Russo One', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 6em;
+    font-family: 'Russo One', sans-serif;
+    font-feature-settings: "tnum";
     display: inline;
     margin: 0;
 }
@@ -9,10 +10,46 @@ h2 {
     font-size: 3em;
     font-family: 'Russo One', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     display: inline;
-    translate: -10px;
 }
 
-p#mph {
+div#speed {
+    height: 6em;
+}
+
+div#rpm {
+
+}
+
+p#label {
     display: inline;
     font-family: 'Rajdhani Medium';
+    font-weight: bold;
+}
+
+div#gauge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+div#progress {
+    position: relative;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 10%;
+    height: 100%;
+    background-color: var(--green);
+    transform: rotate(20deg) translate(0, 0%);
+}
+
+div#mask {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    background-color: var(--red);
+    transform: scale(2, 1) translate(0, -50%);
 }

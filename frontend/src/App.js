@@ -8,6 +8,7 @@ import VehicleStatus from './Components/VehicleStatus';
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
+  const [rpm, setRpm] = useState(0);
   const [speed, setSpeed] = useState(0);
   const [avgCell, setAvgCell] = useState(0);
   const [maxCell, setMaxCell] = useState(0);
@@ -16,6 +17,25 @@ function App() {
   const [dcAmps, setDcAmps] = useState(0);
   const [odometer, setOdometer] = useState(0);
   const [ip, setIp] = useState("");
+
+  function handle_tm_update(tm) {
+
+    // DTI_TelemetryA
+    if (tm['rpm']) setRpm(tm['rpm']);
+    if (tm['speed']) setSpeed(Math.abs(tm['speed']));
+    if (tm['inv_volts']) setInvVolts(tm['inv_volts']);
+    if (tm['odometer']) setOdometer(tm['odometer']);
+
+    // DTI_TelemetryB
+    if (tm['dc_amps']) setDcAmps(tm['dc_amps']);
+
+    // BMS_Information
+    if (tm['avg_cell']) setAvgCell(tm['avg_cell']);
+    if (tm['max_cell']) setMaxCell(tm['max_cell']);
+    if (tm['min_cell']) setMinCell(tm['min_cell']);
+
+    setIsConnected(true);
+  }
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000');
@@ -31,15 +51,8 @@ function App() {
     });
 
     ws.addEventListener('message', (event) => {
-      let tm = JSON.parse(event.data);  
-      setSpeed(Math.abs(tm['speed']));
-      setAvgCell(tm['avg_cell']);
-      setMaxCell(tm['max_cell']);
-      setMinCell(tm['min_cell']);
-      setInvVolts(tm['inv_volts']);
-      setDcAmps(tm['dc_amps']);
-      setOdometer(tm['odometer']);
-      setIsConnected(true);
+      let tm = JSON.parse(event.data);
+      handle_tm_update(tm)
     });
 
     ws.addEventListener('close', (event) => {
@@ -57,7 +70,7 @@ function App() {
       </header>
 
       <VehicleStatus isConnected={isConnected} odometer={odometer} ip={ip}/>
-      <Speedometer speed={speed}/>
+      <Speedometer rpm={rpm} speed={speed}/>
       <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}/>
 
 

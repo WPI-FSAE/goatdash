@@ -12,8 +12,15 @@
     url('./fonts/Russo_One/RussoOne-Regular.ttf') format("truetype");
 }
 
+:root {
+  --gray: rgb(0, 0, 0);
+  --white: rgb(255, 255, 255);
+  --green: rgb(66, 216, 175);
+  --red: rgb(242, 66, 57);
+}
+
 .App {
-  background-color: #ffffff;
+  background-color: var(--white);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,7 +29,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   font-family: "Rajdhani Medium";
-  color: black;
+  color: var(--gray);
 }
 
 p {
@@ -39,14 +46,15 @@ p {
 
 #speedo {
   position: fixed;
+  width: 60%;
   top: 50;
   right: 50;
   text-align: center;
-  color: rgb(0, 0, 0);
 }
 
 #battery {
   position: fixed;
+  width: 25%;
   top: 0;
   left: 0;
 }
