@@ -43,6 +43,7 @@ async def handler(websocket):
 # Read message from can bus, update internal state, return full state
 async def get_tm():
     global speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, odometer, last_time
+    pkt = json.dumps({})
 
     msg = bus.recv(.01)
 
@@ -53,17 +54,25 @@ async def get_tm():
         if hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryA':
             msg = parser.parse(msg)
 
-            speed = msg.ERPM * 0.0015763099 # erpm to mph
+            rpm = msg.ERPM
+            speed = rpm * 0.0015763099 # erpm to mph
+            speed = round(speed, 1)
+
             inv_voltage = msg.inputVoltage
+
             nowtime = datetime.utcnow()
             dt = nowtime - last_time
             odometer += speed * (dt.total_seconds() / 3600)
             last_time = nowtime
-            speed = round(speed, 1)
+
+            pkt = json.dumps({'rpm': rpm, 'speed': speed, 'inv_volts': inv_voltage, 'odometer': round(odometer, 3)})
+
         elif hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryB':
             msg = parser.parse(msg)
 
             dc_amps = round(msg.DCDeciAmps / 10.0, 1)
+            pkt = json.dumps({'dc_amps': dc_amps})
+
         elif hasattr(msgdef, 'name') and msgdef.name == 'BMS_Information' and msgdef.schema.length == len(msg.data):
             msg = parser.parse(msg)
             
@@ -71,8 +80,9 @@ async def get_tm():
             min_cell = round((msg.MinCellVoltage * 0.01) + 2, 2)
             max_cell = round((msg.MaxCellVoltage * 0.01) + 2, 2)
 
+            pkt = json.dumps({'avg_cell': avg_cell, 'min_cell': min_cell, 'max_cell': max_cell})
 
-    return json.dumps({'speed': speed, 'avg_cell': avg_cell, 'min_cell': min_cell, 'max_cell': max_cell, 'inv_volts': inv_voltage, 'dc_amps': dc_amps, 'odometer': round(odometer, 3)})
+    return pkt
 
 async def main():
     async with websockets.serve(handler, "localhost", 8000):
