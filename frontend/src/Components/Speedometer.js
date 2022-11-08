@@ -33,19 +33,29 @@ function padRpm(val) {
 function Speedometer({rpm, speed}) {
 
     const speedo_left_segments = (speed) => {
-      let keys = Array.from(Array(10).keys());
+      let keys = Array.from(Array(9).keys());
+    
+      return keys.map((key) => {
+        let color = 'var(--red)';
+        if ((8 - key) * 5 < speed) {
+          color = 'var(--green)';
+        }
 
-      return keys.map((key) =>
-        <div className="left-segment" key={key} style={{"top": `${key * 10}%`}}></div>
-      );
+        return <div className="left-segment" key={key} style={{"top": `${key * 12}%`, "backgroundColor": color}}></div>
+      });
     }
 
     const speedo_top_segments = (speed) => {
       let keys = Array.from(Array(7).keys());
 
-      return keys.map((key) =>
-        <div className="top-segment" key={key} style={{"left": `${key * 14}%`}}></div>
-      );
+      return keys.map((key) => {
+        let color = 'var(--red)';
+        if ((key * 5) + 45 < speed) {
+          color = 'var(--green)';
+        }
+
+        return <div className="top-segment" key={key} style={{"left": `${key * 14}%`, "backgroundColor": color}}></div>
+    });
     }
 
     return (
@@ -59,20 +69,12 @@ function Speedometer({rpm, speed}) {
 
           <div id="gauge">
 
-            <div className="progress start">
-
-            </div>
-
             <div className="progress left-edge">
-              {speedo_left_segments(0)}
-            </div>
-
-            <div className="progress corner">
-
+              {speedo_left_segments(speed)}
             </div>
 
             <div className="progress top-edge">
-              {speedo_top_segments(0)}
+              {speedo_top_segments(speed)}
             </div>
 
           </div>

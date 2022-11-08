@@ -32,7 +32,6 @@ div#gauge {
     left: 0;
     width: 100%;
     height: 100%;
-    border: solid;
 }
 
 div.progress {
@@ -45,17 +44,18 @@ div.progress {
 
 div.left-edge {
     position: absolute;
-    top: 5%;
-    left: 0;
+    top: 0;
+    left: 8%;
     width: 10%;
-    height: 90%;
+    height: 100%;
     transform: rotate(15deg);
+    transform-origin: top right;
 }
 
 div.top-edge {
     position: absolute;
     top: 0;
-    left: 15%;
+    left: 20%;
     width: 80%;
     height: 8%;
 }
@@ -63,14 +63,17 @@ div.top-edge {
 div.left-segment {
     position: absolute;
     width: 100%;
-    height: 8%;
-    background-color: var(--red);
+    height: 15px;
+    border-radius: 2px;
+    transform: rotate(-15deg);
+    transform-origin: top right;
 }
 
 div.top-segment {
     position: absolute;
     width: 12%;
-    height: 100%;
+    height: 15px;
+    border-radius: 2px;
     background-color: var(--red);
 }
 
