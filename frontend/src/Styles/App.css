@@ -17,6 +17,7 @@
   --white: rgb(255, 255, 255);
   --green: rgb(66, 216, 175);
   --red: rgb(242, 66, 57);
+  --yellow: rgb(247, 212, 23);
 }
 
 .App {
@@ -33,8 +34,12 @@
 }
 
 p {
-  font-size: 1.0em;
-  margin: 10px;
+  font-size: 1.25em;
+  margin: 5px;
+}
+
+.label {
+  font-size: .75em;
 }
 
 .panel#status {

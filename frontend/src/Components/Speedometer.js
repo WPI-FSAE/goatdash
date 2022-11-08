@@ -16,27 +16,25 @@ function padSpeedo(val) {
     return str;
 }
 
-function padRpm(val) {
+function padAmps(val) {
   if (val < 1) {
-    return "0000";
+    return "000";
   } else if (val < 10) {
-    return "000" + val.toString();
-  } else if (val < 100) {
     return "00" + val.toString();
-  } else if (val < 1000) {
+  } else if (val < 100) {
     return "0" + val.toString();
   } else {
     return val.toString();
   }
 }
 
-function Speedometer({rpm, speed}) {
+function Speedometer({dcAmps, speed}) {
 
     const speedo_left_segments = (speed) => {
       let keys = Array.from(Array(9).keys());
     
       return keys.map((key) => {
-        let color = 'var(--red)';
+        let color = 'var(--white)';
         if ((8 - key) * 5 < speed) {
           color = 'var(--green)';
         }
@@ -49,9 +47,14 @@ function Speedometer({rpm, speed}) {
       let keys = Array.from(Array(7).keys());
 
       return keys.map((key) => {
-        let color = 'var(--red)';
+        let color = 'var(--white)';
         if ((key * 5) + 45 < speed) {
-          color = 'var(--green)';
+
+          if (key >= 4) {
+            color = 'var(--red)'
+          } else {
+            color = 'var(--green)';
+          }
         }
 
         return <div className="top-segment" key={key} style={{"left": `${key * 14}%`, "backgroundColor": color}}></div>
@@ -63,8 +66,8 @@ function Speedometer({rpm, speed}) {
           <div id="speed">
             <h1><i>{padSpeedo(speed)}</i></h1> <p id="label"><i>MPH</i></p>
           </div> 
-          <div id="rpm">
-            <h2><i>{padRpm(rpm)}</i></h2> <p id="label"><i>RPM</i></p>    
+          <div id="amps">
+            <h2><i>{padAmps(dcAmps)}</i></h2> <p id="label"><i>AMPS</i></p>    
           </div>
 
           <div id="gauge">
