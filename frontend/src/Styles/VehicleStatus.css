@@ -1,5 +1,5 @@
 div#status {
-    outline: solid;
-    background-color: aqua;
+    border-radius: 5px;
+    background-color: var(--red);
     font-family: 'Rajdhani Medium'
 }

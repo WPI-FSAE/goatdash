@@ -70,7 +70,7 @@ function App() {
       </header>
 
       <VehicleStatus isConnected={isConnected} odometer={odometer} ip={ip}/>
-      <Speedometer rpm={rpm} speed={speed}/>
+      <Speedometer dcAmps={dcAmps} speed={speed}/>
       <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}/>
 
 
