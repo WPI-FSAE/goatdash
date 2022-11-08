@@ -46,8 +46,14 @@ async def get_tm():
 
     # DTI_TelemetryA
     if rand_msg_type == 0:
-        rpm = random.randint(0, 1000)
-        speed = rpm * 0.0015763099 # erpm to mph
+        rpm = random.randint(0, 100000)
+        rpm = rpm // 10;
+        # speed = rpm * 0.0015763099 # erpm to mph
+        speed = speed + 1
+
+        if speed > 100:
+            speed = 0
+        
         inv_voltage = random.randint(0, 100)
         nowtime = datetime.utcnow()
         dt = nowtime - last_time
