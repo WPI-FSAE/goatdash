@@ -40,7 +40,7 @@ async def get_tm():
     pkt = json.dumps({})
 
     # Simulate waiting for message
-    await asyncio.sleep(.1)
+    await asyncio.sleep(.05)
 
     rand_msg_type = random.randint(0, 3)
 
@@ -51,7 +51,7 @@ async def get_tm():
         # speed = rpm * 0.0015763099 # erpm to mph
         speed = speed + 1
 
-        if speed > 100:
+        if speed > 80:
             speed = 0
         
         inv_voltage = random.randint(0, 100)
@@ -65,7 +65,7 @@ async def get_tm():
 
     # DTI_TelemetryB
     elif rand_msg_type == 1:
-        dc_amps = (random.randint(0, 10))
+        dc_amps = (random.randint(-50, 150))
 
         pkt = json.dumps({'dc_amps': dc_amps})
 
