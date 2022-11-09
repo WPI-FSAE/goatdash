@@ -35,6 +35,7 @@
 img {
   position: absolute;
   height: 10%;
+  transform: scale(.8);
 }
 
 img#accel {
