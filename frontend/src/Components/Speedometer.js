@@ -34,7 +34,7 @@ function Speedometer({dcAmps, speed}) {
       let keys = Array.from(Array(9).keys());
     
       return keys.map((key) => {
-        let color = 'var(--white)';
+        let color = 'var(--bg)';
         if ((8 - key) * 5 < speed) {
           color = 'var(--green)';
         }
@@ -47,7 +47,7 @@ function Speedometer({dcAmps, speed}) {
       let keys = Array.from(Array(7).keys());
 
       return keys.map((key) => {
-        let color = 'var(--white)';
+        let color = 'var(--bg)';
         if ((key * 5) + 45 < speed) {
 
           if (key >= 4) {
