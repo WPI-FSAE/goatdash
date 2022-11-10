@@ -1,11 +1,38 @@
 div#status {
-    border-radius: 5px;
+    border-radius: 5px 5px 0px 0px;
     font-family: 'Rajdhani Medium';
     color: var(--black);
+    user-select: none;
+    cursor: pointer;
 }
 
 #network {
-    margin-top: 0;
+    margin: 5px;
+    padding: 0;
+    height: 10%;
+}
+
+#tm-status {
+    float: left;
+}
+
+#lte-status {
+    float: right;
+}
+
+.panel {
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#fault-status {
+}
+
+#rtd-status {
+}
+
+#odo {
 }
 
 #sysinfo {

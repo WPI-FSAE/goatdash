@@ -74,7 +74,6 @@ function App() {
       <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}
                      invTemp={0} accTemp={0} mtrTemp={0}/>
 
-
       {/*<div class ="outer">
                     
           <div class ="inner">

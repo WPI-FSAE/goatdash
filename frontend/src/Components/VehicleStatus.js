@@ -1,29 +1,38 @@
 import '../Styles/VehicleStatus.css';
 
 function VehicleStatus({isConnected, odometer, ip}){
-    /*
-    faults
-    rtd
-    vehicle conn
-    odo
-    external conn
-    */
-    return (
-        <div className="panel" id="status" style={{'backgroundColor': 'var(--red)'}}>
 
-            <p id="network">
-                <span className="label">
-                    Telemetry <b>{isConnected ? 'Connected' : 'Disconnected'}</b>
+    function clickHandler(e) {
+        e.preventDefault();
+        console.log("pressed");
+    }
+
+    return (
+        <div id="status" style={{'backgroundColor': 'var(--gray)'}} onClick={clickHandler}>
+
+            <div id="network">
+                <span className="label" id="tm-status">
+                    TM <b>{isConnected ? 'Connected' : 'Disconnected'} </b>
                 </span>
 
-                <span className="label">
+                <span className="label" id="lte-status">
                     LTE <b>{isConnected ? 'Connected' : 'Disconnected'}</b>
                 </span>
-            </p>
+            </div>
 
-            <p>
-                Odometer: <b>{odometer}</b>
-            </p>
+            <div className="panel" id="fault-status" style={{'backgroundColor': 'var(--green)'}}>
+                <b>FAULTS:</b> NONE
+            </div>
+
+            <div className="panel" id="rtd-status" style={{'backgroundColor': 'var(--red)'}}>
+                <b>NOT READY TO DRIVE</b>
+            </div>
+
+            <div>
+                <p id="odo">
+                    <b>{odometer}</b> mi
+                </p>
+            </div>
 
             <div id="sysinfo">
                 <p>
