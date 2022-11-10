@@ -48,8 +48,9 @@ p {
 
 .panel#status {
   position: fixed;
-  bottom: 5%;
+  bottom: 2%;
   width: 60%;
+  height: 25%;
 }
 
 #speedo {

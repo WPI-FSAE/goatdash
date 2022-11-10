@@ -3,39 +3,39 @@ import '../Styles/BatteryStatus.css';
 function padDecimal(val) {
     let val_str = val.toString();
     if (val_str.includes('.')) {
-        if (val_str.indexOf('.') + 2 == val_str.length) {
-            val_str = val_str + '0';
-        }
+        if (val_str.indexOf('.') + 2 == val_str.length) val_str = val_str + '0';
     }
-    else {
-        val_str = val_str + ".00";
-    }
+    else val_str = val_str + ".00";
 
     return val_str;
 }
 
-function BatteryStatus({avgCell, minCell, invVolts, dcAmps}) {  
+function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mtrTemp}) {  
     /* temps: acc inv mot */
     const color = ['var(--red)', 'var(--yellow)', 'var(--green)', 'var(--white)', 'var(--bg)'];
 
-    const power_segments = (amps) => {
-        let keys = Array.from(Array(200).keys());
+    // Power bar
+    const power_segments = (amps, maxAccel, maxRegen) => {
+        // Define bins
+        let bins = Array.from(Array(200).keys());
         
+        // Determine if regen is active (neg amp val)
         let regen = (amps < 0);
-        let color_sel = regen ? 'var(--red)' : 'var(--green)';
+        let color_sel = regen ? 'var(--green)' : 'var(--red)';
 
-        return keys.map((key) => {
+        return bins.map((key) => {
           let color = 'var(--bg)';
 
           if (regen) {
-            if ((199 - key) < Math.abs(amps)) {
-                color = color_sel
-            }
+            // Jump to center bin and work backwards
+            if ((99 - key) * (maxRegen/100) < Math.abs(amps) && key < 100) color = color_sel;
+            // Jump to center bin and work forwards
           } else {
-            if (key*2 < amps) {
-                color = color_sel;
-            }
+            if ((key - 99) * (maxAccel/100) < amps && key > 100) color = color_sel;
           }
+
+          // Set color of center bin
+          if (key == 100) color = 'var(--text)';
   
           return <div className="segment" key={key} style={{"left": `${key * .5}%`, "backgroundColor": color}}></div>
         });
@@ -45,45 +45,54 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps}) {
         <div id="battery">
 
             <div id="power">
-                {power_segments(dcAmps)}
+                {power_segments(dcAmps, 200, 50)}
             </div>
 
-            <img id="accel" src="accel_light.png"></img>
-            <img id="regen" src="regen_light.png"></img>
+            <img id="accel" src="accel.png"></img>
+            <img id="regen" src="regen.png"></img>
 
             <div id="voltages">
                 <p>
-                    <span className="label">Min: </span>
-                    <div className="value" style={{'backgroundColor': minCell < 2.5 ? color[0] : minCell < 3 ? color[1] : color[2]}}>
+                    <b>BATT</b>
+                </p>
+                <p>
+                    <span className="label">Min </span>
+                    <span className="value" style={{'backgroundColor': minCell < 2.5 ? color[0] : minCell < 3 ? color[1] : color[2]}}>
                         <b>{padDecimal(minCell)}V</b>
-                    </div>
+                    </span>
                 </p>
                 <p>
-                    <span className="label">Accum: </span><b>{invVolts}V</b>
+                    <span className="label">Accum </span><b>{invVolts}V</b>
                 </p>
                 <p>
-                    <span className="label">Avg: </span>
-                    <div className="value" style={{'backgroundColor': avgCell < 3 ? color[0] : avgCell < 3.2 ? color[1] : color[2]}}>
+                    <span className="label">Avg </span>
+                    <span className="value" style={{'backgroundColor': avgCell < 3 ? color[0] : avgCell < 3.2 ? color[1] : color[2]}}>
                         <b>{padDecimal(avgCell)}V</b>
-                    </div>
+                    </span>
                 </p>
             </div>
 
             <div id="temps">
                 <p>
-                    Segment temps (F)
+                    <b>TEMP</b>
                 </p>
                 <p>
-                    1: <meter max="100"/>
+                    <span className="value" style={{'backgroundColor': invTemp > 100 ? color[0] : invTemp > 50 ? color[1] : color[2]}}>
+                        <b>{invTemp}F</b>
+                    </span>
+                    <span className="label"> Inv</span>
                 </p>
                 <p>
-                    2: <meter max="100"/>
+                    <span className="value" style={{'backgroundColor': accTemp > 100 ? color[0] : accTemp > 50 ? color[1] : color[2]}}>
+                        <b>{accTemp}F</b>
+                    </span>
+                    <span className="label"> Accum</span>
                 </p>
                 <p>
-                    3: <meter max="100"/>
-                </p>
-                <p>
-                    4: <meter max="100"/>
+                    <span className="value" style={{'backgroundColor': mtrTemp > 100 ? color[0] : mtrTemp > 50 ? color[1] : color[2]}}>
+                        <b>{mtrTemp}F</b>
+                    </span>
+                    <span className="label"> Mtr</span>
                 </p>
             </div>
         </div>

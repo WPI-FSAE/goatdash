@@ -1,6 +1,23 @@
 div#status {
     border-radius: 5px;
-    background-color: var(--red);
     font-family: 'Rajdhani Medium';
     color: var(--black);
+}
+
+#network {
+    margin-top: 0;
+}
+
+#sysinfo {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#title {
+    float: left;
+}
+
+#version {
+    float: right;
 }

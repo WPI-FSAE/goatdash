@@ -17,12 +17,14 @@
 #voltages {
   position: absolute;
   top: 40%;
+  left: 0;
 }
 
 #temps {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  position: absolute;
+  top: 40%;
+  right: 0;
+  text-align: right;
 }
 
 .value {
@@ -35,15 +37,18 @@
 img {
   position: absolute;
   height: 10%;
-  transform: scale(.8);
 }
 
 img#accel {
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: scale(.8);
+  filter: opacity(50%);
 }
 
 img#regen {
   top: 0;
-  right: 0;
+  right: 50%;
+  transform: scale(.75);
+  filter: opacity(50%);
 }
