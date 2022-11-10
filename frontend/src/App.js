@@ -4,9 +4,12 @@ import { internalIpV4 } from 'internal-ip';
 import Speedometer from './Components/Speedometer';
 import BatteryStatus from './Components/BatteryStatus';
 import VehicleStatus from './Components/VehicleStatus';
+import ConfigPane from './Components/ConfigPane';
 
 
 function App() {
+
+  // Dashboard values
   const [isConnected, setIsConnected] = useState(false);
   const [rpm, setRpm] = useState(0);
   const [speed, setSpeed] = useState(0);
@@ -18,27 +21,36 @@ function App() {
   const [odometer, setOdometer] = useState(0);
   const [ip, setIp] = useState("");
 
+  // Connections
+  const [sock, setSock] = useState("");
+
+  // Dashboard state
+  const [showConf, setShowConf] = useState(false);
+
+  // Update dashboard values from tm frame
   function handle_tm_update(tm) {
 
     // DTI_TelemetryA
-    if (tm['rpm']) setRpm(tm['rpm']);
-    if (tm['speed']) setSpeed(Math.abs(tm['speed']));
-    if (tm['inv_volts']) setInvVolts(tm['inv_volts']);
-    if (tm['odometer']) setOdometer(tm['odometer']);
+    if (tm['rpm'] !== undefined) setRpm(tm['rpm']);
+    if (tm['speed'] !== undefined) setSpeed(Math.abs(tm['speed']));
+    if (tm['inv_volts'] !== undefined) setInvVolts(tm['inv_volts']);
+    if (tm['odometer'] !== undefined) setOdometer(tm['odometer']);
 
     // DTI_TelemetryB
-    if (tm['dc_amps']) setDcAmps(tm['dc_amps']);
+    if (tm['dc_amps'] !== undefined) setDcAmps(tm['dc_amps']);
 
     // BMS_Information
-    if (tm['avg_cell']) setAvgCell(tm['avg_cell']);
-    if (tm['max_cell']) setMaxCell(tm['max_cell']);
-    if (tm['min_cell']) setMinCell(tm['min_cell']);
+    if (tm['avg_cell'] !== undefined) setAvgCell(tm['avg_cell']);
+    if (tm['max_cell'] !== undefined) setMaxCell(tm['max_cell']);
+    if (tm['min_cell'] !== undefined) setMinCell(tm['min_cell']);
 
     setIsConnected(true);
   }
 
+  // Configure websocket
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000');
+    setSock(ws);
 
     internalIpV4().then(ip => {
       setIp(ip)
@@ -58,9 +70,6 @@ function App() {
     ws.addEventListener('close', (event) => {
       console.log(event);
       setIsConnected(false);
-      // setTimeout(function() {
-      //   window.location.reload()
-      // }, 3000);
     });
   }, []);
 
@@ -69,32 +78,15 @@ function App() {
       <header className="App-header">
       </header>
 
-      <VehicleStatus isConnected={isConnected} odometer={odometer} ip={ip}/>
+      <VehicleStatus isConnected={isConnected} odometer={odometer} ip={ip}
+                     setShowConf={setShowConf}/>
+
       <Speedometer dcAmps={dcAmps} speed={speed}/>
+
       <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}
                      invTemp={0} accTemp={0} mtrTemp={0}/>
 
-      {/*<div class ="outer">
-                    
-          <div class ="inner">
-          
-          </div>
-          <div class ="bar-top">
-
-          </div>
-          <div class ="bar">
-             speed bar goes here, also this ^^ is a placeholder color
-            </div>
-      </div>*/}
-
-      {/* <div id="power">
-        <p>
-          Sys Voltage: <b>{invVolts}V</b>
-        </p>
-        <p>
-          Sys Amps: <b>{dcAmps}A</b>
-        </p>
-      </div> */}
+      <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf}/>
     </div>
   );
 }

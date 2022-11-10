@@ -1,10 +1,11 @@
 import '../Styles/VehicleStatus.css';
+import { useEffect } from 'react';
 
-function VehicleStatus({isConnected, odometer, ip}){
+function VehicleStatus({isConnected, odometer, ip, setShowConf}){
 
     function clickHandler(e) {
         e.preventDefault();
-        console.log("pressed");
+        setShowConf(true);
     }
 
     return (

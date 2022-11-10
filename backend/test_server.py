@@ -33,15 +33,30 @@ dc_amps_dir = 1
 
 # Handle incoming connection from dashboard
 async def handler(websocket):
+    global odometer
+
     async for message in websocket:
         print(f'RECEIVED: {message}')
 
         # Only dashboard connections allowed
         if message == 'START_DASH':
+            asyncio.create_task(send_tm(websocket))
+        else:
+            try:
+                data = json.loads(message)
+            except:
+                print("[ERR] Ill formatted message: ", message)
+                return
 
-            # Telemetry send loop
-            while True:
-                await websocket.send(f'{await get_tm()}')
+            # Handle message
+            if (data['opt'] == "RESET_ODO"):
+                print("reseting odo")
+                odometer = 0
+
+async def send_tm(websocket):
+    while True:
+        await websocket.send(f'{await get_tm()}')
+
 
 # Read message from can bus, update internal state, return full state
 async def get_tm():
@@ -72,7 +87,7 @@ async def get_tm():
         
         with open('car_state.json', 'w') as f:
             f.write(json.dumps({'odometer': odometer}))
-
+            
         pkt = json.dumps({'rpm': rpm, 'speed': speed, 'inv_volts': inv_voltage, 'odometer': round(odometer, 3)})
 
     # DTI_TelemetryB
@@ -95,7 +110,7 @@ async def get_tm():
 
         pkt = json.dumps({'avg_cell': avg_cell, 'min_cell': min_cell, 'max_cell': max_cell})
 
-    print(pkt)
+    # print(pkt)
     return pkt
 
 async def main():

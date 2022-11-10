@@ -1,0 +1,6 @@
+.button {
+    text-align: center;
+    height: 10%;
+    user-select: none;
+    cursor: pointer;
+}
