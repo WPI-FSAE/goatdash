@@ -4,7 +4,7 @@ import json
 import configparser
 from datetime import datetime
 
-import time
+# Testing only
 import random
 
 # Load config
@@ -22,6 +22,15 @@ dc_amps = 0
 odometer = 0
 last_time = datetime.utcnow()
 
+# Load persistant car data
+with open('car_state.json', 'r') as f:
+    car_state = json.load(f)
+    
+    odometer = car_state['odometer']
+
+# Testing only
+dc_amps_dir = 1
+
 # Handle incoming connection from dashboard
 async def handler(websocket):
     async for message in websocket:
@@ -36,11 +45,11 @@ async def handler(websocket):
 
 # Read message from can bus, update internal state, return full state
 async def get_tm():
-    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, odometer, last_time
+    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, odometer, last_time, dc_amps_dir
     pkt = json.dumps({})
 
     # Simulate waiting for message
-    await asyncio.sleep(.05)
+    await asyncio.sleep(.025)
 
     rand_msg_type = random.randint(0, 3)
 
@@ -60,12 +69,21 @@ async def get_tm():
         odometer += 0
         last_time = nowtime
         speed = round(speed, 1)
+        
+        with open('car_state.json', 'w') as f:
+            f.write(json.dumps({'odometer': odometer}))
 
         pkt = json.dumps({'rpm': rpm, 'speed': speed, 'inv_volts': inv_voltage, 'odometer': round(odometer, 3)})
 
     # DTI_TelemetryB
     elif rand_msg_type == 1:
-        dc_amps = (random.randint(-50, 150))
+        dc_amps += dc_amps_dir
+
+        if dc_amps > 150:
+            dc_amps_dir = -1
+        
+        if dc_amps < -50:
+            dc_amps_dir = 1
 
         pkt = json.dumps({'dc_amps': dc_amps})
 
