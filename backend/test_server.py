@@ -25,10 +25,13 @@ trip = 0
 last_time = datetime.utcnow()
 
 # Load persistant car data
-with open('car_state.json', 'r') as f:
-    car_state = json.load(f)
-    
-    odometer = car_state['odometer']
+try:
+    with open('car_state.json', 'r') as f:
+        car_state = json.load(f)
+        
+        odometer = car_state['odometer']
+except:
+    print("[ERR] State file not found.")
 
 # Testing only
 dc_amps_dir = 1
