@@ -3,6 +3,7 @@ import asyncio
 import json
 import configparser
 from datetime import datetime
+import time
 
 # Testing only
 import random
@@ -22,6 +23,7 @@ dc_amps = 0
 
 odometer = 0
 trip = 0
+
 last_time = datetime.utcnow()
 
 # Load persistant car data
@@ -60,8 +62,40 @@ async def handler(websocket):
                 trip = 0
 
 async def send_tm(websocket):
+    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
+    odometer, trip
+
+    i = 0
+
     while True:
-        await websocket.send(f'{await get_tm()}')
+        pkt = {}
+
+        # Packet type switching (allows for some values to updated faster than others)
+        if (i % 2 == 0):
+            pkt = {**pkt, **{'rpm': rpm, 
+                             'speed': speed, 
+                             'inv_volts': inv_voltage, 
+                             'odometer': round(odometer, 1), 
+                             'trip': round(trip, 3)}}
+        elif (i % 2 == 1):
+            pkt = {**pkt, **{'avg_cell': avg_cell,
+                             'min_cell': min_cell, 
+                             'max_cell': max_cell,
+                             'dc_amps': dc_amps}}
+
+        # print(pkt)
+        await websocket.send(json.dumps(pkt))
+        await asyncio.sleep(.05)    # Define frontend refresh rate
+
+        if (i >= 9):
+            i = 0
+        else:
+            i += 1
+
+
+async def poll_tm():
+    while True:
+        await get_tm()
 
 
 # Read message from can bus, update internal state, return full state
@@ -69,10 +103,10 @@ async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, last_time, dc_amps_dir
 
-    pkt = json.dumps({})
-
     # Simulate waiting for message
-    await asyncio.sleep(.025)
+    # Each message type 'read' every .1s avg
+    time.sleep(.01) # simulate can reading (blocking)
+    await asyncio.sleep(.005)
 
     rand_msg_type = random.randint(0, 3)
 
@@ -99,12 +133,6 @@ async def get_tm():
         
         with open('car_state.json', 'w') as f:
             f.write(json.dumps({'odometer': odometer, 'trip': trip}))
-            
-        pkt = json.dumps({'rpm': rpm, 
-                          'speed': speed, 
-                          'inv_volts': inv_voltage, 
-                          'odometer': round(odometer, 1), 
-                          'trip': round(trip, 3)})
 
     # DTI_TelemetryB
     elif rand_msg_type == 1:
@@ -116,20 +144,19 @@ async def get_tm():
         if dc_amps < -50:
             dc_amps_dir = 1
 
-        pkt = json.dumps({'dc_amps': dc_amps})
-
     # BMS_Information
     elif rand_msg_type == 2:
         avg_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
         min_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
         max_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
 
-        pkt = json.dumps({'avg_cell': avg_cell, 'min_cell': min_cell, 'max_cell': max_cell})
-
-    print(pkt)
-    return pkt
 
 async def main():
+    
+    # Start polling CAN
+    asyncio.create_task(poll_tm())
+
+    # Start listening for connections
     async with websockets.serve(handler, "localhost", 8000):
         await asyncio.Future()
 
