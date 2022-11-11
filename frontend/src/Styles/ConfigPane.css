@@ -1,9 +1,13 @@
+#conf-pane {
+    background-color: var(--primary);
+}
+
 .button {
     padding: 2% 2% 2% 2%;
     text-align: center;
     user-select: none;
     cursor: pointer;
-    color: var(--black);
+    color: var(--text);
 }
 
 .button:hover {

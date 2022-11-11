@@ -30,7 +30,7 @@ function Speedometer({dcAmps, speed}) {
       return keys.map((key) => {
         let color = 'var(--text)';
         if ((8 - key) * 5 < speed) {
-          color = 'var(--green)';
+          color = 'var(--positive)';
         }
 
         return <div className="left-segment" key={key} style={{"top": `${key * 12}%`, "backgroundColor": color}}></div>
@@ -47,9 +47,9 @@ function Speedometer({dcAmps, speed}) {
         if ((key * 5) + 45 < speed) {
 
           if (key >= 4) {
-            color = 'var(--red)'
+            color = 'var(--negative)'
           } else {
-            color = 'var(--green)';
+            color = 'var(--positive)';
           }
         }
 

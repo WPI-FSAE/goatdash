@@ -5,6 +5,7 @@ import Speedometer from './Components/Speedometer';
 import BatteryStatus from './Components/BatteryStatus';
 import VehicleStatus from './Components/VehicleStatus';
 import ConfigPane from './Components/ConfigPane';
+import Alerts from './Components/Alerts';
 
 
 function App() {
@@ -84,6 +85,8 @@ function App() {
                      setShowConf={setShowConf}/>
 
       <Speedometer dcAmps={dcAmps} speed={speed}/>
+
+      <Alerts/>
 
       <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}
                      invTemp={0} accTemp={0} mtrTemp={0}/>

@@ -27,32 +27,43 @@ function ConfigPane({visible, sock, setShowConf}){
     function handleDarkmodeToggle (e) {
         e.preventDefault();
 
-        const curr_bg = getComputedStyle(document.documentElement).getPropertyValue('--bg');
-        const curr_text = getComputedStyle(document.documentElement).getPropertyValue('--text');
-        document.documentElement.style.setProperty('--bg', curr_text);
-        document.documentElement.style.setProperty('--text', curr_bg);
+        if (getComputedStyle(document.documentElement).getPropertyValue('--bg') === 
+            getComputedStyle(document.documentElement).getPropertyValue('--dark-bg')) {
+            document.documentElement.style.setProperty('--bg', 'var(--light-bg)');
+            document.documentElement.style.setProperty('--text', 'var(--light-text)');
+            document.documentElement.style.setProperty('--primary', 'var(--light-gray)');
+            document.documentElement.style.setProperty('--positive', 'var(--light-green)');
+            document.documentElement.style.setProperty('--negative', 'var(--light-red)');
+    
+        } else {
+            document.documentElement.style.setProperty('--bg', 'var(--dark-bg)');
+            document.documentElement.style.setProperty('--text', 'var(--dark-text)');
+            document.documentElement.style.setProperty('--primary', 'var(--dark-gray)');
+            document.documentElement.style.setProperty('--positive', 'var(--dark-green)');
+            document.documentElement.style.setProperty('--negative', 'var(--dark-red)');
+        }
     }
 
     return (
         <div id="conf-pane" style={{display: visible ? "" : "none"}}>
             
-            <div className="panel button" id="return" style={{backgroundColor: 'var(--red)'}} onClick={handleExit}>
+            <div className="panel button" id="return" style={{backgroundColor: 'var(--negative)'}} onClick={handleExit}>
                 Return
             </div>
 
-            <div className="panel button" style={{backgroundColor: 'var(--red)'}} onClick={handleResetOdo}>
+            <div className="panel button" style={{backgroundColor: 'var(--negative)'}} onClick={handleResetOdo}>
                 Reset Odometer
             </div>
 
-            <div className="panel button" style={{backgroundColor: 'var(--red)'}} onClick={handleResetTrip}>
+            <div className="panel button" style={{backgroundColor: 'var(--negative)'}} onClick={handleResetTrip}>
                 Reset Trip
             </div>
 
-            <div className="panel button" style={{backgroundColor: 'var(--red)'}} onClick={handleRefresh}>
+            <div className="panel button" style={{backgroundColor: 'var(--negative)'}} onClick={handleRefresh}>
                 Refresh Dashboard
             </div>
 
-            <div className="panel button" style={{backgroundColor: 'var(--red)'}} onClick={handleDarkmodeToggle}>
+            <div className="panel button" style={{backgroundColor: 'var(--negative)'}} onClick={handleDarkmodeToggle}>
                 Toggle Darkmode
             </div>
         </div>

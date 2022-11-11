@@ -14,15 +14,52 @@
 
 :root {
   --black: rgb(0, 0, 0);
-  --dark: rgb(10, 15, 19);
-  --gray: rgb(213, 213, 213);
   --white: rgb(255, 255, 255);
-  --green: rgb(66, 216, 175);
-  --red: rgb(242, 66, 57);
+
+  /*Dark theme 1 - Deep*/
+  /* --dark-bg: var(--black);
+  --dark-text: var(--white);
+  --dark-gray: rgb(10, 15, 19);
+  --dark-green: rgb(50, 164, 133);
+  --dark-red: rgb(191, 52, 44); */
+
+  /*Dark theme 2 - Philly*/
+  /* --dark-bg: #010f13;
+  --dark-text: var(--white);
+  --dark-gray: #2b2a2c;
+  --dark-green: #08b2e3;
+  --dark-red: #8c1c13; */
+
+  /*Dark theme 3 - Toucan*/
+  --dark-bg: #7E1F86;
+  --dark-text: #FFFFFB;
+  --dark-gray: #A14DA0;
+  --dark-green: #8CA0D7;
+  --dark-red: #E15554;
+
+  /*Dark theme 4 - Darker*/
+  /* --dark-bg: #181925;
+  --dark-text: #EDF2F4;
+  --dark-gray: #2B2D42;
+  --dark-green: #32908F;
+  --dark-red: #D90429; */
+
+  /*Light theme*/
+  --light-bg: var(--white);
+  --light-text: var(--black);
+  --light-gray: rgb(213, 213, 213);
+  --light-green: rgb(66, 216, 175);
+  --light-red: rgb(242, 66, 57);
+
   --yellow: rgb(247, 212, 23);
 
-  --text: var(--black);
-  --bg: var(--white);
+  /*Applied*/
+  --bg: var(--light-bg);
+  --text: var(--light-text);
+  --negative: var(--light-red);
+  --positive: var(--light-green);
+  --primary: var(--light-gray);
+  --caution: var(--yellow);
 }
 
 .App {
@@ -70,9 +107,15 @@ p {
   pointer-events: none;
 }
 
+#alerts {
+  position: fixed;
+  width: 50%;
+  height: 18%;
+  top: 12%;
+}
+
 #conf-pane {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color: var(--gray);
 }

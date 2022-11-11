@@ -3,7 +3,7 @@ import '../Styles/BatteryStatus.css';
 function padDecimal(val) {
     let val_str = val.toString();
     if (val_str.includes('.')) {
-        if (val_str.indexOf('.') + 2 == val_str.length) val_str = val_str + '0';
+        if (val_str.indexOf('.') + 2 === val_str.length) val_str = val_str + '0';
     }
     else val_str = val_str + ".00";
 
@@ -12,7 +12,7 @@ function padDecimal(val) {
 
 function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mtrTemp}) {  
     /* temps: acc inv mot */
-    const color = ['var(--red)', 'var(--yellow)', 'var(--green)', 'var(--white)', 'var(--bg)'];
+    const color = ['var(--negative)', 'var(--caution)', 'var(--positive)', 'var(--bg)', 'var(--text)'];
 
     // Power bar
     const power_segments = (amps, maxAccel, maxRegen) => {
@@ -21,7 +21,7 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
         
         // Determine if regen is active (neg amp val)
         let regen = (amps < 0);
-        let color_sel = regen ? 'var(--green)' : 'var(--red)';
+        let color_sel = regen ? 'var(--positive)' : 'var(--negative)';
 
         return bins.map((key) => {
           let color = 'var(--bg)';
@@ -35,8 +35,8 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
           }
 
           // Set color of center bin
-          if (key == 99) color = 'var(--green)';
-          if (key == 100) color = 'var(--red)';
+          if (key === 99) color = 'var(--positive)';
+          if (key === 100) color = 'var(--negative)';
   
           return <div className="segment" key={key} style={{"left": `${key * .5}%`, "backgroundColor": color}}></div>
         });

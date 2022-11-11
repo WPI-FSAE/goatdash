@@ -22,7 +22,7 @@ function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
     }
 
     return (
-        <div id="status" style={{'backgroundColor': 'var(--gray)'}} onClick={clickHandler}>
+        <div id="status" onClick={clickHandler}>
 
             <div id="network">
                 <span className="label" id="tm-status">
@@ -34,11 +34,11 @@ function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
                 </span>
             </div>
 
-            <div className="panel" id="fault-status" style={{'backgroundColor': 'var(--green)'}}>
+            <div className="panel" id="fault-status" style={{'backgroundColor': 'var(--positive)'}}>
                 <b>FAULTS:</b> NONE
             </div>
 
-            <div className="panel" id="rtd-status" style={{'backgroundColor': 'var(--red)'}}>
+            <div className="panel" id="rtd-status" style={{'backgroundColor': 'var(--negative)'}}>
                 <b>NOT READY TO DRIVE</b>
             </div>
 

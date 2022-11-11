@@ -74,7 +74,7 @@ div.top-segment {
     width: 12%;
     height: 15px;
     border-radius: 2px;
-    background-color: var(--red);
+    background-color: var(--negative);
 }
 
 div#mask {
@@ -82,6 +82,6 @@ div#mask {
     content: '';
     width: 100%;
     height: 100%;
-    background-color: var(--red);
+    background-color: var(--negative);
     transform: scale(2, 1) translate(0, -100%);
 }

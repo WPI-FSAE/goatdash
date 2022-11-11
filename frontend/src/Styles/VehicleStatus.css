@@ -1,9 +1,10 @@
 div#status {
     border-radius: 5px 5px 0px 0px;
     font-family: 'Rajdhani Medium';
-    color: var(--black);
+    color: var(--text);
     user-select: none;
     cursor: pointer;
+    background-color: var(--primary);
 }
 
 #network {
