@@ -19,7 +19,9 @@ avg_cell = 0
 min_cell = 0
 max_cell = 0
 dc_amps = 0
+
 odometer = 0
+trip = 0
 last_time = datetime.utcnow()
 
 # Load persistant car data
@@ -33,7 +35,7 @@ dc_amps_dir = 1
 
 # Handle incoming connection from dashboard
 async def handler(websocket):
-    global odometer
+    global odometer, trip
 
     async for message in websocket:
         print(f'RECEIVED: {message}')
@@ -50,8 +52,9 @@ async def handler(websocket):
 
             # Handle message
             if (data['opt'] == "RESET_ODO"):
-                print("reseting odo")
                 odometer = 0
+            elif (data['opt'] == "RESET_TRIP"):
+                trip = 0
 
 async def send_tm(websocket):
     while True:
@@ -60,7 +63,9 @@ async def send_tm(websocket):
 
 # Read message from can bus, update internal state, return full state
 async def get_tm():
-    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, odometer, last_time, dc_amps_dir
+    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
+    odometer, trip, last_time, dc_amps_dir
+
     pkt = json.dumps({})
 
     # Simulate waiting for message
@@ -81,14 +86,22 @@ async def get_tm():
         inv_voltage = random.randint(0, 100)
         nowtime = datetime.utcnow()
         dt = nowtime - last_time
-        odometer += 0
+
+        dx = speed * (dt.total_seconds() / 3600)
+        odometer += dx
+        trip += dx
+
         last_time = nowtime
         speed = round(speed, 1)
         
         with open('car_state.json', 'w') as f:
-            f.write(json.dumps({'odometer': odometer}))
+            f.write(json.dumps({'odometer': odometer, 'trip': trip}))
             
-        pkt = json.dumps({'rpm': rpm, 'speed': speed, 'inv_volts': inv_voltage, 'odometer': round(odometer, 3)})
+        pkt = json.dumps({'rpm': rpm, 
+                          'speed': speed, 
+                          'inv_volts': inv_voltage, 
+                          'odometer': round(odometer, 1), 
+                          'trip': round(trip, 3)})
 
     # DTI_TelemetryB
     elif rand_msg_type == 1:
@@ -110,7 +123,7 @@ async def get_tm():
 
         pkt = json.dumps({'avg_cell': avg_cell, 'min_cell': min_cell, 'max_cell': max_cell})
 
-    # print(pkt)
+    print(pkt)
     return pkt
 
 async def main():
