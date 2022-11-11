@@ -1,6 +1,17 @@
 .button {
+    padding: 2% 2% 2% 2%;
     text-align: center;
-    height: 10%;
     user-select: none;
     cursor: pointer;
+    color: var(--black);
+}
+
+.button:hover {
+    filter: brightness(.9);
+}
+
+#return {
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }

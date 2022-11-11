@@ -29,13 +29,14 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
           if (regen) {
             // Jump to center bin and work backwards
             if ((99 - key) * (maxRegen/100) < Math.abs(amps) && key < 100) color = color_sel;
-            // Jump to center bin and work forwards
           } else {
+            // Jump to center bin and work forwards
             if ((key - 99) * (maxAccel/100) < amps && key > 100) color = color_sel;
           }
 
           // Set color of center bin
-          if (key == 100) color = 'var(--text)';
+          if (key == 99) color = 'var(--green)';
+          if (key == 100) color = 'var(--red)';
   
           return <div className="segment" key={key} style={{"left": `${key * .5}%`, "backgroundColor": color}}></div>
         });

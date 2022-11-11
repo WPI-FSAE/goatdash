@@ -19,6 +19,7 @@ function App() {
   const [invVolts, setInvVolts] = useState(0);
   const [dcAmps, setDcAmps] = useState(0);
   const [odometer, setOdometer] = useState(0);
+  const [trip, setTrip] = useState(0);
   const [ip, setIp] = useState("");
 
   // Connections
@@ -35,6 +36,7 @@ function App() {
     if (tm['speed'] !== undefined) setSpeed(Math.abs(tm['speed']));
     if (tm['inv_volts'] !== undefined) setInvVolts(tm['inv_volts']);
     if (tm['odometer'] !== undefined) setOdometer(tm['odometer']);
+    if (tm['trip'] !== undefined) setTrip(tm['trip']);
 
     // DTI_TelemetryB
     if (tm['dc_amps'] !== undefined) setDcAmps(tm['dc_amps']);
@@ -78,7 +80,7 @@ function App() {
       <header className="App-header">
       </header>
 
-      <VehicleStatus isConnected={isConnected} odometer={odometer} ip={ip}
+      <VehicleStatus isConnected={isConnected} odometer={odometer} trip={trip} ip={ip}
                      setShowConf={setShowConf}/>
 
       <Speedometer dcAmps={dcAmps} speed={speed}/>

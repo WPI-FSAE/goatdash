@@ -1,7 +1,20 @@
 import '../Styles/VehicleStatus.css';
-import { useEffect } from 'react';
 
-function VehicleStatus({isConnected, odometer, ip, setShowConf}){
+function padDecimal(val, decs) {
+    let val_str = val.toString();
+
+    if (!val_str.includes('.')) {
+        val_str = val_str + ".";
+    }
+
+    while (val_str.length - val_str.indexOf('.') - 1 < decs) {
+        val_str = val_str + "0";
+    }
+
+    return val_str;
+}
+
+function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
 
     function clickHandler(e) {
         e.preventDefault();
@@ -30,8 +43,9 @@ function VehicleStatus({isConnected, odometer, ip, setShowConf}){
             </div>
 
             <div>
-                <p id="odo">
-                    <b>{odometer}</b> mi
+                <p>
+                    <span id="odo"><b>{padDecimal(odometer, 1)}</b> mi </span>
+                    <span id="trip">Trip: <b>{padDecimal(trip, 3)}</b> mi</span>
                 </p>
             </div>
 
