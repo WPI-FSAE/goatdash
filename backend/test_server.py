@@ -8,6 +8,14 @@ import time
 # Testing only
 import random
 
+#########
+# Setup #
+#########
+
+CLIENT_REFRESH = 0
+CAN_REFRESH = 0
+STATE_REFRESH = 0
+
 # Load config
 config = configparser.ConfigParser()
 config.read('./config.ini')
@@ -38,17 +46,24 @@ except:
 # Testing only
 dc_amps_dir = 1
 
-# Handle incoming connection from dashboard
-async def handler(websocket):
+
+######
+# WS #
+######
+async def message_handler(websocket):
+    """
+    Handle incoming websocket messages
+    """
     global odometer, trip
 
     async for message in websocket:
         print(f'RECEIVED: {message}')
 
-        # Only dashboard connections allowed
         if message == 'START_DASH':
+            # Create new coroutine serving tm data to ws
             asyncio.create_task(send_tm(websocket))
         else:
+            # Handle incoming command
             try:
                 data = json.loads(message)
             except:
@@ -62,6 +77,9 @@ async def handler(websocket):
                 trip = 0
 
 async def send_tm(websocket):
+    """
+    Maintain telemetry connection with client
+    """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip
 
@@ -83,22 +101,24 @@ async def send_tm(websocket):
                              'max_cell': max_cell,
                              'dc_amps': dc_amps}}
 
-        # print(pkt)
-        await websocket.send(json.dumps(pkt))
-        await asyncio.sleep(.05)    # Define frontend refresh rate
-
         if (i >= 9):
             i = 0
         else:
             i += 1
+        
+        await websocket.send(json.dumps(pkt))
+        await asyncio.sleep(.05)    # Define frontend refresh rate
 
 
+#######
+# CAN #
+#######
 async def poll_tm():
     while True:
         await get_tm()
+        await asyncio.sleep(.005)   # backend tm refresh rate
 
-
-# Read message from can bus, update internal state, return full state
+# Read message from can bus, update internal state,
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, last_time, dc_amps_dir
@@ -106,7 +126,6 @@ async def get_tm():
     # Simulate waiting for message
     # Each message type 'read' every .1s avg
     time.sleep(.01) # simulate can reading (blocking)
-    await asyncio.sleep(.005)
 
     rand_msg_type = random.randint(0, 3)
 
@@ -131,9 +150,6 @@ async def get_tm():
         last_time = nowtime
         speed = round(speed, 1)
         
-        with open('car_state.json', 'w') as f:
-            f.write(json.dumps({'odometer': odometer, 'trip': trip}))
-
     # DTI_TelemetryB
     elif rand_msg_type == 1:
         dc_amps += dc_amps_dir
@@ -151,13 +167,34 @@ async def get_tm():
         max_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
 
 
+#########
+# STATE #
+#########
+async def store_tm():
+    while True:
+        await write_state()
+        await asyncio.sleep(10) # state update refresh
+
+async def write_state():
+    global odometer, trip
+
+    with open('car_state.json', 'w') as f:
+            f.write(json.dumps({'odometer': round(odometer, 3), 'trip': round(trip, 3)}))
+
+
+#########
+# START #
+#########
 async def main():
     
     # Start polling CAN
     asyncio.create_task(poll_tm())
 
+    # Start writing state
+    asyncio.create_task(store_tm())
+
     # Start listening for connections
-    async with websockets.serve(handler, "localhost", 8000):
+    async with websockets.serve(message_handler, "localhost", 8000):
         await asyncio.Future()
 
 asyncio.run(main())
