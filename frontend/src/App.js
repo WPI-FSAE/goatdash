@@ -6,7 +6,7 @@ import BatteryStatus from './Components/BatteryStatus';
 import VehicleStatus from './Components/VehicleStatus';
 import ConfigPane from './Components/ConfigPane';
 import Alerts from './Components/Alerts';
-
+import LapStatus from './Components/LapStatus';
 
 function App() {
 
@@ -91,7 +91,10 @@ function App() {
       <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}
                      invTemp={0} accTemp={0} mtrTemp={0}/>
 
+      <LapStatus/>
+      
       <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf}/>
+      
     </div>
   );
 }

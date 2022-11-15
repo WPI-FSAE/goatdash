@@ -1,0 +1,12 @@
+#lap-batt {
+    width: 25%;
+    float: left;
+    outline: solid;
+}
+
+#lap-time {
+    width: 25%;
+    float: right;
+    outline: solid;
+    text-align: right;
+}

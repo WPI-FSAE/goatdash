@@ -16,8 +16,8 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
 
     // Power bar
     const power_segments = (amps, maxAccel, maxRegen) => {
-        // Define bins
-        let bins = Array.from(Array(200).keys());
+        // Define bins 0-198
+        let bins = Array.from(Array(199).keys());
         
         // Determine if regen is active (neg amp val)
         let regen = (amps < 0);
