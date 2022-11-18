@@ -34,7 +34,7 @@
   color: var(--text)
 }
 
-img {
+img.icon {
   position: absolute;
   height: 10%;
 }
