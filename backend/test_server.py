@@ -33,6 +33,7 @@ odometer = 0
 trip = 0
 
 last_time = datetime.utcnow()
+start_time = last_time
 
 # Load persistant car data
 try:
@@ -94,7 +95,8 @@ async def send_tm(websocket):
                              'speed': speed, 
                              'inv_volts': inv_voltage, 
                              'odometer': round(odometer, 1), 
-                             'trip': round(trip, 3)}}
+                             'trip': round(trip, 3),
+                             'uptime': (datetime.utcnow() - start_time).total_seconds()}}
         elif (i % 2 == 1):
             pkt = {**pkt, **{'avg_cell': avg_cell,
                              'min_cell': min_cell, 
