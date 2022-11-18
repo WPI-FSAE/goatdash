@@ -49,8 +49,8 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
                 {power_segments(dcAmps, 200, 50)}
             </div>
 
-            <img id="accel" src="accel.png"></img>
-            <img id="regen" src="regen.png"></img>
+            <img className="icon" id="accel" src="accel2.png"></img>
+            <img className="icon" id="regen" src="regen.png"></img>
 
             <div id="voltages">
                 <p>
