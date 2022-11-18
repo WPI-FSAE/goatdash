@@ -54,7 +54,7 @@ function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
                     <span className="label" id="title">
                         Goat Fast Racing
                     </span>
-
+                    <img id="logo" src="logo.png"></img>
                     <span className="label" id="version">
                         {ip} v0.1.0
                     </span>

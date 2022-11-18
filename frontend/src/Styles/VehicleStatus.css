@@ -40,6 +40,7 @@ div#status {
 #trip {
     float: left;
 }
+
 #sysinfo {
     position: absolute;
     bottom: 0;
@@ -48,6 +49,12 @@ div#status {
 
 #title {
     float: left;
+}
+
+#logo {
+    position: absolute;
+    height: 1em;
+    transform: translate(-0%, -20%);
 }
 
 #version {

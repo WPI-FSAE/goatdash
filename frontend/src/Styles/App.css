@@ -13,8 +13,8 @@
 }
 
 :root {
-  --black: rgb(0, 0, 0);
-  --white: rgb(255, 255, 255);
+  --black: #000000;
+  --white: #ffffff;
 
   /*Dark theme 1 - Deep*/
   /* --dark-bg: #181925;
@@ -33,7 +33,7 @@
   /*Dark theme 3 - Toucan*/
   /* --dark-bg: #3d0d41;
   --dark-text: #FFFFFB;
-  --dark-gray: #611f60;
+  --dark-gray: #6d386c;
   --dark-green: #8CA0D7;
   --dark-red: #E15554; */
 
@@ -47,11 +47,11 @@
   /*Light theme*/
   --light-bg: var(--white);
   --light-text: var(--black);
-  --light-gray: rgb(213, 213, 213);
-  --light-green: rgb(66, 216, 175);
-  --light-red: rgb(242, 66, 57);
+  --light-gray: #d5d5d5;
+  --light-green: #42d8af;
+  --light-red: #f24239;
 
-  --yellow: rgb(170, 160, 105);
+  --yellow: #ffd900;
 
   /*Applied*/
   --bg: var(--light-bg);
