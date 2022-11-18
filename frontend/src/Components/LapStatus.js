@@ -1,14 +1,18 @@
 import '../Styles/LapStatus.css';
 
-function LapStatus(){
+function LapStatus({}){
     return (
         <div id="lap-status">
             <div id="lap-batt">
-                -O.4v
+                <div className="time"><span className="label">DELTA </span>--v</div>
             </div>
             
             <div id="lap-time">
-                00:00:00
+                <div className="time">--:--.--<span className="label"> TIME</span></div>
+
+                <div className="time">+--:--.--<span className="label"> DELTA</span></div>
+
+                <div className="time" id="lap">+--:--.--<span className="label"> LAP</span></div>
             </div>
         </div>
     );
