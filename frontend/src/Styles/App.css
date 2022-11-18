@@ -31,18 +31,18 @@
   --dark-red: #8c1c13; */
 
   /*Dark theme 3 - Toucan*/
-  --dark-bg: #3d0d41;
+  /* --dark-bg: #3d0d41;
   --dark-text: #FFFFFB;
   --dark-gray: #611f60;
   --dark-green: #8CA0D7;
-  --dark-red: #E15554;
+  --dark-red: #E15554; */
 
     /*Dark theme 4 - Deeper*/
-  /* --dark-bg: var(--black);
+  --dark-bg: var(--black);
   --dark-text: var(--white);
   --dark-gray: rgb(10, 15, 19);
   --dark-green: rgb(50, 164, 133);
-  --dark-red: rgb(191, 52, 44); */
+  --dark-red: rgb(191, 52, 44);
 
   /*Light theme*/
   --light-bg: var(--white);
@@ -124,6 +124,6 @@ p {
   position: absolute;
   width: 100%;
   height: 25%;
-  top: 10%;
+  top: 11%;
   right: 0;
 }
