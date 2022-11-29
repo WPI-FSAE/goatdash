@@ -36,7 +36,7 @@ last_time = datetime.utcnow()
 
 # Load persistant car data
 try:
-    with open('car_state.json', 'r') as f:
+    with open('car_state_test.json', 'r') as f:
         car_state = json.load(f)
         
         odometer = car_state['odometer']
@@ -178,7 +178,7 @@ async def store_tm():
 async def write_state():
     global odometer, trip
 
-    with open('car_state.json', 'w') as f:
+    with open('car_state_test.json', 'w') as f:
             f.write(json.dumps({'odometer': round(odometer, 3), 'trip': round(trip, 3)}))
 
 

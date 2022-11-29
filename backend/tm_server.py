@@ -27,6 +27,7 @@ from can.interface import Bus
 bus = Bus()
 parser = Parser()
 
+rpm = 0
 speed = 0
 inv_voltage = 0
 avg_cell = 0
