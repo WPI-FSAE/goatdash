@@ -2,7 +2,7 @@
 
 #cd ./frontend && npm run dev &
 
-cd ./backend && python3 tm_server.py &
+#cd ./backend && python tm_server.py &
 
 export DISPLAY=:0
 fsae-dashboard &
