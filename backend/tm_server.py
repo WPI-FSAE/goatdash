@@ -24,7 +24,7 @@ can.rc['channel'] = config['CAN']['Channel']
 
 from can.interface import Bus
 
-bus = Bus()
+bus = Bus(receive_own_messages=True)
 parser = Parser()
 
 rpm = 0
