@@ -17,11 +17,11 @@
   --white: rgb(255, 255, 255);
 
   /*Dark theme 1 - Deep*/
-  /* --dark-bg: var(--black);
+  --dark-bg: var(--black);
   --dark-text: var(--white);
   --dark-gray: rgb(10, 15, 19);
   --dark-green: rgb(50, 164, 133);
-  --dark-red: rgb(191, 52, 44); */
+  --dark-red: rgb(191, 52, 44);
 
   /*Dark theme 2 - Philly*/
   /* --dark-bg: #010f13;
@@ -31,11 +31,11 @@
   --dark-red: #8c1c13; */
 
   /*Dark theme 3 - Toucan*/
-  --dark-bg: #7E1F86;
+  /* --dark-bg: #7E1F86;
   --dark-text: #FFFFFB;
   --dark-gray: #A14DA0;
   --dark-green: #8CA0D7;
-  --dark-red: #E15554;
+  --dark-red: #E15554; */
 
   /*Dark theme 4 - Darker*/
   /* --dark-bg: #181925;
