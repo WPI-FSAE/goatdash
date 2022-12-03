@@ -6,6 +6,14 @@ from parser import Parser
 import can
 from datetime import datetime
 
+#########
+# Setup #
+#########
+
+CLIENT_REFRESH = 0
+CAN_REFRESH = 0
+STATE_REFRESH = 0
+
 # Load config
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -19,31 +27,103 @@ from can.interface import Bus
 bus = Bus()
 parser = Parser()
 
+rpm = 0
 speed = 0
 inv_voltage = 0
 avg_cell = 0
 min_cell = 0
 max_cell = 0
 dc_amps = 0
+
 odometer = 0
+trip = 0
 last_time = datetime.utcnow()
 
-# Handle incoming connection from dashboard
-async def handler(websocket):
+# Load persistant car data
+try:
+    with open('car_state.json', 'r') as f:
+        car_state = json.load(f)
+        
+        odometer = car_state['odometer']
+except:
+    print("[ERR] State file not found.")
+
+
+######
+# WS #
+######
+async def message_handler(websocket):
+    """
+    Handle incoming websocket messages
+    """
+    global odometer, trip
+
     async for message in websocket:
         print(f'RECEIVED: {message}')
 
-        # Only dashboard connections allowed
         if message == 'START_DASH':
+            # Create new coroutine serving tm data to ws
+            asyncio.create_task(send_tm(websocket))
+        else:
+            # Handle incoming command
+            try:
+                data = json.loads(message)
+            except:
+                print("[ERR] Ill formatted message: ", message)
+                return
 
-            # Telemetry send loop
-            while True:
-                await websocket.send(f'{await get_tm()}')
+            # Handle message
+            if (data['opt'] == "RESET_ODO"):
+                odometer = 0
+            elif (data['opt'] == "RESET_TRIP"):
+                trip = 0
 
-# Read message from can bus, update internal state, return full state
+async def send_tm(websocket):
+    """
+    Maintain telemetry connection with client
+    """
+    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
+    odometer, trip
+
+    i = 0
+
+    while True:
+        pkt = {}
+
+        # Packet type switching (allows for some values to updated faster than others)
+        if (i % 2 == 0):
+            pkt = {**pkt, **{'rpm': rpm, 
+                             'speed': speed, 
+                             'inv_volts': inv_voltage, 
+                             'odometer': round(odometer, 1), 
+                             'trip': round(trip, 3)}}
+        elif (i % 2 == 1):
+            pkt = {**pkt, **{'avg_cell': avg_cell,
+                             'min_cell': min_cell, 
+                             'max_cell': max_cell,
+                             'dc_amps': dc_amps}}
+
+        if (i >= 9):
+            i = 0
+        else:
+            i += 1
+        
+        await websocket.send(json.dumps(pkt))
+        await asyncio.sleep(.05)    # Define frontend refresh rate
+
+
+#######
+# CAN #
+#######
+async def poll_tm():
+    while True:
+        await get_tm()
+        await asyncio.sleep(.005)   # backend tm refresh rate
+
+# Read message from can bus, update internal state,
 async def get_tm():
-    global speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, odometer, last_time
-    pkt = json.dumps({})
+    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
+    odometer, trip, last_time, dc_amps_dir
 
     msg = bus.recv(.01)
 
@@ -51,28 +131,30 @@ async def get_tm():
 
         msgdef = parser.getMsg(msg.arbitration_id)
 
+        # DTI_TelemetryA
         if hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryA':
             msg = parser.parse(msg)
-
-            rpm = msg.ERPM
-            speed = rpm * 0.0015763099 # erpm to mph
-            speed = round(speed, 1)
-
+            erpm = msg.ERPM
+            rpm = erpm // 10;
+            speed = erpm * 0.0015763099 # erpm to mph
+            
             inv_voltage = msg.inputVoltage
 
             nowtime = datetime.utcnow()
             dt = nowtime - last_time
-            odometer += speed * (dt.total_seconds() / 3600)
+            dx = speed * (dt.total_seconds() / 3600)
+            odometer += dx
+            trip += dx
+
             last_time = nowtime
-
-            pkt = json.dumps({'rpm': rpm, 'speed': speed, 'inv_volts': inv_voltage, 'odometer': round(odometer, 3)})
-
+            speed = round(speed, 1)
+            
+        # DTI_TelemetryB
         elif hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryB':
             msg = parser.parse(msg)
-
             dc_amps = round(msg.DCDeciAmps / 10.0, 1)
-            pkt = json.dumps({'dc_amps': dc_amps})
 
+        # BMS_Information
         elif hasattr(msgdef, 'name') and msgdef.name == 'BMS_Information' and msgdef.schema.length == len(msg.data):
             msg = parser.parse(msg)
             
@@ -80,12 +162,35 @@ async def get_tm():
             min_cell = round((msg.MinCellVoltage * 0.01) + 2, 2)
             max_cell = round((msg.MaxCellVoltage * 0.01) + 2, 2)
 
-            pkt = json.dumps({'avg_cell': avg_cell, 'min_cell': min_cell, 'max_cell': max_cell})
 
-    return pkt
+#########
+# STATE #
+#########
+async def store_tm():
+    while True:
+        await write_state()
+        await asyncio.sleep(10) # state update refresh
 
+async def write_state():
+    global odometer, trip
+
+    with open('car_state.json', 'w') as f:
+            f.write(json.dumps({'odometer': round(odometer, 3), 'trip': round(trip, 3)}))
+
+
+#########
+# START #
+#########
 async def main():
-    async with websockets.serve(handler, "localhost", 8000):
+    
+    # Start polling CAN
+    asyncio.create_task(poll_tm())
+
+    # Start writing state
+    asyncio.create_task(store_tm())
+
+    # Start listening for connections
+    async with websockets.serve(message_handler, "localhost", 8000):
         await asyncio.Future()
 
 asyncio.run(main())
