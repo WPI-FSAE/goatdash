@@ -23,102 +23,106 @@ function ConfigPane({visible, sock, setShowConf}){
         setAlertText("");
     }
 
-    function handleResetOdo (e) {
-        e.preventDefault();
-        let data = JSON.stringify({opt: "RESET_ODO"});
-        sock.send(data);
-        setAlertText("Odometer Reset.");
-    }
-
-    function handleResetTrip (e) {
-        e.preventDefault();
-        let data = JSON.stringify({opt: "RESET_TRIP"});
-        sock.send(data);
-        setAlertText("Trip Reset.");
-    }
-
-    function handleRefresh (e) {
-        e.preventDefault();
-        window.location.reload();
-    }
-
-    function handleDarkmodeToggle (e) {
-        e.preventDefault();
-
-        if (getComputedStyle(document.documentElement).getPropertyValue('--bg') === 
-            getComputedStyle(document.documentElement).getPropertyValue('--dark-bg')) {
-            document.documentElement.style.setProperty('--bg', 'var(--light-bg)');
-            document.documentElement.style.setProperty('--text', 'var(--light-text)');
-            document.documentElement.style.setProperty('--primary', 'var(--light-gray)');
-            document.documentElement.style.setProperty('--positive', 'var(--light-green)');
-            document.documentElement.style.setProperty('--negative', 'var(--light-red)');
-            setDarkMode(false);
-            setAlertText("Light.");
-
-        } else {
-            document.documentElement.style.setProperty('--bg', 'var(--dark-bg)');
-            document.documentElement.style.setProperty('--text', 'var(--dark-text)');
-            document.documentElement.style.setProperty('--primary', 'var(--dark-gray)');
-            document.documentElement.style.setProperty('--positive', 'var(--dark-green)');
-            document.documentElement.style.setProperty('--negative', 'var(--dark-red)');
-            setDarkMode(true);
-            setAlertText("Dark.");
-
+    function Menu() {
+        
+        function MenuEntry({title, icon, showFn}) {
+            return (
+                <div className="panel tile" onClick={() => showFn(true)}>
+                    <img className="menu-icon" src={icon} style={{filter: darkMode ? "invert(1)" : ""}}></img>
+                    {title}
+                </div>
+            )
         }
+        return (
+            <div className="menu">
+
+                <MenuEntry title="General" icon="icons/Settings.svg" showFn={setShowGeneral}/>
+                <MenuEntry title="Tuning" icon="icons/Repair.svg" showFn={setShowTuning}/>
+                <MenuEntry title="GPS" icon="icons/Globe.svg" showFn={setShowGPS}/>
+                <MenuEntry title="Trip" icon="icons/ConstructionCone.svg" showFn={setShowTrip}/>
+                <MenuEntry title="Charge" icon="icons/VerticalBatteryCharging0.svg" showFn={setShowCharge}/>
+                <MenuEntry title="Debug" icon="icons/Bug.svg" showFn={setShowDebug}/>
+
+            </div>
+        )
     }
 
-    return (
-        <div id="conf-pane" style={{display: visible ? "" : "none"}}>
-            
-            <h1 id="menu-title">Menu</h1>
+    function GeneralSettings() {
+        const [showThemes, setShowThemes] = useState(false);
 
-            <div className="menu">
-                <div className="panel tile" onClick={() => setShowGeneral(true)}>
-                    <img className="menu-icon" src="icons/Settings.svg" style={{filter: darkMode ? "invert(1)" : ""}}></img>
-                    General
+        function handleRefresh (e) {
+            e.preventDefault();
+            window.location.reload();
+        }
+
+        function setTheme(e, theme) {
+            e.preventDefault();
+            document.documentElement.style.setProperty('--bg', `var(--${theme}-bg)`);
+            document.documentElement.style.setProperty('--text', `var(--${theme}-text)`);
+            document.documentElement.style.setProperty('--primary', `var(--${theme}-gray)`);
+            document.documentElement.style.setProperty('--positive', `var(--${theme}-green)`);
+            document.documentElement.style.setProperty('--negative', `var(--${theme}-red)`);
+
+            if (theme == 'light') 
+                setDarkMode(false);
+            else
+                setDarkMode(true);
+
+            setAlertText(`Set ${theme[0].toUpperCase() + theme.substring(1)} theme.`);
+        }
+    
+        function ThemeButton({theme}) {
+            return (
+                <div className="panel button" onClick={(e) => setTheme(e, theme)}>
+                    <div style={{display: "inline"}}>
+                        {theme[0].toUpperCase() + theme.substring(1)}
+                    </div>
+                    <div style={{display: "absolute", width: "10%"}}>
+                        <div style={{backgroundColor: `var(--${theme}-bg)`, height: "20%"}}></div>
+                        <div style={{backgroundColor: `var(--${theme}-text)`, height: "20%"}}></div>
+                        <div style={{backgroundColor: `var(--${theme}-gray)`, height: "20%"}}></div>
+                        <div style={{backgroundColor: `var(--${theme}-green)`, height: "20%"}}></div>
+                        <div style={{backgroundColor: `var(--${theme}-red)`, height: "20%"}}></div>
+                    </div>
                 </div>
+            )
+        }
 
-                <div className="panel tile" onClick={() => setShowTuning(true)}>
-                    <img className="menu-icon" src="icons/Repair.svg" style={{filter: darkMode ? "invert(1)" : ""}}></img>
-                    Tuning
-                </div>
-
-                <div className="panel tile" onClick={() => setShowGPS(true)}>
-                    <img className="menu-icon" src="icons/Globe.svg" style={{filter: darkMode ? "invert(1)" : ""}}></img>
-                    GPS
-                </div>
-
-                <div className="panel tile" onClick={() => setShowTrip(true)}>
-                    <img className="menu-icon" src="icons/ConstructionCone.svg" style={{filter: darkMode ? "invert(1)" : ""}}></img>
-                    Trip
-                </div>
-
-                <div className="panel tile" onClick={() => setShowCharge(true)}>
-                    <img className="menu-icon" src="icons/VerticalBatteryCharging0.svg" style={{filter: darkMode ? "invert(1)" : ""}}></img>
-                    Charge
-                </div>
-
-                <div className="panel tile" onClick={() => setShowDebug(true)}>
-                    <img className="menu-icon" src="icons/Bug.svg" style={{filter: darkMode ? "invert(1)" : ""}}></img>
-                    Debug
-                </div>
-            </div>
-
+        return (
             <div className="page" id="general-settings" style={{display: showGeneral ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} General</h1>
-                <div className="panel button" onClick={handleRefresh}>
-                    Refresh Dashboard
-                </div>
 
-                <div className="panel button" onClick={handleDarkmodeToggle}>
-                    Toggle Darkmode
+                <div className="option-page">
+                    <div className="option-select">
+                        <div className="panel button" onClick={handleRefresh}>
+                            Refresh Dashboard
+                        </div>
+
+                        <div className="panel button"  style={{filter: showThemes ? "brightness(.7)" : ""}} onClick={() => setShowThemes(!showThemes)}>
+                            Set Theme
+                        </div>
+                    </div>
+
+                    <div className="option-pane" id="theme-set" style={{display: showThemes ? "" : "none"}}>
+                        
+                        <ThemeButton theme="light"/>
+                        <ThemeButton theme="toucan"/>
+                        <ThemeButton theme="deep"/>
+                        <ThemeButton theme="philly"/>
+                        <ThemeButton theme="darker"/>
+                
+                    </div>
                 </div>
 
                 <div className="panel button" id="back" onClick={() => {setShowGeneral(false); setAlertText("");}}>
                     Back
                 </div>
             </div>
+        )
+    }
 
+    function TuningSettings() {
+        return (
             <div className="page" id="tuning-settings" style={{display: showTuning ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Tuning</h1>
 
@@ -126,7 +130,11 @@ function ConfigPane({visible, sock, setShowConf}){
                     Back
                 </div>
             </div>
+        )
+    }
 
+    function GPSSettings() {
+        return (            
             <div className="page" id="gps-settings" style={{display: showGPS ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} GPS</h1>
 
@@ -134,7 +142,26 @@ function ConfigPane({visible, sock, setShowConf}){
                     Back
                 </div>
             </div>
+        )
+    }
 
+    function TripSettings() {
+
+        function handleResetOdo (e) {
+            e.preventDefault();
+            let data = JSON.stringify({opt: "RESET_ODO"});
+            sock.send(data);
+            setAlertText("Odometer Reset.");
+        }
+    
+        function handleResetTrip (e) {
+            e.preventDefault();
+            let data = JSON.stringify({opt: "RESET_TRIP"});
+            sock.send(data);
+            setAlertText("Trip Reset.");
+        }
+
+        return (
             <div className="page" id="trip-settings" style={{display: showTrip ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Trip</h1>
 
@@ -151,7 +178,11 @@ function ConfigPane({visible, sock, setShowConf}){
                 </div>
                 
             </div>
+        )
+    }
 
+    function ChargeSettings() {
+        return (
             <div className="page" id="charge-settings" style={{display: showCharge ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Charge</h1>
 
@@ -159,7 +190,11 @@ function ConfigPane({visible, sock, setShowConf}){
                     Back
                 </div>
             </div>
+        )
+    }
 
+    function DebugSettings() {
+        return (
             <div className="page" id="debug-settings" style={{display: showDebug ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Debug</h1>
  
@@ -167,6 +202,22 @@ function ConfigPane({visible, sock, setShowConf}){
                     Back
                 </div>
             </div>
+        )
+    }
+
+    return (
+        <div id="conf-pane" style={{display: visible ? "" : "none"}}>
+            
+            <h1 id="menu-title">Menu</h1>
+
+           <Menu/>
+
+            <GeneralSettings/>
+            <TuningSettings/>
+            <GPSSettings/>
+            <TripSettings/>
+            <ChargeSettings/>
+            <DebugSettings/>
 
             <div className="panel button" id="return" onClick={handleExit}>
                 Dashboard
