@@ -17,32 +17,32 @@
   --white: rgb(255, 255, 255);
 
   /*Dark theme 1 - Deep*/
-  --dark-bg: var(--black);
-  --dark-text: var(--white);
-  --dark-gray: rgb(10, 15, 19);
-  --dark-green: rgb(50, 164, 133);
-  --dark-red: rgb(191, 52, 44);
+  --deep-bg: var(--black);
+  --deep-text: var(--white);
+  --deep-gray: rgb(10, 15, 19);
+  --deep-green: rgb(50, 164, 133);
+  --deep-red: rgb(191, 52, 44);
 
   /*Dark theme 2 - Philly*/
-  /* --dark-bg: #010f13;
-  --dark-text: var(--white);
-  --dark-gray: #2b2a2c;
-  --dark-green: #08b2e3;
-  --dark-red: #8c1c13; */
+  --philly-bg: #010f13;
+  --philly-text: var(--white);
+  --philly-gray: #2b2a2c;
+  --philly-green: #08b2e3;
+  --philly-red: #8c1c13;
 
   /*Dark theme 3 - Toucan*/
-  /* --dark-bg: #7E1F86;
-  --dark-text: #FFFFFB;
-  --dark-gray: #A14DA0;
-  --dark-green: #8CA0D7;
-  --dark-red: #E15554; */
+  --toucan-bg: #310235;
+  --toucan-text: #FFFFFB;
+  --toucan-gray: #490c48;
+  --toucan-green: #0d7e74;
+  --toucan-red: #E15554;
 
   /*Dark theme 4 - Darker*/
-  /* --dark-bg: #181925;
-  --dark-text: #EDF2F4;
-  --dark-gray: #2B2D42;
-  --dark-green: #32908F;
-  --dark-red: #D90429; */
+  --darker-bg: #181925;
+  --darker-text: #EDF2F4;
+  --darker-gray: #2B2D42;
+  --darker-green: #32908F;
+  --darker-red: #D90429;
 
   /*Light theme*/
   --light-bg: var(--white);
