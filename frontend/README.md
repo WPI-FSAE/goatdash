@@ -136,6 +136,10 @@ You may need to set the ```$DISPLAY``` environment variable to ```:0``` to allow
 
 Notable changes will be recorded here. Major version changes should be tagged and released.
 
+### [0.2.1]
+
+* Added menu options
+
 ### [0.2.0]
 
 * Graphical Improvements
