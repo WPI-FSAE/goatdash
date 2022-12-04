@@ -17,11 +17,11 @@
   --white: rgb(255, 255, 255);
 
   /*Dark theme 1 - Deep*/
-  --deep-bg: var(--black);
-  --deep-text: var(--white);
-  --deep-gray: rgb(10, 15, 19);
-  --deep-green: rgb(50, 164, 133);
-  --deep-red: rgb(191, 52, 44);
+  --deep-bg: #181925;
+  --deep-text: #EDF2F4;
+  --deep-gray: #2B2D42;
+  --deep-green: #32908F;
+  --deep-red: #D90429;
 
   /*Dark theme 2 - Philly*/
   --philly-bg: #010f13;
@@ -38,11 +38,11 @@
   --toucan-red: #E15554;
 
   /*Dark theme 4 - Darker*/
-  --darker-bg: #181925;
-  --darker-text: #EDF2F4;
-  --darker-gray: #2B2D42;
-  --darker-green: #32908F;
-  --darker-red: #D90429;
+  --darker-bg: var(--black);
+  --darker-text: var(--white);
+  --darker-gray: rgb(10, 15, 19);
+  --darker-green: rgb(50, 164, 133);
+  --darker-red: rgb(191, 52, 44);
 
   /*Light theme*/
   --light-bg: var(--white);
