@@ -56,7 +56,7 @@ function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
                     </span>
 
                     <span className="label" id="version">
-                        {ip} v0.1.0
+                        {ip} v0.2.1
                     </span>
                 </p>
             </div>
