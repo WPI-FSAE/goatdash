@@ -36,12 +36,12 @@ function ConfigPane({visible, sock, setShowConf}){
         return (
             <div className="menu">
 
-                <MenuEntry title="General" icon="icons/Settings.svg" showFn={setShowGeneral}/>
-                <MenuEntry title="Tuning" icon="icons/Repair.svg" showFn={setShowTuning}/>
-                <MenuEntry title="GPS" icon="icons/Globe.svg" showFn={setShowGPS}/>
-                <MenuEntry title="Trip" icon="icons/ConstructionCone.svg" showFn={setShowTrip}/>
-                <MenuEntry title="Charge" icon="icons/VerticalBatteryCharging0.svg" showFn={setShowCharge}/>
-                <MenuEntry title="Debug" icon="icons/Bug.svg" showFn={setShowDebug}/>
+                <MenuEntry title="General" icon="svg_icons/Settings.svg" showFn={setShowGeneral}/>
+                <MenuEntry title="Tuning" icon="svg_icons/Repair.svg" showFn={setShowTuning}/>
+                <MenuEntry title="GPS" icon="svg_icons/Globe.svg" showFn={setShowGPS}/>
+                <MenuEntry title="Trip" icon="svg_icons/ConstructionCone.svg" showFn={setShowTrip}/>
+                <MenuEntry title="Charge" icon="svg_icons/VerticalBatteryCharging0.svg" showFn={setShowCharge}/>
+                <MenuEntry title="Debug" icon="svg_icons/Bug.svg" showFn={setShowDebug}/>
 
             </div>
         )
