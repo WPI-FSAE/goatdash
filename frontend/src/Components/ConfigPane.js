@@ -115,7 +115,7 @@ function ConfigPane({visible, sock, setShowConf}){
                     </div>
                 </div>
 
-                <div className="panel button" id="back" onClick={() => {setShowGeneral(false); setAlertText("");}}>
+                <div className="button" id="back" onClick={() => {setShowGeneral(false); setAlertText("");}}>
                     Back
                 </div>
             </div>
@@ -213,7 +213,7 @@ function ConfigPane({visible, sock, setShowConf}){
                     </div>
                 </div>
 
-                <div className="panel button" id="back" onClick={() => {setShowTuning(false); setAlertText("");}}>
+                <div className="button" id="back" onClick={() => {setShowTuning(false); setAlertText("");}}>
                     Back
                 </div>
             </div>
@@ -264,7 +264,7 @@ function ConfigPane({visible, sock, setShowConf}){
                     </div>
                 </div>
 
-                <div className="panel button" id="back" onClick={() => {setShowTrip(false); setAlertText("");}}>
+                <div className="button" id="back" onClick={() => {setShowTrip(false); setAlertText("");}}>
                     Back
                 </div>
                 
@@ -277,7 +277,7 @@ function ConfigPane({visible, sock, setShowConf}){
             <div className="page" id="charge-settings" style={{display: showCharge ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Charge</h1>
 
-                <div className="panel button" id="back" onClick={() => {setShowCharge(false); setAlertText("");}}>
+                <div className="button" id="back" onClick={() => {setShowCharge(false); setAlertText("");}}>
                     Back
                 </div>
             </div>
@@ -289,7 +289,7 @@ function ConfigPane({visible, sock, setShowConf}){
             <div className="page" id="debug-settings" style={{display: showDebug ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Debug</h1>
  
-                <div className="panel button" id="back" onClick={() => {setShowDebug(false); setAlertText("");}}>
+                <div className="button" id="back" onClick={() => {setShowDebug(false); setAlertText("");}}>
                     Back
                 </div>
             </div>
@@ -310,7 +310,7 @@ function ConfigPane({visible, sock, setShowConf}){
             <ChargeSettings/>
             <DebugSettings/>
 
-            <div className="panel button" id="return" onClick={handleExit}>
+            <div className="button" id="return" onClick={handleExit}>
                 Dashboard
             </div>
 

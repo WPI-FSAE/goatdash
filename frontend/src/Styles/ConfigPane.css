@@ -43,6 +43,8 @@
     display: flex;
     justify-content: space-between;
     padding: 2% 2% 2% 2%;
+    margin: 5px;
+    border-radius: 5px;
     text-align: center;
     user-select: none;
     cursor: pointer;

@@ -41,7 +41,7 @@ const Speedometer = forwardRef((props, ref) => {
         let color = 'inherit';
         if ((8 - key) * 5 < speed) {
           
-          if (speed < 70) color = 'var(--positive)';
+          if (speed <= 70) color = 'var(--positive)';
           else color = 'var(--negative)'
 
           // color = 'var(--positive)';
@@ -62,7 +62,7 @@ const Speedometer = forwardRef((props, ref) => {
         let color = 'inherit';
         if ((key * 5) + 45 < speed) {
 
-          if (speed < 70) color = 'var(--positive)';
+          if (speed <= 70) color = 'var(--positive)';
           else color = 'var(--negative)'
 
           // if (key >= 4) {
@@ -83,11 +83,13 @@ const Speedometer = forwardRef((props, ref) => {
         <div id="speedo">
 
           <div id="speed">
-            <h1><i>{padSpeedo(speed)}</i></h1> <p id="label"><i>MPH</i></p>
+            <h1><i>{padSpeedo(speed)}</i></h1>
+            <p id="label" style={{top: "45%", right: "15%"}}><i>MPH</i></p>
           </div> 
           
           <div id="amps">
-            <h2><i>{padAmps(dcAmps)}</i></h2> <p id="label"><i>AMPS</i></p>    
+            <h2><i>{padAmps(dcAmps)}</i></h2> 
+            <p id="label" style={{top: "78%", right: "25%"}}><i>AMPS</i></p>    
           </div>
 
           <div id="gauge">

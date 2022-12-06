@@ -10,9 +10,7 @@ import Alerts from './Components/Alerts';
 
 
 function App() {
-
   const [ip, setIp] = useState("");
-  const [halo, setHalo] = useState("prim"); // prim | neg | pos | none
 
   // Connections
   const [sock, setSock] = useState("");
@@ -68,13 +66,8 @@ function App() {
       <header className="App-header">
       </header>
 
-      <div className={`halo ${halo === 'prim' ? 'active' : ''}`}/>
-      <div className={`halo ${halo === 'neg' ? 'active' : ''}`} id="negative"/>
-      <div className={`halo ${halo === 'pos' ? 'active' : ''}`} id="positive"/>
-
       <VehicleStatus ref={statusRef} ip={ip}
-                     setShowConf={setShowConf}
-                     setHalo={setHalo}/>
+                     setShowConf={setShowConf}/>
 
       <Speedometer ref={speedoRef}/>
 

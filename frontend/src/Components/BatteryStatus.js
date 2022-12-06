@@ -1,4 +1,5 @@
 import '../Styles/BatteryStatus.css';
+import * as Constants from '../constants';
 import { useState, forwardRef, useImperativeHandle } from 'react';
 
 function padDecimal(val) {
@@ -24,16 +25,17 @@ const BatteryStatus = forwardRef((props, ref) => {
         updateBattery(tm) {
             if (tm['dc_amps'] !== undefined && tm['dc_amps'] !== dcAmps) setDcAmps(tm['dc_amps']);
             if (tm['inv_volts'] !== undefined && tm['inv_volts'] !== invVolts) setInvVolts(tm['inv_volts']);
+
             if (tm['avg_cell'] !== undefined && tm['avg_cell'] !== avgCell) setAvgCell(tm['avg_cell']);
             if (tm['min_cell'] !== undefined && tm['min_cell'] !== minCell) setMinCell(tm['min_cell']);
+            
+            if (tm['acc_temp'] !== undefined && tm['acc_temp'] !== accTemp) setAccTemp(tm['acc_temp']);
+            if (tm['inv_temp'] !== undefined && tm['inv_temp'] !== invTemp) setInvTemp(tm['inv_temp']);
+            if (tm['mtr_temp'] !== undefined && tm['mtr_temp'] !== mtrTemp) setMtrTemp(tm['mtr_temp']);
         }
     }));
 
     const color = ['var(--negative)', 'var(--caution)', 'var(--positive)', 'var(--bg)', 'var(--text)'];
-    const cell_thresholds = [3.2, 3.4];
-    const inv_temp_thresholds = [100, 90];
-    const acc_temp_thresholds = [100, 90];
-    const mtr_temp_thresholds = [100, 90];
 
     // Power bar
     const power_segments = (amps, maxAccel, maxRegen) => {
@@ -79,7 +81,7 @@ const BatteryStatus = forwardRef((props, ref) => {
                 </p>
                 <p>
                     <span className="label">Min </span>
-                    <span className="value" style={{'backgroundColor': minCell < cell_thresholds[0] ? color[0] : minCell < cell_thresholds[1] ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': minCell < Constants.CELL_THRESHOLDS[0] ? color[0] : minCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
                         <b>{padDecimal(minCell)}V</b>
                     </span>
                 </p>
@@ -88,7 +90,7 @@ const BatteryStatus = forwardRef((props, ref) => {
                 </p>
                 <p>
                     <span className="label">Avg </span>
-                    <span className="value" style={{'backgroundColor': avgCell < cell_thresholds[0] ? color[0] : avgCell < cell_thresholds[1] ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': avgCell < Constants.CELL_THRESHOLDS[0] ? color[0] : avgCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
                         <b>{padDecimal(avgCell)}V</b>
                     </span>
                 </p>
@@ -99,19 +101,19 @@ const BatteryStatus = forwardRef((props, ref) => {
                     <b>TEMP</b>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': invTemp > inv_temp_thresholds[0] ? color[0] : invTemp > inv_temp_thresholds[1] ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': invTemp > Constants.INV_TEMP_THRESHOLDS[0] ? color[0] : invTemp > Constants.INV_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
                         <b>{invTemp}F</b>
                     </span>
                     <span className="label"> Inv</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': accTemp > acc_temp_thresholds[0] ? color[0] : accTemp > acc_temp_thresholds[1] ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': accTemp > Constants.ACC_TEMP_THRESHOLDS[0] ? color[0] : accTemp > Constants.ACC_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
                         <b>{accTemp}F</b>
                     </span>
                     <span className="label"> Accum</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': mtrTemp > mtr_temp_thresholds[0] ? color[0] : mtrTemp > mtr_temp_thresholds[1] ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': mtrTemp > Constants.MTR_TEMP_THRESHOLDS[0] ? color[0] : mtrTemp > Constants.MTR_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
                         <b>{mtrTemp}F</b>
                     </span>
                     <span className="label"> Mtr</span>
