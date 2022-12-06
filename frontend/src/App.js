@@ -1,5 +1,5 @@
 import './Styles/App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { internalIpV4 } from 'internal-ip';
 import Speedometer from './Components/Speedometer';
 import BatteryStatus from './Components/BatteryStatus';
@@ -11,17 +11,6 @@ import Alerts from './Components/Alerts';
 
 function App() {
 
-  // Dashboard values
-  const [isConnected, setIsConnected] = useState(false);
-  const [rpm, setRpm] = useState(0);
-  const [speed, setSpeed] = useState(0);
-  const [avgCell, setAvgCell] = useState(0);
-  const [maxCell, setMaxCell] = useState(0);
-  const [minCell, setMinCell] = useState(0);
-  const [invVolts, setInvVolts] = useState(0);
-  const [dcAmps, setDcAmps] = useState(0);
-  const [odometer, setOdometer] = useState(0);
-  const [trip, setTrip] = useState(0);
   const [ip, setIp] = useState("");
   const [halo, setHalo] = useState("prim"); // prim | neg | pos | none
 
@@ -29,28 +18,17 @@ function App() {
   const [sock, setSock] = useState("");
 
   // Dashboard state
-  const [showConf, setShowConf] = useState(true);
+  const [showConf, setShowConf] = useState(false);
 
-  // Update dashboard values from tm frame
-  function handle_tm_update(tm) {
+  // Set up refs for tm updates
+  const speedoRef = useRef(null);
+  const updateSpeedo = (tm) => speedoRef.current?.updateSpeedo(tm);
 
-    // DTI_TelemetryA
-    if (tm['rpm'] !== undefined && tm['rpm'] !== rpm) setRpm(tm['rpm']);
-    if (tm['speed'] !== undefined && tm['speed'] !== speed) setSpeed(Math.abs(tm['speed']));
-    if (tm['inv_volts'] !== undefined && tm['inv_volts'] !== invVolts) setInvVolts(tm['inv_volts']);
-    if (tm['odometer'] !== undefined && tm['odometer'] !== odometer) setOdometer(tm['odometer']);
-    if (tm['trip'] !== undefined && tm['trip'] !== trip) setTrip(tm['trip']);
+  const batteryRef = useRef(null);
+  const updateBattery = (tm) => speedoRef.current?.updateBattery(tm);
 
-    // DTI_TelemetryB
-    if (tm['dc_amps'] !== undefined && tm['dc_amps'] !== dcAmps) setDcAmps(tm['dc_amps']);
-
-    // BMS_Information
-    if (tm['avg_cell'] !== undefined && tm['avg_cell'] !== avgCell) setAvgCell(tm['avg_cell']);
-    if (tm['max_cell'] !== undefined && tm['max_cell'] !== maxCell) setMaxCell(tm['max_cell']);
-    if (tm['min_cell'] !== undefined && tm['min_cell'] !== minCell) setMinCell(tm['min_cell']);
-
-    setIsConnected(true);
-  }
+  const statusRef = useRef(null);
+  const updateStatus = (tm, conn) => speedoRef.current?.updateStatus(tm, conn);
 
   // Configure websocket
   useEffect(() => {
@@ -64,17 +42,19 @@ function App() {
     ws.addEventListener('open', (event) => {
       console.log("opening conn...");
       ws.send('START_DASH');
-      setIsConnected(true);
+      updateStatus({}, true);
     });
 
     ws.addEventListener('message', (event) => {
       let tm = JSON.parse(event.data);
-      handle_tm_update(tm)
+      updateSpeedo(tm);
+      updateBattery(tm);
+      updateStatus(tm, true);
     });
 
     ws.addEventListener('close', (event) => {
       console.log(event);
-      setIsConnected(false);
+      updateStatus({}, false);
     });
 
     return () => ws.close();
@@ -89,15 +69,14 @@ function App() {
       <div className={`halo ${halo === 'neg' ? 'active' : ''}`} id="negative"/>
       <div className={`halo ${halo === 'pos' ? 'active' : ''}`} id="positive"/>
 
-      <VehicleStatus isConnected={isConnected} odometer={odometer} trip={trip} ip={ip}
+      <VehicleStatus ref={statusRef} ip={ip}
                      setShowConf={setShowConf}/>
 
-      <Speedometer dcAmps={dcAmps} speed={speed}/>
+      <Speedometer ref={speedoRef}/>
 
       <Alerts/>
 
-      <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}
-                     invTemp={0} accTemp={0} mtrTemp={0}/>
+      <BatteryStatus ref={batteryRef}/>
 
       <WheelStatus fl={false} fr={false} rl={false} rr={false}/>
 

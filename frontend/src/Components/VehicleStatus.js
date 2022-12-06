@@ -1,4 +1,5 @@
 import '../Styles/VehicleStatus.css';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 
 function padDecimal(val, decs) {
     let val_str = val.toString();
@@ -14,7 +15,21 @@ function padDecimal(val, decs) {
     return val_str;
 }
 
-function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
+const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
+    const[isConnected, setIsConnected] = useState(0);
+    const[odometer, setOdometer] = useState(0);
+    const[trip, setTrip] = useState(0);
+
+    useImperativeHandle(ref, () => ({
+        updateStatus(tm, conn) {
+            if (tm['odometer'] !== undefined && tm['odometer'] !== odometer) setOdometer(tm['odometer']);
+            if (tm['trip'] !== undefined && tm['trip'] !== trip) setTrip(tm['trip']);
+
+            if (conn != isConnected) {
+                setIsConnected(conn);
+            }
+        }
+      }));
 
     function clickHandler(e) {
         e.preventDefault();
@@ -62,6 +77,6 @@ function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
             </div>
         </div>
     );
-}
+});
 
 export default VehicleStatus;

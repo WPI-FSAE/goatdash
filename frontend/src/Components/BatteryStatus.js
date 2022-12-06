@@ -1,4 +1,5 @@
 import '../Styles/BatteryStatus.css';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 
 function padDecimal(val) {
     let val_str = val.toString();
@@ -10,8 +11,23 @@ function padDecimal(val) {
     return val_str;
 }
 
-function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mtrTemp}) {  
-    /* temps: acc inv mot */
+const BatteryStatus = forwardRef((props, ref) => {  
+    const [avgCell, setAvgCell] = useState(0);
+    const [minCell, setMinCell] = useState(0);
+    const [invVolts, setInvVolts] = useState(0);
+    const [dcAmps, setDcAmps] = useState(0);
+    const [accTemp, setAccTemp] = useState(0);
+    const [invTemp, setInvTemp] = useState(0);
+    const [mtrTemp, setMtrTemp] = useState(0);
+
+    useImperativeHandle(ref, () => ({
+        updateBattery(tm) {
+            if (tm['inv_volts'] !== undefined && tm['inv_volts'] !== invVolts) setInvVolts(tm['inv_volts']);
+            if (tm['avg_cell'] !== undefined && tm['avg_cell'] !== avgCell) setAvgCell(tm['avg_cell']);
+            if (tm['min_cell'] !== undefined && tm['min_cell'] !== minCell) setMinCell(tm['min_cell']);
+        }
+    }));
+
     const color = ['var(--negative)', 'var(--caution)', 'var(--positive)', 'var(--bg)', 'var(--text)'];
     const cell_thresholds = [3.2, 3.4];
     const inv_temp_thresholds = [100, 90];
@@ -102,6 +118,6 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
             </div>
         </div>
     )
-}
+});
 
 export default BatteryStatus;

@@ -1,4 +1,5 @@
 import "../Styles/Speedometer.css"
+import { useState, forwardRef, useImperativeHandle } from 'react';
 
 function padSpeedo(val) {
     let str = "";
@@ -20,7 +21,16 @@ function padAmps(val) {
   else return val.toString();
 }
 
-function Speedometer({dcAmps, speed}) {
+const Speedometer = forwardRef((props, ref) => {
+    const [dcAmps, setDcAmps] = useState(0);
+    const [speed, setSpeed] = useState(0);
+    
+    useImperativeHandle(ref, () => ({
+      updateSpeedo(tm) {
+        if (tm['dc_amps'] !== undefined && tm['dc_amps'] !== dcAmps) setDcAmps(tm['dc_amps']);
+        if (tm['speed'] !== undefined && tm['speed'] !== speed) setSpeed(Math.abs(tm['speed']));
+      }
+    }));
 
     // Controls segments in left edge
     const speedo_left_segments = (speed) => {
@@ -31,7 +41,7 @@ function Speedometer({dcAmps, speed}) {
         let color = 'inherit';
         if ((8 - key) * 5 < speed) {
           
-          if (speed < 60) color = 'var(--positive)';
+          if (speed < 70) color = 'var(--positive)';
           else color = 'var(--negative)'
 
           // color = 'var(--positive)';
@@ -39,9 +49,7 @@ function Speedometer({dcAmps, speed}) {
 
         return <div className="left-segment" key={key} style={{top: `${key * 12}%`, 
                                                                backgroundColor: color,
-                                                               borderColor: color === 'inherit' ? "": color}}/>
-                                                               
-
+                                                               borderBottomColor: color === 'inherit' ? "" : color}}/>
       });
     }
 
@@ -54,7 +62,7 @@ function Speedometer({dcAmps, speed}) {
         let color = 'inherit';
         if ((key * 5) + 45 < speed) {
 
-          if (speed < 60) color = 'var(--positive)';
+          if (speed < 70) color = 'var(--positive)';
           else color = 'var(--negative)'
 
           // if (key >= 4) {
@@ -67,7 +75,7 @@ function Speedometer({dcAmps, speed}) {
 
         return <div className="top-segment" key={key} style={{left: `${key * 14}%`, 
                                                               backgroundColor: color,
-                                                              borderColor: color === 'inherit' ? "": color}}/>
+                                                              borderBottomColor: color === 'inherit' ? "" : color}}/>
     });
     }
 
@@ -92,6 +100,6 @@ function Speedometer({dcAmps, speed}) {
           </div>
         </div>
     )
-}
+});
 
 export default Speedometer;
