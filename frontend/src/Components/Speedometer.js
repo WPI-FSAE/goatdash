@@ -28,12 +28,20 @@ function Speedometer({dcAmps, speed}) {
       
       // Illuminate segments at 5mph intervals
       return keys.map((key) => {
-        let color = 'var(--text)';
+        let color = 'inherit';
         if ((8 - key) * 5 < speed) {
-          color = 'var(--positive)';
+          
+          if (speed < 60) color = 'var(--positive)';
+          else color = 'var(--negative)'
+
+          // color = 'var(--positive)';
         }
 
-        return <div className="left-segment" key={key} style={{"top": `${key * 12}%`, "backgroundColor": color}}></div>
+        return <div className="left-segment" key={key} style={{top: `${key * 12}%`, 
+                                                               backgroundColor: color,
+                                                               borderColor: color === 'inherit' ? "": color}}/>
+                                                               
+
       });
     }
 
@@ -43,17 +51,23 @@ function Speedometer({dcAmps, speed}) {
 
       // Illumincate segments at 5mph intervals
       return keys.map((key) => {
-        let color = 'var(--text)';
+        let color = 'inherit';
         if ((key * 5) + 45 < speed) {
 
-          if (key >= 4) {
-            color = 'var(--negative)'
-          } else {
-            color = 'var(--positive)';
-          }
+          if (speed < 60) color = 'var(--positive)';
+          else color = 'var(--negative)'
+
+          // if (key >= 4) {
+          //   color = 'var(--negative)'
+          // } else {
+          //   color = 'var(--positive)';
+          // }
+
         }
 
-        return <div className="top-segment" key={key} style={{"left": `${key * 14}%`, "backgroundColor": color}}></div>
+        return <div className="top-segment" key={key} style={{left: `${key * 14}%`, 
+                                                              backgroundColor: color,
+                                                              borderColor: color === 'inherit' ? "": color}}/>
     });
     }
 

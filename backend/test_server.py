@@ -107,7 +107,7 @@ async def send_tm(websocket):
             i += 1
         
         await websocket.send(json.dumps(pkt))
-        await asyncio.sleep(.05)    # Define frontend refresh rate
+        await asyncio.sleep(1)    # Define frontend refresh rate
 
 
 #######

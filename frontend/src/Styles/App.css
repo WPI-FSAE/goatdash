@@ -26,7 +26,7 @@
   /*Dark theme 2 - Philly*/
   --philly-bg: #010f13;
   --philly-text: var(--white);
-  --philly-gray: #2b2a2c;
+  --philly-gray: #161f27;
   --philly-green: #08b2e3;
   --philly-red: #8c1c13;
 
@@ -51,7 +51,7 @@
   --light-green: rgb(66, 216, 175);
   --light-red: rgb(242, 66, 57);
 
-  --yellow: rgb(247, 212, 23);
+  --yellow: rgb(223, 189, 0);
 
   /*Applied*/
   --bg: var(--light-bg);
@@ -60,10 +60,12 @@
   --positive: var(--light-green);
   --primary: var(--light-gray);
   --caution: var(--yellow);
+  --halo: var(--primary);
 }
 
 .App {
   background-color: var(--bg);
+  /* background: radial-gradient(100% 70% at bottom, var(--primary) 50%, var(--bg) 100%); */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -73,6 +75,28 @@
   font-size: calc(10px + 2vmin);
   font-family: "Rajdhani Medium";
   color: var(--text);
+  user-select: none;
+}
+
+.halo {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(120% 70% at bottom, var(--bg) 0, var(--bg) 20%, var(--halo) 50%, var(--bg) 60%, var(--bg) 100%);
+  filter: opacity(0);
+  transition: filter 1s;
+}
+
+.halo#negative {
+  background: radial-gradient(120% 70% at bottom, var(--bg) 0, var(--bg) 20%, var(--negative) 50%, var(--bg) 60%, var(--bg) 100%);
+}
+
+.halo#positive {
+  background: radial-gradient(120% 70% at bottom, var(--bg) 0, var(--bg) 20%, var(--positive) 50%, var(--bg) 60%, var(--bg) 100%);
+}
+
+.halo.active {
+  filter: opacity(1);
 }
 
 p {
@@ -118,4 +142,12 @@ p {
   position: fixed;
   width: 100%;
   height: 100%;
+}
+
+#wheel-status {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 20%;
+  height: 30%;
 }

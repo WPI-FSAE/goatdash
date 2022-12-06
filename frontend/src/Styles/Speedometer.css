@@ -39,7 +39,7 @@ div.progress {
     content: '';
     top: 0;
     left: 0;
-    background-color: var(--bg);
+    background-color: inherit;
 }
 
 div.left-edge {
@@ -55,7 +55,7 @@ div.left-edge {
 div.top-edge {
     position: absolute;
     top: 0;
-    left: 20%;
+    left: 19.75%;
     width: 80%;
     height: 8%;
 }
@@ -67,6 +67,7 @@ div.left-segment {
     border-radius: 2px;
     transform: rotate(-15deg);
     transform-origin: top right;
+    border-bottom: solid var(--text);
 }
 
 div.top-segment {
@@ -74,7 +75,7 @@ div.top-segment {
     width: 12%;
     height: 15px;
     border-radius: 2px;
-    background-color: var(--negative);
+    border-bottom: solid var(--text);
 }
 
 div#mask {

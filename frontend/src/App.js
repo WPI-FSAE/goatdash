@@ -4,6 +4,7 @@ import { internalIpV4 } from 'internal-ip';
 import Speedometer from './Components/Speedometer';
 import BatteryStatus from './Components/BatteryStatus';
 import VehicleStatus from './Components/VehicleStatus';
+import WheelStatus from './Components/WheelStatus';
 import ConfigPane from './Components/ConfigPane';
 import Alerts from './Components/Alerts';
 
@@ -22,30 +23,31 @@ function App() {
   const [odometer, setOdometer] = useState(0);
   const [trip, setTrip] = useState(0);
   const [ip, setIp] = useState("");
+  const [halo, setHalo] = useState("prim"); // prim | neg | pos | none
 
   // Connections
   const [sock, setSock] = useState("");
 
   // Dashboard state
-  const [showConf, setShowConf] = useState(false);
+  const [showConf, setShowConf] = useState(true);
 
   // Update dashboard values from tm frame
   function handle_tm_update(tm) {
 
     // DTI_TelemetryA
-    if (tm['rpm'] !== undefined) setRpm(tm['rpm']);
-    if (tm['speed'] !== undefined) setSpeed(Math.abs(tm['speed']));
-    if (tm['inv_volts'] !== undefined) setInvVolts(tm['inv_volts']);
-    if (tm['odometer'] !== undefined) setOdometer(tm['odometer']);
-    if (tm['trip'] !== undefined) setTrip(tm['trip']);
+    if (tm['rpm'] !== undefined && tm['rpm'] !== rpm) setRpm(tm['rpm']);
+    if (tm['speed'] !== undefined && tm['speed'] !== speed) setSpeed(Math.abs(tm['speed']));
+    if (tm['inv_volts'] !== undefined && tm['inv_volts'] !== invVolts) setInvVolts(tm['inv_volts']);
+    if (tm['odometer'] !== undefined && tm['odometer'] !== odometer) setOdometer(tm['odometer']);
+    if (tm['trip'] !== undefined && tm['trip'] !== trip) setTrip(tm['trip']);
 
     // DTI_TelemetryB
-    if (tm['dc_amps'] !== undefined) setDcAmps(tm['dc_amps']);
+    if (tm['dc_amps'] !== undefined && tm['dc_amps'] !== dcAmps) setDcAmps(tm['dc_amps']);
 
     // BMS_Information
-    if (tm['avg_cell'] !== undefined) setAvgCell(tm['avg_cell']);
-    if (tm['max_cell'] !== undefined) setMaxCell(tm['max_cell']);
-    if (tm['min_cell'] !== undefined) setMinCell(tm['min_cell']);
+    if (tm['avg_cell'] !== undefined && tm['avg_cell'] !== avgCell) setAvgCell(tm['avg_cell']);
+    if (tm['max_cell'] !== undefined && tm['max_cell'] !== maxCell) setMaxCell(tm['max_cell']);
+    if (tm['min_cell'] !== undefined && tm['min_cell'] !== minCell) setMinCell(tm['min_cell']);
 
     setIsConnected(true);
   }
@@ -74,12 +76,18 @@ function App() {
       console.log(event);
       setIsConnected(false);
     });
+
+    return () => ws.close();
   }, []);
 
   return (
     <div className="App">
       <header className="App-header">
       </header>
+
+      <div className={`halo ${halo === 'prim' ? 'active' : ''}`}/>
+      <div className={`halo ${halo === 'neg' ? 'active' : ''}`} id="negative"/>
+      <div className={`halo ${halo === 'pos' ? 'active' : ''}`} id="positive"/>
 
       <VehicleStatus isConnected={isConnected} odometer={odometer} trip={trip} ip={ip}
                      setShowConf={setShowConf}/>
@@ -90,6 +98,8 @@ function App() {
 
       <BatteryStatus avgCell={avgCell} minCell={minCell} invVolts={invVolts} dcAmps={dcAmps}
                      invTemp={0} accTemp={0} mtrTemp={0}/>
+
+      <WheelStatus fl={false} fr={false} rl={false} rr={false}/>
 
       <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf}/>
     </div>

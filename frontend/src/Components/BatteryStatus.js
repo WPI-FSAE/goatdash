@@ -13,6 +13,10 @@ function padDecimal(val) {
 function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mtrTemp}) {  
     /* temps: acc inv mot */
     const color = ['var(--negative)', 'var(--caution)', 'var(--positive)', 'var(--bg)', 'var(--text)'];
+    const cell_thresholds = [3.2, 3.4];
+    const inv_temp_thresholds = [100, 90];
+    const acc_temp_thresholds = [100, 90];
+    const mtr_temp_thresholds = [100, 90];
 
     // Power bar
     const power_segments = (amps, maxAccel, maxRegen) => {
@@ -58,7 +62,7 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
                 </p>
                 <p>
                     <span className="label">Min </span>
-                    <span className="value" style={{'backgroundColor': minCell < 2.5 ? color[0] : minCell < 3 ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': minCell < cell_thresholds[0] ? color[0] : minCell < cell_thresholds[1] ? color[1] : color[2]}}>
                         <b>{padDecimal(minCell)}V</b>
                     </span>
                 </p>
@@ -67,7 +71,7 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
                 </p>
                 <p>
                     <span className="label">Avg </span>
-                    <span className="value" style={{'backgroundColor': avgCell < 3 ? color[0] : avgCell < 3.2 ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': avgCell < cell_thresholds[0] ? color[0] : avgCell < cell_thresholds[1] ? color[1] : color[2]}}>
                         <b>{padDecimal(avgCell)}V</b>
                     </span>
                 </p>
@@ -78,19 +82,19 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
                     <b>TEMP</b>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': invTemp > 100 ? color[0] : invTemp > 50 ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': invTemp > inv_temp_thresholds[0] ? color[0] : invTemp > inv_temp_thresholds[1] ? color[1] : color[2]}}>
                         <b>{invTemp}F</b>
                     </span>
                     <span className="label"> Inv</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': accTemp > 100 ? color[0] : accTemp > 50 ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': accTemp > acc_temp_thresholds[0] ? color[0] : accTemp > acc_temp_thresholds[1] ? color[1] : color[2]}}>
                         <b>{accTemp}F</b>
                     </span>
                     <span className="label"> Accum</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': mtrTemp > 100 ? color[0] : mtrTemp > 50 ? color[1] : color[2]}}>
+                    <span className="value" style={{'backgroundColor': mtrTemp > mtr_temp_thresholds[0] ? color[0] : mtrTemp > mtr_temp_thresholds[1] ? color[1] : color[2]}}>
                         <b>{mtrTemp}F</b>
                     </span>
                     <span className="label"> Mtr</span>

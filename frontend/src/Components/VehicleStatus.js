@@ -23,7 +23,7 @@ function VehicleStatus({isConnected, odometer, trip, ip, setShowConf}){
 
     return (
         <div id="status" onClick={clickHandler}>
-
+            
             <div id="network">
                 <span className="label" id="tm-status">
                     TM <b>{isConnected ? 'Connected' : 'Disconnected'} </b>

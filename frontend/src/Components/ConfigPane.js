@@ -33,6 +33,7 @@ function ConfigPane({visible, sock, setShowConf}){
                 </div>
             )
         }
+
         return (
             <div className="menu">
 
@@ -122,6 +123,7 @@ function ConfigPane({visible, sock, setShowConf}){
     }
 
     function TuningSettings() {
+
         return (
             <div className="page" id="tuning-settings" style={{display: showTuning ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Tuning</h1>

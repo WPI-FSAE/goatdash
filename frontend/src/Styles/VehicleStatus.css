@@ -5,6 +5,7 @@ div#status {
     user-select: none;
     cursor: pointer;
     background-color: var(--primary);
+    outline: solid var(--text) 1px;
 }
 
 #network {
