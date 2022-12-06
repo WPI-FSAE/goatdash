@@ -122,9 +122,95 @@ function ConfigPane({visible, sock, setShowConf}){
     }
 
     function TuningSettings() {
+        const [showACLim, setShowACLim] = useState(false);
+        const [showDCLim, setShowDCLim] = useState(false);
+
+        function togglePane(e, paneShowFn, paneState) {
+            e.preventDefault();
+            
+            setShowACLim(false);
+            setShowDCLim(false);
+            paneShowFn(!paneState);
+        }
+
+        // Create a NumberPad component
+        /*
+        This code block was developed by ChatGPT 
+        */
+        const NumberPad = () => {
+            // Define the numbers to display on the numberpad
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+        
+            // Create a state variable for the current value
+            const [value, setValue] = useState("");
+        
+            // Create the numberpad elements
+            const numberPadElements = numbers.map(number => (
+            // Create a square element with the number in the center
+            <div
+                key={number}
+                style={{ width: 50, height: 50, lineHeight: "50px", textAlign: "center", display: "inline" }}
+                onClick={() => setValue(value + number)}
+            >
+                {number}
+            </div>
+            ));
+        
+            // Define a handler function to display the value state variable
+            const handleEnter = () => {
+            alert(value);
+            };
+        
+            return (
+            <div>
+                {/* Display the numberpad elements in a grid */}
+                <div>{numberPadElements.slice(0, 3)}</div>
+                <div>{numberPadElements.slice(3, 6)}</div>
+                <div>{numberPadElements.slice(6, 9)}</div>
+                <div>
+                {/* Add the delete key on the bottom row to the left of the zero button */}
+                <div
+                    onClick={() => setValue(value.slice(0, -1))}
+                    style={{ width: 50, height: 50, lineHeight: "50px", textAlign: "center" }}
+                >
+                    Delete
+                </div>
+                {/* Add the enter key on the bottom row to the right of the zero button */}
+                <div
+                    onClick={handleEnter}
+                    style={{ width: 50, height: 50, lineHeight: "50px", textAlign: "center" }}
+                >
+                    Enter
+                </div>
+                </div>
+                <div>{value}</div>
+            </div>
+            );
+        };
+
         return (
             <div className="page" id="tuning-settings" style={{display: showTuning ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Tuning</h1>
+
+                <div className="option-page">
+                    <div className="option-select">
+                        <div className="panel button"  style={{filter: showACLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowACLim, showACLim)}>
+                            Set AC Current Limit
+                        </div>
+
+                        <div className="panel button"  style={{filter: showDCLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowDCLim, showDCLim)}>
+                            Set DC Current Limit
+                        </div>
+                    </div>
+
+                    <div className="option-pane" id="" style={{display: showACLim ? "" : "none"}}>
+                        <NumberPad/>
+                    </div>
+
+                    <div className="option-pane" id="" style={{display: showDCLim ? "" : "none"}}>
+                        
+                    </div>
+                </div>
 
                 <div className="panel button" id="back" onClick={() => {setShowTuning(false); setAlertText("");}}>
                     Back
@@ -165,12 +251,16 @@ function ConfigPane({visible, sock, setShowConf}){
             <div className="page" id="trip-settings" style={{display: showTrip ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Trip</h1>
 
-                <div className="panel button" onClick={handleResetOdo}>
-                    Reset Odomoeter {'(Hold)'}
-                </div>
+                <div className="option-page">
+                    <div className="option-select">
+                        <div className="panel button" onClick={handleResetOdo}>
+                            Reset Odomoeter {'(Hold)'}
+                        </div>
 
-                <div className="panel button" onClick={handleResetTrip}>
-                    Reset Trip
+                        <div className="panel button" onClick={handleResetTrip}>
+                            Reset Trip
+                        </div>
+                    </div>
                 </div>
 
                 <div className="panel button" id="back" onClick={() => {setShowTrip(false); setAlertText("");}}>
