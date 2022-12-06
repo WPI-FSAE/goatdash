@@ -1,6 +1,6 @@
 {
   "name": "FSAE-Dashboard",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "author": {
     "name": "WPI FSAE",
@@ -10,6 +10,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "dotenv": "^16.0.3",
     "electron-is-dev": "^2.0.0",
     "internal-ip": "^7.0.0",
     "isomorphic-ws": "^5.0.0",
