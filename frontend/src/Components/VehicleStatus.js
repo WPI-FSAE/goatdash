@@ -15,7 +15,7 @@ function padDecimal(val, decs) {
     return val_str;
 }
 
-const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
+const VehicleStatus = forwardRef(({ip, setShowConf, setHalo}, ref) =>{
     const[isConnected, setIsConnected] = useState(0);
     const[odometer, setOdometer] = useState(0);
     const[trip, setTrip] = useState(0);

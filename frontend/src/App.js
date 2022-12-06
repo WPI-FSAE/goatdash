@@ -25,10 +25,10 @@ function App() {
   const updateSpeedo = (tm) => speedoRef.current?.updateSpeedo(tm);
 
   const batteryRef = useRef(null);
-  const updateBattery = (tm) => speedoRef.current?.updateBattery(tm);
+  const updateBattery = (tm) => batteryRef.current?.updateBattery(tm);
 
   const statusRef = useRef(null);
-  const updateStatus = (tm, conn) => speedoRef.current?.updateStatus(tm, conn);
+  const updateStatus = (tm, conn) => statusRef.current?.updateStatus(tm, conn);
 
   // Configure websocket
   useEffect(() => {
@@ -47,6 +47,9 @@ function App() {
 
     ws.addEventListener('message', (event) => {
       let tm = JSON.parse(event.data);
+      
+      /* Incoming changes should not rerender entire app,
+         state is handled by the individual components. */
       updateSpeedo(tm);
       updateBattery(tm);
       updateStatus(tm, true);
@@ -70,7 +73,8 @@ function App() {
       <div className={`halo ${halo === 'pos' ? 'active' : ''}`} id="positive"/>
 
       <VehicleStatus ref={statusRef} ip={ip}
-                     setShowConf={setShowConf}/>
+                     setShowConf={setShowConf}
+                     setHalo={setHalo}/>
 
       <Speedometer ref={speedoRef}/>
 
