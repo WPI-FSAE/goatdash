@@ -187,7 +187,6 @@ async def get_tm():
         min_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
         max_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
 
-
 #########
 # STATE #
 #########
