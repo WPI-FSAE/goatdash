@@ -35,6 +35,13 @@ min_cell = 0
 max_cell = 0
 dc_amps = 0
 
+acc_temp = 0
+inv_temp = 0
+mtr_temp = 0
+
+rtd = False
+fault = False
+
 odometer = 0
 trip = 0
 last_time = datetime.utcnow()
@@ -83,7 +90,7 @@ async def send_tm(websocket):
     Maintain telemetry connection with client
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip
+    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault
 
     i = 0
 
@@ -94,14 +101,19 @@ async def send_tm(websocket):
         if (i % 2 == 0):
             pkt = {**pkt, **{'rpm': rpm, 
                              'speed': speed, 
-                             'inv_volts': inv_voltage, 
-                             'odometer': round(odometer, 1), 
-                             'trip': round(trip, 3)}}
+                             'inv_volts': inv_voltage,
+                             'dc_amps': dc_amps}}
         elif (i % 2 == 1):
             pkt = {**pkt, **{'avg_cell': avg_cell,
                              'min_cell': min_cell, 
                              'max_cell': max_cell,
-                             'dc_amps': dc_amps}}
+                             'acc_temp': acc_temp, 
+                             'inv_temp': inv_temp,
+                             'mtr_temp': mtr_temp,
+                             'odometer': round(odometer, 1), 
+                             'trip': round(trip, 3), 
+                             'rtd': rtd, 
+                             'fault': fault}}
 
         if (i >= 9):
             i = 0
@@ -123,7 +135,7 @@ async def poll_tm():
 # Read message from can bus, update internal state,
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip, last_time, dc_amps_dir
+    odometer, trip, last_time, acc_temp, inv_temp, mtr_temp, rtd, fault
 
     msg = bus.recv(.01)
 
