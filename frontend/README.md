@@ -136,6 +136,27 @@ You may need to set the ```$DISPLAY``` environment variable to ```:0``` to allow
 
 Notable changes will be recorded here. Major version changes should be tagged and released.
 
+### [0.2.2]
+
+* Fixed menu bug during WS activity by refactoring WS updates
+    * Each component handles it's own state, instead of the application handling total TM state
+* New UI element: Halo
+    * Used to notify the driver that a fault has occurred, or that a reading is beyond a threshold.
+    * For example, if the min_cell voltage drops too low, screen will glow red.
+
+### [0.2.1]
+
+* Added menu options
+
+### [0.2.0]
+
+* Graphical Improvements
+* Power/regen gauge
+* Vehicle status panel
+* Fields user input
+* Data transmission optimizations
+* Project restructuring
+
 ### [0.1.0]
 
 Initial version with basic display functionality:

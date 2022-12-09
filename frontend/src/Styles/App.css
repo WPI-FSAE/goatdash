@@ -17,32 +17,32 @@
   --white: #ffffff;
 
   /*Dark theme 1 - Deep*/
-  /* --dark-bg: #181925;
-  --dark-text: #EDF2F4;
-  --dark-gray: #2B2D42;
-  --dark-green: #32908F;
-  --dark-red: #D90429; */
-  
+  --deep-bg: #181925;
+  --deep-text: #EDF2F4;
+  --deep-gray: #2B2D42;
+  --deep-green: #32908F;
+  --deep-red: #D90429;
+
   /*Dark theme 2 - Philly*/
-  /* --dark-bg: #010f13;
-  --dark-text: var(--white);
-  --dark-gray: #2b2a2c;
-  --dark-green: #08b2e3;
-  --dark-red: #8c1c13; */
+  --philly-bg: #010f13;
+  --philly-text: var(--white);
+  --philly-gray: #161f27;
+  --philly-green: #08b2e3;
+  --philly-red: #8c1c13;
 
   /*Dark theme 3 - Toucan*/
-  /* --dark-bg: #3d0d41;
-  --dark-text: #FFFFFB;
-  --dark-gray: #6d386c;
-  --dark-green: #8CA0D7;
-  --dark-red: #E15554; */
+  --toucan-bg: #310235;
+  --toucan-text: #FFFFFB;
+  --toucan-gray: #490c48;
+  --toucan-green: #0d7e74;
+  --toucan-red: #E15554;
 
-    /*Dark theme 4 - Deeper*/
-  --dark-bg: var(--black);
-  --dark-text: var(--white);
-  --dark-gray: rgb(10, 15, 19);
-  --dark-green: rgb(50, 164, 133);
-  --dark-red: rgb(191, 52, 44);
+  /*Dark theme 4 - Darker*/
+  --darker-bg: var(--black);
+  --darker-text: var(--white);
+  --darker-gray: rgb(10, 15, 19);
+  --darker-green: rgb(50, 164, 133);
+  --darker-red: rgb(191, 52, 44);
 
   /*Light theme*/
   --light-bg: var(--white);
@@ -51,7 +51,7 @@
   --light-green: #42d8af;
   --light-red: #f24239;
 
-  --yellow: #ffd900;
+  --yellow: rgb(255, 208, 0);
 
   /*Applied*/
   --bg: var(--light-bg);
@@ -60,6 +60,7 @@
   --positive: var(--light-green);
   --primary: var(--light-gray);
   --caution: var(--yellow);
+  --halo: var(--primary);
 }
 
 .App {
@@ -73,6 +74,7 @@
   font-size: calc(10px + 2vmin);
   font-family: "Rajdhani Medium";
   color: var(--text);
+  user-select: none;
 }
 
 p {
@@ -85,10 +87,9 @@ p {
 }
 
 #status {
-  position: absolute;
-  bottom: 0;
-  width: 60%;
-  height: 30%;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 #speedo {
@@ -120,10 +121,10 @@ p {
   height: 100%;
 }
 
-#lap-status {
-  position: absolute;
-  width: 100%;
-  height: 25%;
-  top: 11%;
+#wheel-status {
+  position: fixed;
+  bottom: 0;
   right: 0;
+  width: 20%;
+  height: 30%;
 }
