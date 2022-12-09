@@ -100,18 +100,10 @@ async def send_tm(websocket):
         if (i % 2 == 0):
             pkt = {**pkt, **{'rpm': rpm, 
                              'speed': speed, 
-<<<<<<< HEAD
-                             'inv_volts': inv_voltage, 
-                             'odometer': round(odometer, 1), 
-                             'trip': round(trip, 3),
-                             'uptime': (datetime.utcnow() - start_time).total_seconds()}}
-        elif (i % 2 == 1):
-=======
                              'inv_volts': inv_voltage,
                              'dc_amps': dc_amps
                              }}
         elif (i == 1):
->>>>>>> main
             pkt = {**pkt, **{'avg_cell': avg_cell,
                              'min_cell': min_cell, 
                              'max_cell': max_cell,
