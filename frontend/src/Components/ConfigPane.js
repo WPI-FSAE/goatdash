@@ -23,6 +23,61 @@ function ConfigPane({visible, sock, setShowConf}){
         setAlertText("");
     }
 
+    // Create a NumberPad component
+    /*
+    This code block was developed by ChatGPT 
+    */
+    const NumberPad = (props) => {
+        // Define the numbers to display on the numberpad
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+    
+        // Create a state variable for the current value
+        const [value, setValue] = useState("");
+    
+        // Create the numberpad elements
+        const numberPadElements = numbers.map(number => (
+            // Create a square element with the number in the center
+            <div
+                className="num-pad-key"
+                key={number}
+                onClick={() => setValue(value + number)}
+            >
+                {number}
+            </div>
+        ));
+    
+        // Define a handler function to display the value state variable
+        const handleEnter = (fn) => {
+            fn(value);
+        };
+    
+        return (
+        <div className="num-pad-wrap" style={{display: props.show ? "" : "none"}}>
+            <div className="num-pad-val">{props.name}: {value}_</div>
+            <div className="num-pad">
+                {/* Display the numberpad elements in a grid */}
+                {numberPadElements.slice(0, 9)}
+                <div
+                        className="num-pad-key"
+                        onClick={() => setValue(value.slice(0, -1))}
+                        style={{backgroundColor: "var(--negative)"}}
+                >
+                    Delete
+                </div>
+                {numberPadElements.slice(9, 10)}
+                <div
+                        className="num-pad-key"
+                        onClick={() => handleEnter(props.fn)}
+                        style={{backgroundColor: "var(--positive)"}}
+                >
+                    Enter
+                </div>
+
+                </div>
+        </div>
+        );
+    };
+
     function Menu() {
         
         function MenuEntry({title, icon, showFn}) {
@@ -134,61 +189,6 @@ function ConfigPane({visible, sock, setShowConf}){
             paneShowFn(!paneState);
         }
 
-        // Create a NumberPad component
-        /*
-        This code block was developed by ChatGPT 
-        */
-        const NumberPad = () => {
-            // Define the numbers to display on the numberpad
-            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-        
-            // Create a state variable for the current value
-            const [value, setValue] = useState("");
-        
-            // Create the numberpad elements
-            const numberPadElements = numbers.map(number => (
-            // Create a square element with the number in the center
-            <div
-                key={number}
-                style={{ width: 50, height: 50, lineHeight: "50px", textAlign: "center", display: "inline" }}
-                onClick={() => setValue(value + number)}
-            >
-                {number}
-            </div>
-            ));
-        
-            // Define a handler function to display the value state variable
-            const handleEnter = () => {
-            alert(value);
-            };
-        
-            return (
-            <div>
-                {/* Display the numberpad elements in a grid */}
-                <div>{numberPadElements.slice(0, 3)}</div>
-                <div>{numberPadElements.slice(3, 6)}</div>
-                <div>{numberPadElements.slice(6, 9)}</div>
-                <div>
-                {/* Add the delete key on the bottom row to the left of the zero button */}
-                <div
-                    onClick={() => setValue(value.slice(0, -1))}
-                    style={{ width: 50, height: 50, lineHeight: "50px", textAlign: "center" }}
-                >
-                    Delete
-                </div>
-                {/* Add the enter key on the bottom row to the right of the zero button */}
-                <div
-                    onClick={handleEnter}
-                    style={{ width: 50, height: 50, lineHeight: "50px", textAlign: "center" }}
-                >
-                    Enter
-                </div>
-                </div>
-                <div>{value}</div>
-            </div>
-            );
-        };
-
         return (
             <div className="page" id="tuning-settings" style={{display: showTuning ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Tuning</h1>
@@ -205,7 +205,7 @@ function ConfigPane({visible, sock, setShowConf}){
                     </div>
 
                     <div className="option-pane" id="" style={{display: showACLim ? "" : "none"}}>
-                        <NumberPad/>
+                        <NumberPad fn={(val) => alert(val)}/>
                     </div>
 
                     <div className="option-pane" id="" style={{display: showDCLim ? "" : "none"}}>
@@ -233,6 +233,8 @@ function ConfigPane({visible, sock, setShowConf}){
     }
 
     function TripSettings() {
+        const [showLapOptions, setShowLapOptions] = useState(false);
+        const [showLapNumber, setShowLapNumber] = useState(false);
 
         function handleResetOdo (e) {
             e.preventDefault();
@@ -248,6 +250,13 @@ function ConfigPane({visible, sock, setShowConf}){
             setAlertText("Trip Reset.");
         }
 
+        function handleSetLapNumber (val) {
+            let data = JSON.stringify({opt: "SET_LAP", laps: val});
+            sock.send(data);
+            setShowLapNumber(false);
+            setAlertText(`Set Laps To ${val}`)
+        }
+
         return (
             <div className="page" id="trip-settings" style={{display: showTrip ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Trip</h1>
@@ -255,14 +264,26 @@ function ConfigPane({visible, sock, setShowConf}){
                 <div className="option-page">
                     <div className="option-select">
                         <div className="panel button" onClick={handleResetOdo}>
-                            Reset Odomoeter {'(Hold)'}
+                            Reset Odomoeter
                         </div>
 
                         <div className="panel button" onClick={handleResetTrip}>
                             Reset Trip
                         </div>
+
+                        <div className="panel button"  style={{filter: showLapOptions ? "brightness(.7)" : ""}} onClick={() => setShowLapOptions(!showLapOptions)}>
+                            Lap Options
+                        </div>
+                    </div>
+
+                    <div className="option-pane" id="lap-set" style={{display: showLapOptions ? "" : "none"}}>
+                        <div className="panel button" onClick={() => setShowLapNumber(true)}>
+                            Set Lap Number
+                        </div>
                     </div>
                 </div>
+
+                <NumberPad fn={handleSetLapNumber} name="Number of Laps" show={showLapNumber}/>
 
                 <div className="button" id="back" onClick={() => {setShowTrip(false); setAlertText("");}}>
                     Back

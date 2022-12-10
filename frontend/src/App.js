@@ -29,7 +29,7 @@ function App() {
   const updateStatus = (tm, conn) => statusRef.current?.updateStatus(tm, conn);
 
   const lapRef = useRef(null);
-  const updateLap = (tm) => statusRef.current?.updateLap(tm);
+  const updateLap = (tm) => lapRef.current?.updateLap(tm);
 
   // Configure websocket
   useEffect(() => {
@@ -81,7 +81,7 @@ function App() {
 
       <WheelStatus fl={false} fr={false} rl={false} rr={false}/>
 
-      <LapStatus/>
+      <LapStatus ref={lapRef}/>
       
       <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf}/>
       

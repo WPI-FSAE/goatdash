@@ -21,10 +21,10 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 PORT = int(config['TEST']['Port'])
 
-rpm, speed, inv_voltage, avg_cell, min_cell, dc_amps = 0
-acc_temp, inv_temp, mtr_temp = 0
-rtd, fault = False
-odometer, trip = 0
+rpm, speed, inv_voltage, avg_cell, min_cell, dc_amps = [0] * 6
+acc_temp, inv_temp, mtr_temp = [0] * 3
+rtd, fault = [False] * 2
+odometer, trip = [0] * 2
 
 
 
@@ -72,6 +72,8 @@ async def message_handler(websocket):
                 odometer = 0
             elif (data['opt'] == "RESET_TRIP"):
                 trip = 0
+            elif (data['opt'] == "SET_LAP"):
+                await websocket.send(json.dumps({"lap_total": data["laps"]}))
 
 async def send_tm(websocket):
     """
@@ -102,7 +104,8 @@ async def send_tm(websocket):
                              'odometer': round(odometer, 1), 
                              'trip': round(trip, 3), 
                              'rtd': rtd, 
-                             'fault': fault}}
+                             'fault': fault,
+                             }}
 
         if (i >= 99):
             i = 0

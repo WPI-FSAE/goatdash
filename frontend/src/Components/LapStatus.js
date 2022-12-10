@@ -27,7 +27,7 @@ const LapStatus = forwardRef((props, ref) => {
     const [voltDelta, setVoltDelta] = useState(0);
 
     useImperativeHandle(ref, () => ({
-        updateBattery(tm) {
+        updateLap(tm) {
             if (tm['lap_time'] !== undefined && tm['lap_time'] !== time) setTime(tm['lap_time']);
             if (tm['lap_use'] !== undefined && tm['lap_use'] !== use) setUse(tm['lap_use']);
 
