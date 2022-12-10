@@ -249,6 +249,20 @@ function ConfigPane({visible, sock, setShowConf}){
             setAlertText("Trip Reset.");
         }
 
+        function handleResetDraw (e) {
+            e.preventDefault();
+            let data = JSON.stringify({opt: "RESET_DRAW"});
+            sock.send(data);
+            setAlertText("Peak Draw Reset.");
+        }
+
+        function handleResetRegen (e) {
+            e.preventDefault();
+            let data = JSON.stringify({opt: "RESET_REGEN"});
+            sock.send(data);
+            setAlertText("Peak Regen Reset.");
+        }
+
         function handleSetLapNumber (val) {
             let data = JSON.stringify({opt: "SET_LAP", laps: val});
             sock.send(data);
@@ -263,11 +277,19 @@ function ConfigPane({visible, sock, setShowConf}){
                 <div className="option-page">
                     <div className="option-select">
                         <div className="panel button" onClick={handleResetOdo}>
-                            Reset Odomoeter
+                            ↺ Reset Odomoeter
                         </div>
 
                         <div className="panel button" onClick={handleResetTrip}>
-                            Reset Trip
+                            ↺ Reset Trip
+                        </div>
+
+                        <div className="panel button" onClick={handleResetDraw}>
+                            ⇝ Reset Peak Draw
+                        </div>
+
+                        <div className="panel button" onClick={handleResetRegen}>
+                            ⇜ Reset Peak Regen 
                         </div>
 
                         <div className="panel button"  style={{filter: showLapOptions ? "brightness(.7)" : ""}} onClick={() => setShowLapOptions(!showLapOptions)}>

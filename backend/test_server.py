@@ -59,7 +59,7 @@ async def message_handler(websocket):
     """
     Handle incoming websocket messages
     """
-    global odometer, trip, lap_timer, timer_start
+    global odometer, trip, lap_timer, timer_start, peak_amps, peak_regen 
 
     async for message in websocket:
         print(f'RECEIVED: {message}')
@@ -80,6 +80,10 @@ async def message_handler(websocket):
                 odometer = 0
             elif (data['opt'] == "RESET_TRIP"):
                 trip = 0
+            elif (data['opt'] == "RESET_DRAW"):
+                peak_amps = 0
+            elif (data['opt'] == "RESET_REGEN"):
+                peak_regen = 0
             elif (data['opt'] == "SET_LAP"):
                 await websocket.send(json.dumps({"lap_total": data["laps"]}))
             elif (data['opt'] == "START_TIME"):
