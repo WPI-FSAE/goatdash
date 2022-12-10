@@ -136,6 +136,15 @@ You may need to set the ```$DISPLAY``` environment variable to ```:0``` to allow
 
 Notable changes will be recorded here. Major version changes should be tagged and released.
 
+### [0.3.0]
+
+* Added option element for numerical input values
+* Lap tracking UI
+    * Ability to set total lap number
+    * Race timer
+* Tracking max and min amp draw
+    * Ability to reset these from 'Trip Settings'
+    
 ### [0.2.2]
 
 * Fixed menu bug during WS activity by refactoring WS updates
