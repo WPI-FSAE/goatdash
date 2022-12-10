@@ -1,19 +1,19 @@
 h1 {
-    font-size: 6em;
-    font-family: 'Russo One', sans-serif;
+    font-size: 5em;
+    font-family: var(--main-font), sans-serif;
     font-feature-settings: "tnum";
     display: inline;
     margin: 0;
 }
 
 h2 {
-    font-size: 3em;
-    font-family:'Russo One', sans-serif;
+    font-size: 2em;
+    font-family:'Dash Digital', sans-serif;
     display: inline;
 }
 
 div#speed {
-    height: 6em;
+    height: 7em;
 }
 
 div#rpm {

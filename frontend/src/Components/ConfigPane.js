@@ -204,9 +204,8 @@ function ConfigPane({visible, sock, setShowConf}){
                         </div>
                     </div>
 
-                    <div className="option-pane" id="" style={{display: showACLim ? "" : "none"}}>
-                        <NumberPad fn={(val) => alert(val)}/>
-                    </div>
+                    <NumberPad fn={(val) => alert(val)} show={showACLim} name="Set AC Max"/>
+                    <NumberPad fn={(val) => alert(val)} show={showDCLim} name="Set DC Max"/>
 
                     <div className="option-pane" id="" style={{display: showDCLim ? "" : "none"}}>
                         
@@ -279,6 +278,10 @@ function ConfigPane({visible, sock, setShowConf}){
                     <div className="option-pane" id="lap-set" style={{display: showLapOptions ? "" : "none"}}>
                         <div className="panel button" onClick={() => setShowLapNumber(true)}>
                             Set Lap Number
+                        </div>
+
+                        <div className="panel button" onClick={() => sock.send(JSON.stringify({opt: "START_TIME"}))}>
+                            Start Time
                         </div>
                     </div>
                 </div>

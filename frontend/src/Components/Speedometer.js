@@ -84,12 +84,12 @@ const Speedometer = forwardRef((props, ref) => {
 
           <div id="speed">
             <h1><i>{padSpeedo(speed)}</i></h1>
-            <p id="label" style={{top: "45%", right: "15%"}}><i>MPH</i></p>
+            <p id="label" style={{top: "53%", right: "15%"}}><i>MPH</i></p>
           </div> 
           
           <div id="amps">
             <h2><i>{padAmps(dcAmps)}</i></h2> 
-            <p id="label" style={{top: "78%", right: "25%"}}><i>AMPS</i></p>    
+            <p id="label" style={{top: "82%", right: "28%"}}><i>AMPS</i></p>    
           </div>
 
           <div id="gauge">

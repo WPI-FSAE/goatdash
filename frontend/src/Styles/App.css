@@ -12,6 +12,49 @@
     url('./fonts/Russo_One/RussoOne-Regular.ttf') format("truetype");
 }
 
+@font-face {
+  font-family: "Dash Digital";
+  src:
+    local("Dash Digital"),
+    url('./fonts/Dash Digital/dash_digital-7.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: "Share Tech Mono";
+  src:
+    local("Share Tech Mono"),
+    url('./fonts/Share Tech Mono/ShareTechMono-Regular.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: "Ooh Bahn";
+  src:
+    local("Ooh Bahn"),
+    url('./fonts/Ooh Bahn/OohBahn-Regular.otf') format("truetype");
+}
+
+@font-face {
+  font-family: "Patopian 1986";
+  src:
+    local("Patopian 1986"),
+    url('./fonts/Patopian 1986/Patopian 1986.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: "LiquidCrystalNormal";
+  src:
+    local("LiquidCrystalNormal"),
+    url('./fonts/LiquidCrystal/LiquidCrystal-Normal.otf') format("truetype");
+}
+
+@font-face {
+  font-family: "LiquidCrystalBold";
+  src:
+    local("LiquidCrystalBold"),
+    url('./fonts/LiquidCrystal/LiquidCrystal-Bold.otf') format("truetype");
+}
+
+
 :root {
   --black: #000000;
   --white: #ffffff;
@@ -54,13 +97,14 @@
   --yellow: rgb(255, 208, 0);
 
   /*Applied*/
-  --bg: var(--light-bg);
-  --text: var(--light-text);
-  --negative: var(--light-red);
-  --positive: var(--light-green);
-  --primary: var(--light-gray);
+  --bg: var(--deep-bg);
+  --text: var(--deep-text);
+  --negative: var(--deep-red);
+  --positive: var(--deep-green);
+  --primary: var(--deep-gray);
   --caution: var(--yellow);
   --halo: var(--primary);
+  --main-font: "Dash Digital";
 }
 
 .App {

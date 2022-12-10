@@ -44,15 +44,15 @@ const LapStatus = forwardRef((props, ref) => {
         <div id="lap-status">
             <div id="lap">
                 <div className="time" style={{display: "none"}}>+/- {msToTime(timeDelta)} <span className="label">Change</span></div>
-                <div className="time"><span className="label">Time</span> {msToTime(time)}</div>
+                <div className="time"><span className="label">Time </span>{msToTime(time)}</div>
 
                 <div className="time" style={{display: "none"}}>+/- {voltDelta}V <span className="label">Change</span></div>
-                <div className="time"><span className="label">Use</span> {use}V</div>
+                <div className="time"><span className="label">Use </span>{use}V</div>
             </div>
             
             <div id="total">
-                <div className="time">{msToTime(total)} <span className="label">Total</span></div>
-                <div className="time">{lapNum}/{lapTotal} <span className="label">Lap</span></div>
+                <div className="time">{msToTime(total)}<span className="label"> Total</span></div>
+                <div className="time">{lapNum}/{lapTotal}<span className="label"> Lap</span></div>
             </div>
         </div>
     );
