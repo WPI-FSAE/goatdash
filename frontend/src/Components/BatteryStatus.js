@@ -72,11 +72,7 @@ const BatteryStatus = forwardRef((props, ref) => {
                 {power_segments(dcAmps, 200, 50)}
             </div>
 
-<<<<<<< HEAD
-            <img className="icon" id="accel" src="accel2.png"></img>
-=======
             <img className="icon" id="accel" src="accel.png"></img>
->>>>>>> c7a1723fc599b9aadf753a03c74c22a09e0da274
             <img className="icon" id="regen" src="regen.png"></img>
 
             <div id="voltages">
