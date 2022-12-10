@@ -26,7 +26,8 @@ acc_temp, inv_temp, mtr_temp = [0] * 3
 rtd, fault = [False] * 2
 odometer, trip = [0] * 2
 
-
+lap_timer = False
+timer_start = 0
 
 last_time = datetime.utcnow()
 start_time = last_time
@@ -51,7 +52,7 @@ async def message_handler(websocket):
     """
     Handle incoming websocket messages
     """
-    global odometer, trip
+    global odometer, trip, lap_timer, timer_start
 
     async for message in websocket:
         print(f'RECEIVED: {message}')
@@ -74,13 +75,17 @@ async def message_handler(websocket):
                 trip = 0
             elif (data['opt'] == "SET_LAP"):
                 await websocket.send(json.dumps({"lap_total": data["laps"]}))
+            elif (data['opt'] == "START_TIME"):
+                lap_timer = True
+                timer_start = round(time.time() * 1000.0)
+
 
 async def send_tm(websocket):
     """
     Maintain telemetry connection with client
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault
+    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer
 
     i = 0
 
@@ -92,7 +97,8 @@ async def send_tm(websocket):
             pkt = {**pkt, **{'rpm': rpm, 
                              'speed': speed, 
                              'inv_volts': inv_voltage,
-                             'dc_amps': dc_amps
+                             'dc_amps': dc_amps,
+                             'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0
                              }}
         elif (i == 1):
             pkt = {**pkt, **{'avg_cell': avg_cell,
