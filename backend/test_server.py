@@ -21,13 +21,20 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 PORT = int(config['TEST']['Port'])
 
+# TM Values
 rpm, speed, inv_voltage, avg_cell, min_cell, dc_amps = [0] * 6
 acc_temp, inv_temp, mtr_temp = [0] * 3
 rtd, fault = [False] * 2
+
 odometer, trip = [0] * 2
 
+# Lap Values
 lap_timer = False
 timer_start = 0
+
+# Derived values
+peak_amps = 0
+peak_regen = 0
 
 last_time = datetime.utcnow()
 start_time = last_time
@@ -85,7 +92,8 @@ async def send_tm(websocket):
     Maintain telemetry connection with client
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer
+    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer, \
+    peak_amps, peak_regen
 
     i = 0
 
@@ -111,6 +119,8 @@ async def send_tm(websocket):
                              'trip': round(trip, 3), 
                              'rtd': rtd, 
                              'fault': fault,
+                             'peak_amps': peak_amps,
+                             'peak_regen': peak_regen
                              }}
 
         if (i >= 99):
@@ -134,7 +144,7 @@ async def poll_tm():
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, last_time, dc_amps_dir, acc_temp, inv_temp, mtr_temp, \
-    rtd, fault
+    rtd, fault, peak_amps, peak_regen
 
     # Simulate waiting for message
     # Each message type 'read' every .1s avg
@@ -172,6 +182,12 @@ async def get_tm():
         
         if dc_amps < -50:
             dc_amps_dir = 1
+
+        if dc_amps > peak_amps:
+            peak_amps = dc_amps
+        
+        if dc_amps < peak_regen:
+            peak_regen = dc_amps
 
         acc_temp = 90
         inv_temp = 110

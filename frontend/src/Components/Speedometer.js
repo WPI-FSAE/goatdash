@@ -13,7 +13,7 @@ function padSpeedo(val) {
 }
 
 function padAmps(val) {
-  if (val < -10) return "-" + Math.abs(val).toString();
+  if (val <= -10) return "-" + Math.abs(val).toString();
   else if (val < 0) return "-0" + Math.abs(val).toString();
   else if (val == 0) return "000";
   else if (val < 10) return "00" + val.toString();
@@ -24,11 +24,17 @@ function padAmps(val) {
 const Speedometer = forwardRef((props, ref) => {
     const [dcAmps, setDcAmps] = useState(0);
     const [speed, setSpeed] = useState(0);
+    const [peakAmps, setPeakAmps] = useState(0);
+    const [peakRegen, setPeakRegen] = useState(0);
     
     useImperativeHandle(ref, () => ({
       updateSpeedo(tm) {
         if (tm['dc_amps'] !== undefined && tm['dc_amps'] !== dcAmps) setDcAmps(tm['dc_amps']);
         if (tm['speed'] !== undefined && tm['speed'] !== speed) setSpeed(Math.abs(tm['speed']));
+
+        if (tm['peak_amps'] !== undefined && tm['peak_amps'] !== peakAmps) setPeakAmps(Math.abs(tm['peak_amps']));
+        if (tm['peak_regen'] !== undefined && tm['peak_regen'] !== peakRegen) setPeakRegen(Math.abs(tm['peak_regen']));
+
       }
     }));
 
@@ -92,6 +98,15 @@ const Speedometer = forwardRef((props, ref) => {
           <div id="amps">
             <h2><i>{padAmps(dcAmps)}</i></h2> 
             <p id="label" style={{top: "82%", right: "28%"}}><i>AMPS</i></p>    
+          </div>
+
+          <div id="peaks">
+            <div style={{float: "right"}}><i>
+            {peakAmps}A<span style={{color: 'var(--negative)'}}> ⇝</span>
+              </i></div>
+            <div style={{float: "left"}}><i>
+              <span style={{color: 'var(--positive)'}}>⇜ </span>{peakRegen}A
+            </i></div>
           </div>
 
           <div id="gauge">

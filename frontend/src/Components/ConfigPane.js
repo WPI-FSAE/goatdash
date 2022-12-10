@@ -151,7 +151,7 @@ function ConfigPane({visible, sock, setShowConf}){
                 <div className="option-page">
                     <div className="option-select">
                         <div className="panel button" onClick={handleRefresh}>
-                            Refresh Dashboard
+                        ↻ Refresh Dashboard
                         </div>
 
                         <div className="panel button"  style={{filter: showThemes ? "brightness(.7)" : ""}} onClick={() => setShowThemes(!showThemes)}>

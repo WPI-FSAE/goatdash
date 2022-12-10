@@ -20,6 +20,13 @@ div#rpm {
 
 }
 
+div#peaks {
+    position: absolute;
+    left: 27%;
+    width: 50%;
+    top: 71%;
+}
+
 p#label {
     position: absolute;
     font-family: 'Rajdhani Medium';
