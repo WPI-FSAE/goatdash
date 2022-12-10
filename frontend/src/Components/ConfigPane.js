@@ -2,7 +2,7 @@ import '../Styles/ConfigPane.css';
 import { useEffect, useState } from 'react';
 
 function ConfigPane({visible, sock, setShowConf}){
-    const [darkMode, setDarkMode] = useState(false);
+    const [darkMode, setDarkMode] = useState(true);
     const [showGeneral, setShowGeneral] = useState(false);
     const [showTuning, setShowTuning] = useState(false);
     const [showGPS, setShowGPS] = useState(false);

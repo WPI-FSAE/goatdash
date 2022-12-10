@@ -8,7 +8,7 @@ h1 {
 
 h2 {
     font-size: 2em;
-    font-family:'Dash Digital', sans-serif;
+    font-family: var(--main-font), sans-serif;
     display: inline;
 }
 
@@ -67,7 +67,6 @@ div.left-segment {
     /* border-radius: 2px; */
     transform: rotate(-15deg);
     transform-origin: top right;
-    border-bottom: solid var(--text);
 }
 
 div.top-segment {
@@ -75,7 +74,7 @@ div.top-segment {
     width: 12%;
     height: 15px;
     /* border-radius: 2px; */
-    border-bottom: solid var(--text);
+    /* border-bottom: solid var(--text); */
 }
 
 div#mask {

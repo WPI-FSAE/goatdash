@@ -85,8 +85,8 @@
 
 #alert {
     position: absolute;
-    left: 50%;
-    transform: translate(-50%, -80%);
+    right: 5px;
+    top: 5px;
     background-color: var(--positive);
     padding: 5px;
     border-radius: 5px;

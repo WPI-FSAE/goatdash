@@ -49,6 +49,7 @@ const Speedometer = forwardRef((props, ref) => {
 
         return <div className="left-segment" key={key} style={{top: `${key * 12}%`, 
                                                                backgroundColor: color,
+                                                               boxShadow: color === 'inherit' ? "none" : `0px 0px 50px ${color}`,
                                                                borderBottomColor: color === 'inherit' ? "" : color}}/>
       });
     }
@@ -75,6 +76,7 @@ const Speedometer = forwardRef((props, ref) => {
 
         return <div className="top-segment" key={key} style={{left: `${key * 14}%`, 
                                                               backgroundColor: color,
+                                                              boxShadow: color === 'inherit' ? "none" : `0px 0px 50px ${color}`,
                                                               borderBottomColor: color === 'inherit' ? "" : color}}/>
     });
     }
@@ -84,7 +86,7 @@ const Speedometer = forwardRef((props, ref) => {
 
           <div id="speed">
             <h1><i>{padSpeedo(speed)}</i></h1>
-            <p id="label" style={{top: "53%", right: "15%"}}><i>MPH</i></p>
+            <p id="label" style={{top: "53%", right: "13%"}}><i>MPH</i></p>
           </div> 
           
           <div id="amps">
