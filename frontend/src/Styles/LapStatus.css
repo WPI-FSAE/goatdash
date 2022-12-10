@@ -1,17 +1,19 @@
 #lap-status {
 }
 
-#lap-batt {
-    width: 25%;
+#lap {
+    width: 23%;
     float: left;
     padding: 10px;
+    text-align: right;
 }
 
-#lap-time {
-    width: 25%;
+#total {
+    width: 23%;
     float: right;
     text-align: right;
     padding: 10px;
+    text-align: left;
 }
 
 .time {

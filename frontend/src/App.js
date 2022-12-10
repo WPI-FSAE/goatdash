@@ -28,6 +28,9 @@ function App() {
   const statusRef = useRef(null);
   const updateStatus = (tm, conn) => statusRef.current?.updateStatus(tm, conn);
 
+  const lapRef = useRef(null);
+  const updateLap = (tm) => statusRef.current?.updateLap(tm);
+
   // Configure websocket
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000');
@@ -51,6 +54,7 @@ function App() {
       updateSpeedo(tm);
       updateBattery(tm);
       updateStatus(tm, true);
+      updateLap(tm);
     });
 
     ws.addEventListener('close', (event) => {

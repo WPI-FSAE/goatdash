@@ -21,23 +21,12 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 PORT = int(config['TEST']['Port'])
 
-rpm = 0
-speed = 0
-inv_voltage = 0
-avg_cell = 0
-min_cell = 0
-max_cell = 0
-dc_amps = 0
+rpm, speed, inv_voltage, avg_cell, min_cell, dc_amps = 0
+acc_temp, inv_temp, mtr_temp = 0
+rtd, fault = False
+odometer, trip = 0
 
-acc_temp = 0
-inv_temp = 0
-mtr_temp = 0
 
-rtd = False
-fault = False
-
-odometer = 0
-trip = 0
 
 last_time = datetime.utcnow()
 start_time = last_time
