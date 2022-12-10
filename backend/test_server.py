@@ -21,22 +21,19 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 PORT = int(config['TEST']['Port'])
 
-rpm = 0
-speed = 0
-inv_voltage = 0
-avg_cell = 0
-min_cell = 0
-max_cell = 0
-dc_amps = 0
+rpm, speed, inv_voltage, avg_cell, min_cell, dc_amps = [0] * 6
+acc_temp, inv_temp, mtr_temp = [0] * 3
+rtd, fault = [False] * 2
+odometer, trip = [0] * 2
 
-odometer = 0
-trip = 0
+
 
 last_time = datetime.utcnow()
+start_time = last_time
 
 # Load persistant car data
 try:
-    with open('car_state.json', 'r') as f:
+    with open('car_state_test.json', 'r') as f:
         car_state = json.load(f)
         
         odometer = car_state['odometer']
@@ -75,13 +72,15 @@ async def message_handler(websocket):
                 odometer = 0
             elif (data['opt'] == "RESET_TRIP"):
                 trip = 0
+            elif (data['opt'] == "SET_LAP"):
+                await websocket.send(json.dumps({"lap_total": data["laps"]}))
 
 async def send_tm(websocket):
     """
     Maintain telemetry connection with client
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip
+    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault
 
     i = 0
 
@@ -92,22 +91,29 @@ async def send_tm(websocket):
         if (i % 2 == 0):
             pkt = {**pkt, **{'rpm': rpm, 
                              'speed': speed, 
-                             'inv_volts': inv_voltage, 
-                             'odometer': round(odometer, 1), 
-                             'trip': round(trip, 3)}}
-        elif (i % 2 == 1):
+                             'inv_volts': inv_voltage,
+                             'dc_amps': dc_amps
+                             }}
+        elif (i == 1):
             pkt = {**pkt, **{'avg_cell': avg_cell,
                              'min_cell': min_cell, 
                              'max_cell': max_cell,
-                             'dc_amps': dc_amps}}
+                             'acc_temp': acc_temp, 
+                             'inv_temp': inv_temp,
+                             'mtr_temp': mtr_temp,
+                             'odometer': round(odometer, 1), 
+                             'trip': round(trip, 3), 
+                             'rtd': rtd, 
+                             'fault': fault,
+                             }}
 
-        if (i >= 9):
+        if (i >= 99):
             i = 0
         else:
             i += 1
         
         await websocket.send(json.dumps(pkt))
-        await asyncio.sleep(.05)    # Define frontend refresh rate
+        await asyncio.sleep(.01)    # Define frontend refresh rate
 
 
 #######
@@ -121,7 +127,8 @@ async def poll_tm():
 # Read message from can bus, update internal state,
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip, last_time, dc_amps_dir
+    odometer, trip, last_time, dc_amps_dir, acc_temp, inv_temp, mtr_temp, \
+    rtd, fault
 
     # Simulate waiting for message
     # Each message type 'read' every .1s avg
@@ -160,12 +167,18 @@ async def get_tm():
         if dc_amps < -50:
             dc_amps_dir = 1
 
+        acc_temp = 90
+        inv_temp = 110
+        mtr_temp = 74
+
+        rtd = True
+        fault = False
+
     # BMS_Information
     elif rand_msg_type == 2:
         avg_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
         min_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
         max_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
-
 
 #########
 # STATE #
@@ -178,7 +191,7 @@ async def store_tm():
 async def write_state():
     global odometer, trip
 
-    with open('car_state.json', 'w') as f:
+    with open('car_state_test.json', 'w') as f:
             f.write(json.dumps({'odometer': round(odometer, 3), 'trip': round(trip, 3)}))
 
 

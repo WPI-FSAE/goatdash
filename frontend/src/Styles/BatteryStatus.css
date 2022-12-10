@@ -10,19 +10,18 @@
   position: absolute;
   width: 1%;
   height: 100%;
-  border-radius: 0px;
   background-color: var(--negative);
 }
 
 #voltages {
   position: absolute;
-  top: 40%;
+  top: 35%;
   left: 0;
 }
 
 #temps {
   position: absolute;
-  top: 40%;
+  top: 35%;
   right: 0;
   text-align: right;
 }
@@ -31,7 +30,7 @@
   display: inline;
   padding: 0px 10px 0px 10px;
   border-radius: 5px;
-  color: var(--text)
+  color: var(--text);
 }
 
 img.icon {

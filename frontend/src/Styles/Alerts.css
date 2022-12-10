@@ -1,4 +1,5 @@
 #alerts {
     border-radius: 5px;
     background-color: var(--primary);
+    outline: solid var(--text) 1px;
 }

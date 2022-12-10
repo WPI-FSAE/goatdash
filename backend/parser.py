@@ -10,6 +10,10 @@ class Parser:
 
     def __init__(self):
         self.model = getConfiguration()
+        self.msgdefs = {}
+
+        for msg in self.model.messages:
+            self.msgdefs[msg.canID] = msg
     
     def parse(self, message):
         msgdef = self.getMsg(message.arbitration_id)
@@ -29,10 +33,23 @@ class Parser:
         return M(*unpack(format, message.data))
 
     def getMsg(self, i):
-        for msg in self.model.messages:
-            if msg.canID == i:
-                return msg
-        return 0
+        return self.msgdefs[i]
 
-    def parseBitfield(self, field, msgdef):
-        print('not implemented')
+    def parseBitfield(self, msg, name):
+        """
+        msg: can message type
+        name: name of bitfield
+        """
+        msgDef = self.getMsg(msg.arbitration_id)
+
+        for field in msgDef.schema.body:
+            if (hasattr(field, 'name') and field.name == name):
+                M = namedtuple(field.name, [f.name for f in sorted(field.field_entries, key=attrgetter('start_bit'))])
+                
+                data = unpack('<' + 'x' * field.start_index + \
+                                    'B' * field.length_bytes + \
+                                    'x' * (len(msg.data) - (field.start_index + field.length_bytes)), \
+                                    msg.data)[0]
+
+                fields = [((data >> f.start_bit) & (0xFF >> (8 - f.entry_type.length))) for f in field.field_entries]
+                return M(*fields)

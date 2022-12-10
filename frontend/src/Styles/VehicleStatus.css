@@ -1,10 +1,37 @@
-div#status {
+div#status-box {
+    position: fixed;
+    bottom: 0;
+    right: 20%;
+    width: 60%;
+    height: 30%;
     border-radius: 5px 5px 0px 0px;
     font-family: 'Rajdhani Medium';
     color: var(--text);
     user-select: none;
     cursor: pointer;
     background-color: var(--primary);
+    outline: solid var(--text) 1px;
+}
+
+.halo {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(120% 70% at bottom, var(--bg) 0, var(--bg) 20%, var(--halo) 50%, var(--bg) 60%, var(--bg) 100%);
+    filter: opacity(0);
+    transition: filter 1s;
+}
+  
+.halo#negative {
+    background: radial-gradient(120% 70% at bottom, var(--bg) 0, var(--bg) 20%, var(--negative) 50%, var(--bg) 60%, var(--bg) 100%);
+}
+  
+.halo#positive {
+    background: radial-gradient(120% 70% at bottom, var(--bg) 0, var(--bg) 20%, var(--positive) 50%, var(--bg) 60%, var(--bg) 100%);
+}
+  
+.halo.active {
+    filter: opacity(1);
 }
 
 #network {

@@ -1,0 +1,44 @@
+#wheel-status {
+
+}
+
+.wheel {
+    content: none;
+    width: 20%;
+    height: 35%;
+    border-radius: 5px;
+    text-align: center;
+    outline: solid var(--text) 1px;
+}
+
+#fl {
+    position: absolute;
+    top: 5%;
+    left: 30%;
+}
+
+#fr {
+    position: absolute;
+    top: 5%;
+    right: 10%;
+}
+
+#rl {
+    position: absolute;
+    bottom: 10%;
+    left: 30%;
+}
+
+#rr {
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+}
+
+.bar {
+    content: none;
+    position: absolute;
+    width: 20%;
+    height: 3px;
+    background-color: var(--text);
+}
