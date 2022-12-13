@@ -1,5 +1,5 @@
 h1 {
-    font-size: 5em;
+    font-size: 6rem;
     font-family: var(--main-font), sans-serif;
     font-feature-settings: "tnum";
     display: inline;
@@ -7,13 +7,13 @@ h1 {
 }
 
 h2 {
-    font-size: 2em;
+    font-size: 2rem;
     font-family: var(--main-font), sans-serif;
     display: inline;
 }
 
 div#speed {
-    height: 7em;
+    height: 9.3rem;
 }
 
 div#peaks {

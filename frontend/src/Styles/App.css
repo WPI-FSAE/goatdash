@@ -139,6 +139,7 @@ p {
 #speedo {
   position: absolute;
   width: 60%;
+  height: 35%;
   text-align: center;
   pointer-events: none;
 }

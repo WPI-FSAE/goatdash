@@ -15,7 +15,7 @@ function padSpeedo(val) {
 function padAmps(val) {
   if (val <= -10) return "-" + Math.abs(val).toString();
   else if (val < 0) return "-0" + Math.abs(val).toString();
-  else if (val == 0) return "000";
+  else if (val === 0) return "000";
   else if (val < 10) return "00" + val.toString();
   else if (val < 100) return "0" + val.toString();
   else return val.toString();
