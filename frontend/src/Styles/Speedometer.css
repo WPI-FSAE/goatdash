@@ -1,4 +1,4 @@
-h1 {
+h1#speed-text {
     font-size: 6rem;
     font-family: var(--main-font), sans-serif;
     font-feature-settings: "tnum";
@@ -6,21 +6,33 @@ h1 {
     margin: 0;
 }
 
-h2 {
-    font-size: 2rem;
+h2#amp-text {
+    font-size: 2.5rem;
     font-family: var(--main-font), sans-serif;
     display: inline;
 }
 
-div#speed {
-    height: 9.3rem;
+#speed {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+#amps {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-45%, 0);
 }
 
 div#peaks {
     position: absolute;
-    left: 27%;
-    width: 50%;
-    top: 71%;
+    font-size: 2rem;
+    left: 50%;
+    width: 65%;
+    bottom: 0%;
+    transform: translate(-50%, 0)
 }
 
 p#label {
