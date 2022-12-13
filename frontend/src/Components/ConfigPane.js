@@ -1,5 +1,5 @@
 import '../Styles/ConfigPane.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function ConfigPane({visible, sock, setShowConf}){
     const [darkMode, setDarkMode] = useState(true);
@@ -119,7 +119,7 @@ function ConfigPane({visible, sock, setShowConf}){
             document.documentElement.style.setProperty('--positive', `var(--${theme}-green)`);
             document.documentElement.style.setProperty('--negative', `var(--${theme}-red)`);
 
-            if (theme == 'light') 
+            if (theme === 'light') 
                 setDarkMode(false);
             else
                 setDarkMode(true);

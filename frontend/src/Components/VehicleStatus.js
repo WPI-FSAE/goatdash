@@ -64,7 +64,7 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
 
             if (update) setWarn(warnFlag);
 
-            if (conn != isConnected) {
+            if (conn !== isConnected) {
                 setIsConnected(conn);
             }
         }
