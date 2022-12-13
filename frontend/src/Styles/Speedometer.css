@@ -14,7 +14,7 @@ h2#amp-text {
 
 #speed {
     position: absolute;
-    top: 0;
+    top: 30%; /*Fix for shifting font*/
     left: 50%;
     transform: translate(-50%, 0);
 }
