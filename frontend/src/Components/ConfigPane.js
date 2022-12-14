@@ -50,6 +50,14 @@ function ConfigPane({visible, sock, setShowConf}){
         const handleEnter = (fn) => {
             fn(value);
         };
+
+        const handleDel = () => {
+            if (value === "") {
+                props.setShow(false);
+                return;
+            }
+            setValue(value.slice(0, -1))
+        }
     
         return (
         <div className="num-pad-wrap" style={{display: props.show ? "" : "none"}}>
@@ -59,10 +67,10 @@ function ConfigPane({visible, sock, setShowConf}){
                 {numberPadElements.slice(0, 9)}
                 <div
                         className="num-pad-key"
-                        onClick={() => setValue(value.slice(0, -1))}
+                        onClick={handleDel}
                         style={{backgroundColor: "var(--negative)"}}
                 >
-                    Delete
+                    {value === "" ? "Back" : "Delete"}
                 </div>
                 {numberPadElements.slice(9, 10)}
                 <div
@@ -204,8 +212,8 @@ function ConfigPane({visible, sock, setShowConf}){
                         </div>
                     </div>
 
-                    <NumberPad fn={(val) => alert(val)} show={showACLim} name="Set AC Max"/>
-                    <NumberPad fn={(val) => alert(val)} show={showDCLim} name="Set DC Max"/>
+                    <NumberPad fn={(val) => alert(val)} show={showACLim} setShow={setShowACLim} name="Set AC Max"/>
+                    <NumberPad fn={(val) => alert(val)} show={showDCLim} setShow={setShowDCLim} name="Set DC Max"/>
 
                     <div className="option-pane" id="" style={{display: showDCLim ? "" : "none"}}>
                         
@@ -295,6 +303,7 @@ function ConfigPane({visible, sock, setShowConf}){
                         <div className="panel button"  style={{filter: showLapOptions ? "brightness(.7)" : ""}} onClick={() => setShowLapOptions(!showLapOptions)}>
                             Lap Options
                         </div>
+
                     </div>
 
                     <div className="option-pane" id="lap-set" style={{display: showLapOptions ? "" : "none"}}>
@@ -308,7 +317,7 @@ function ConfigPane({visible, sock, setShowConf}){
                     </div>
                 </div>
 
-                <NumberPad fn={handleSetLapNumber} name="Number of Laps" show={showLapNumber}/>
+                <NumberPad fn={handleSetLapNumber} name="Number of Laps" show={showLapNumber} setShow={setShowLapNumber}/>
 
                 <div className="button" id="back" onClick={() => {setShowTrip(false); setAlertText("");}}>
                     Back
