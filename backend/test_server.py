@@ -50,7 +50,7 @@ except:
 
 # Testing only
 dc_amps_dir = 1
-
+spd_dir = 1
 
 ######
 # WS #
@@ -107,7 +107,7 @@ async def send_tm(websocket):
         # Packet type switching (allows for some values to updated faster than others)
         if (i % 2 == 0):
             pkt = {**pkt, **{'rpm': rpm, 
-                             'speed': speed, 
+                             'speed': round(speed, 1), 
                              'inv_volts': inv_voltage,
                              'dc_amps': dc_amps,
                              'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0
@@ -133,7 +133,7 @@ async def send_tm(websocket):
             i += 1
         
         await websocket.send(json.dumps(pkt))
-        await asyncio.sleep(.01)    # Define frontend refresh rate
+        await asyncio.sleep(.005)    # Define frontend refresh rate
 
 
 #######
@@ -147,7 +147,7 @@ async def poll_tm():
 # Read message from can bus, update internal state,
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip, last_time, dc_amps_dir, acc_temp, inv_temp, mtr_temp, \
+    odometer, trip, last_time, dc_amps_dir, spd_dir, acc_temp, inv_temp, mtr_temp, \
     rtd, fault, peak_amps, peak_regen
 
     # Simulate waiting for message
@@ -156,15 +156,19 @@ async def get_tm():
 
     rand_msg_type = random.randint(0, 3)
 
+    speed = speed + (.3 * spd_dir)
+
+    if speed > 80:
+        spd_dir = -1
+
+    if speed < 0:
+        spd_dir = 1
+
     # DTI_TelemetryA
     if rand_msg_type == 0:
         rpm = random.randint(0, 100000)
         rpm = rpm // 10;
         # speed = rpm * 0.0015763099 # erpm to mph
-        speed = speed + 1
-
-        if speed > 80:
-            speed = 0
         
         inv_voltage = random.randint(0, 100)
         nowtime = datetime.utcnow()
@@ -175,7 +179,6 @@ async def get_tm():
         trip += dx
 
         last_time = nowtime
-        speed = round(speed, 1)
         
     # DTI_TelemetryB
     elif rand_msg_type == 1:
