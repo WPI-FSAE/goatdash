@@ -35,6 +35,7 @@ timer_start = 0
 # Derived values
 peak_amps = 0
 peak_regen = 0
+top_speed = 0
 
 last_time = datetime.utcnow()
 start_time = last_time
@@ -59,7 +60,7 @@ async def message_handler(websocket):
     """
     Handle incoming websocket messages
     """
-    global odometer, trip, lap_timer, timer_start, peak_amps, peak_regen 
+    global odometer, trip, lap_timer, timer_start, peak_amps, peak_regen, top_speed 
 
     async for message in websocket:
         print(f'RECEIVED: {message}')
@@ -84,22 +85,38 @@ async def message_handler(websocket):
                 peak_amps = 0
             elif (data['opt'] == "RESET_REGEN"):
                 peak_regen = 0
+            elif (data['opt'] == "RESET_TOP_SPEED"):
+                top_speed = 0
             elif (data['opt'] == "SET_LAP"):
                 await websocket.send(json.dumps({"lap_total": data["laps"]}))
             elif (data['opt'] == "START_TIME"):
                 lap_timer = True
                 timer_start = round(time.time() * 1000.0)
 
+async def animate(websocket):
+    inc = 1
+    tick = 1
 
+    while tick > 0:
+        await websocket.send(json.dumps({'speed': tick * .6}))
+        await asyncio.sleep(.01)
+
+        if tick > 100:
+            inc = -1
+
+        tick += inc
+    
 async def send_tm(websocket):
     """
     Maintain telemetry connection with client
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer, \
-    peak_amps, peak_regen
+    peak_amps, peak_regen, top_speed
 
     i = 0
+
+    # await animate(websocket)
 
     while True:
         pkt = {}
@@ -124,7 +141,8 @@ async def send_tm(websocket):
                              'rtd': rtd, 
                              'fault': fault,
                              'peak_amps': peak_amps,
-                             'peak_regen': peak_regen
+                             'peak_regen': peak_regen,
+                             'top_speed': top_speed
                              }}
 
         if (i >= 99):
@@ -148,7 +166,7 @@ async def poll_tm():
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, last_time, dc_amps_dir, spd_dir, acc_temp, inv_temp, mtr_temp, \
-    rtd, fault, peak_amps, peak_regen
+    rtd, fault, peak_amps, peak_regen, top_speed
 
     # Simulate waiting for message
     # Each message type 'read' every .1s avg
@@ -163,6 +181,9 @@ async def get_tm():
 
     if speed < 0:
         spd_dir = 1
+
+    if speed > top_speed:
+        top_speed = speed
 
     # DTI_TelemetryA
     if rand_msg_type == 0:
