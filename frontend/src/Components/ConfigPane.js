@@ -1,8 +1,7 @@
 import '../Styles/ConfigPane.css';
 import { useState } from 'react';
 
-function ConfigPane({visible, sock, setShowConf}){
-    const [darkMode, setDarkMode] = useState(true);
+function ConfigPane({visible, sock, setShowConf, darkMode, setDarkMode}){
     const [showGeneral, setShowGeneral] = useState(false);
     const [showTuning, setShowTuning] = useState(false);
     const [showGPS, setShowGPS] = useState(false);
@@ -25,7 +24,7 @@ function ConfigPane({visible, sock, setShowConf}){
 
     // Create a NumberPad component
     /*
-    This code block was developed by ChatGPT 
+    This code block was developed in part by ChatGPT 
     */
     const NumberPad = (props) => {
         // Define the numbers to display on the numberpad
@@ -188,12 +187,16 @@ function ConfigPane({visible, sock, setShowConf}){
     function TuningSettings() {
         const [showACLim, setShowACLim] = useState(false);
         const [showDCLim, setShowDCLim] = useState(false);
+        const [showTCS, setShowTCS] = useState(false);
+        const [showRegen, setShowRegen] = useState(false);
 
         function togglePane(e, paneShowFn, paneState) {
             e.preventDefault();
             
             setShowACLim(false);
             setShowDCLim(false);
+            setShowTCS(false);
+            setShowRegen(false);
             paneShowFn(!paneState);
         }
 
@@ -210,10 +213,20 @@ function ConfigPane({visible, sock, setShowConf}){
                         <div className="panel button"  style={{filter: showDCLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowDCLim, showDCLim)}>
                             Set DC Current Limit
                         </div>
+
+                        <div className="panel button"  style={{filter: showTCS ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowTCS, showTCS)}>
+                            Set TCS Strength
+                        </div>
+
+                        <div className="panel button"  style={{filter: showRegen ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowRegen, showRegen)}>
+                            Set Regen Braking Strength
+                        </div>
                     </div>
 
                     <NumberPad fn={(val) => alert(val)} show={showACLim} setShow={setShowACLim} name="Set AC Max"/>
                     <NumberPad fn={(val) => alert(val)} show={showDCLim} setShow={setShowDCLim} name="Set DC Max"/>
+                    <NumberPad fn={(val) => alert(val)} show={showTCS} setShow={setShowTCS} name="Set TCS Strength (%)"/>
+                    <NumberPad fn={(val) => alert(val)} show={showRegen} setShow={setShowRegen} name="Set Regen Strength (%)"/>
 
                     <div className="option-pane" id="" style={{display: showDCLim ? "" : "none"}}>
                         
