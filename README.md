@@ -1,5 +1,7 @@
 # FSAE 2022-23 Vehicle Dashboard
 
+## Graphical Operations and Telemetry Dashboard (GOaTDash)
+
 Repository for the live telemetry server and dashboard interface for the 2022-2023 FSAE EV.
 
 This software runs on the Pi to consume CAN telemetry data and drive the dashboard display.
