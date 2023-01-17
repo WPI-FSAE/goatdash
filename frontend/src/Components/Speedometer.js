@@ -1,5 +1,5 @@
 import "../Styles/Speedometer.css"
-import { useState, forwardRef, useImperativeHandle } from 'react';
+import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 
 function padSpeedo(val) {
     let str = "";
@@ -13,8 +13,8 @@ function padSpeedo(val) {
 }
 
 function padAmps(val) {
-  if (val <= -10) return "-" + Math.abs(val).toString();
-  else if (val < 0) return "-0" + Math.abs(val).toString();
+  if (val <= -10) return "0" + Math.abs(val).toString();
+  else if (val < 0) return "00" + Math.abs(val).toString();
   else if (val === 0) return "000";
   else if (val < 10) return "00" + val.toString();
   else if (val < 100) return "0" + val.toString();
@@ -108,28 +108,51 @@ const Speedometer = forwardRef((props, ref) => {
     });
     }
 
+    let speedStr = padSpeedo(speed);
+    let ampStr = padAmps(dcAmps);
+    let maxAmpStr = padAmps(peakAmps);
+    let minAmpStr = padAmps(peakRegen);
+
     return (
         <div id="speedo">
 
           <div id="speed">
-            <h1 id="speed-text"><i>{padSpeedo(speed)}</i></h1>
+            <h1 id="speed-text"><i>
+              <font style={{color: speed < 10 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[0]}</font>
+              <font style={{color: speed < 1 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[1]}</font>
+              <font style={{color: speed === 0 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[2]}</font>
+              <font style={{color: speed === 0 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[3]}</font>
+            </i></h1>
             <span id="label"><i>MPH</i></span>
           </div> 
           
           <div id="amps">
-            <h2 id="amp-text"><i>{padAmps(dcAmps)}</i></h2> 
+            <h2 id="amp-text"><i>
+              <font style={{color: dcAmps >= 0 ? 'var(--primary)' : 'var(--text)'}}>-</font>
+              <font style={{color: (dcAmps >= 0 && dcAmps < 100) || (dcAmps <= 0 && dcAmps > -100) ? 'var(--primary)' : 'var(--text)'}}>{ampStr[0]}</font>
+              <font style={{color: (dcAmps >= 0 && dcAmps < 10) || (dcAmps <= 0 && dcAmps > -10) ? 'var(--primary)' : 'var(--text)'}}>{ampStr[1]}</font>
+              <font style={{color: speed === 0 ? 'var(--primary)' : 'var(--text)'}}>{ampStr[2]}</font>
+            </i></h2> 
             <span id="label"><i> A</i></span>    
           </div>
 
           <div id="peaks">
             <div style={{float: "right"}}><i>
-              <span style={{fontFamily: 'var(--main-font)', fontSize: '1.5rem'}}>{peakAmps}</span>
+              <span style={{fontFamily: 'var(--main-font)', fontSize: '1.5rem'}}>
+                <font style={{color: peakAmps < 100 ? 'var(--primary)' : 'var(--text)'}}>{maxAmpStr[0]}</font>
+                <font style={{color: peakAmps < 10 ? 'var(--primary)' : 'var(--text)'}}>{maxAmpStr[1]}</font>
+                <font style={{color: peakAmps === 0 ? 'var(--primary)' : 'var(--text)'}}>{maxAmpStr[2]}</font>
+              </span>
               <span style={{fontSize: '1rem'}}>A</span>
               <span style={{color: 'var(--negative)'}}> ⇝</span>
               </i></div>
             <div style={{float: "left"}}><i>
               <span style={{color: 'var(--positive)'}}>⇜ </span>
-              <span style={{fontFamily: 'var(--main-font)', fontSize: '1.5rem'}}>{peakRegen}</span>
+                <span style={{fontFamily: 'var(--main-font)', fontSize: '1.5rem'}}>
+                <font style={{color: peakRegen < 100 ? 'var(--primary)' : 'var(--text)'}}>{minAmpStr[0]}</font>
+                <font style={{color: peakRegen < 10 ? 'var(--primary)' : 'var(--text)'}}>{minAmpStr[1]}</font>
+                <font style={{color: peakRegen === 0 ? 'var(--primary)' : 'var(--text)'}}>{minAmpStr[2]}</font>
+                </span>
               <span style={{fontSize: '1rem'}}>A</span>
             </i></div>
           </div>

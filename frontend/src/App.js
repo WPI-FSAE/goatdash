@@ -17,6 +17,7 @@ function App() {
 
   // Dashboard state
   const [showConf, setShowConf] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   // Set up refs for tm updates
   const speedoRef = useRef(null);
@@ -77,13 +78,14 @@ function App() {
 
       <Alerts/>
 
-      <BatteryStatus ref={batteryRef}/>
+      <BatteryStatus ref={batteryRef} darkMode={darkMode}/>
 
       <WheelStatus fl={false} fr={false} rl={false} rr={false}/>
 
       <LapStatus ref={lapRef}/>
       
-      <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf}/>
+      <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf} 
+                  darkMode={darkMode} setDarkMode={setDarkMode}/>
       
     </div>
   );

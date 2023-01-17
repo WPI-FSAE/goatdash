@@ -61,7 +61,7 @@ const BatteryStatus = forwardRef((props, ref) => {
           if (key === 99) color = 'var(--positive)';
           if (key === 100) color = 'var(--negative)';
   
-          return <div className="segment" key={key} style={{"left": `${key * .5}%`, "backgroundColor": color}}></div>
+          return <div className="segment" key={key} style={{left: `${key * .5}%`, backgroundColor: color}}></div>
         });
       }
 
@@ -72,8 +72,8 @@ const BatteryStatus = forwardRef((props, ref) => {
                 {power_segments(dcAmps, 200, 50)}
             </div>
 
-            <img className="icon" id="accel" src="accel.png"></img>
-            <img className="icon" id="regen" src="regen.png"></img>
+            <img className="icon" id="accel" src="rabbit1.png" style={{filter: `invert(${props.darkMode ? 1 : 0}) opacity(80%)`}}></img>
+            <img className="icon" id="regen" src="regen.png" style={{filter: `invert(${props.darkMode ? 1 : 0}) opacity(80%)`}}></img>
 
             <div id="voltages">
                 <p>

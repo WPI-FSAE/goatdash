@@ -1,5 +1,5 @@
 h1#speed-text {
-    font-size: 5rem;
+    font-size: 6rem;
     font-family: var(--main-font), sans-serif;
     font-feature-settings: "tnum";
     display: inline;
@@ -32,9 +32,9 @@ div#peaks {
     position: absolute;
     font-size: 2rem;
     left: 50%;
-    width: 70%;
+    width: 75%;
     bottom: 0%;
-    transform: translate(-45%, 0)
+    transform: translate(-47%, 0)
 }
 
 p#label {

@@ -41,13 +41,12 @@ img.icon {
 img#accel {
   top: 0;
   left: 50%;
-  transform: scale(.8);
-  filter: opacity(50%);
+  transform: scale(.9);
 }
 
 img#regen {
   top: 0;
   right: 50%;
-  transform: scale(.75);
-  filter: opacity(50%);
+  transform: scale(.7);
+  filter: invert(0) opacity(50%);
 }
