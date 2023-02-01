@@ -77,7 +77,7 @@ const BatteryStatus = forwardRef((props, ref) => {
 
             <div id="voltages">
                 <p>
-                    <b>BATT</b>
+                    <b>ACCUM</b>
                 </p>
                 <p>
                     <span className="label">Min </span>

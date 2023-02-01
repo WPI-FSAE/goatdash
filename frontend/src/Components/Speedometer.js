@@ -119,9 +119,9 @@ const Speedometer = forwardRef((props, ref) => {
           <div id="speed">
             <h1 id="speed-text"><i>
               <font style={{color: speed < 10 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[0]}</font>
-              <font style={{color: speed < 1 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[1]}</font>
-              <font style={{color: speed === 0 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[2]}</font>
-              <font style={{color: speed === 0 ? 'var(--primary)' : 'var(--text)'}}>{speedStr[3]}</font>
+              <font style={{color: speed < 1 ? 'var(--text)' : 'var(--text)'}}>{speedStr[1]}</font>
+              <font style={{color: speed === 0 ? 'var(--text)' : 'var(--text)'}}>{speedStr[2]}</font>
+              <font style={{color: speed === 0 ? 'var(--text)' : 'var(--text)'}}>{speedStr[3]}</font>
             </i></h1>
             <span id="label"><i>MPH</i></span>
           </div> 
@@ -131,7 +131,7 @@ const Speedometer = forwardRef((props, ref) => {
               <font style={{color: dcAmps >= 0 ? 'var(--primary)' : 'var(--text)'}}>-</font>
               <font style={{color: (dcAmps >= 0 && dcAmps < 100) || (dcAmps <= 0 && dcAmps > -100) ? 'var(--primary)' : 'var(--text)'}}>{ampStr[0]}</font>
               <font style={{color: (dcAmps >= 0 && dcAmps < 10) || (dcAmps <= 0 && dcAmps > -10) ? 'var(--primary)' : 'var(--text)'}}>{ampStr[1]}</font>
-              <font style={{color: speed === 0 ? 'var(--primary)' : 'var(--text)'}}>{ampStr[2]}</font>
+              <font style={{color: dcAmps === 0 ? 'var(--text)' : 'var(--text)'}}>{ampStr[2]}</font>
             </i></h2> 
             <span id="label"><i> A</i></span>    
           </div>
@@ -143,17 +143,17 @@ const Speedometer = forwardRef((props, ref) => {
                 <font style={{color: peakAmps < 10 ? 'var(--primary)' : 'var(--text)'}}>{maxAmpStr[1]}</font>
                 <font style={{color: peakAmps === 0 ? 'var(--primary)' : 'var(--text)'}}>{maxAmpStr[2]}</font>
               </span>
-              <span style={{fontSize: '1rem'}}>A</span>
-              <span style={{color: 'var(--negative)'}}> ⇝</span>
+              <span style={{fontSize: '1rem'}}><font style={{color: peakAmps === 0 ? 'var(--primary)' : 'var(--text)'}}>A</font></span>
+              <span style={{color: peakAmps === 0 ? 'var(--primary)' : 'var(--negative)'}}> ⇝</span>
               </i></div>
             <div style={{float: "left"}}><i>
-              <span style={{color: 'var(--positive)'}}>⇜ </span>
+              <span style={{color: peakRegen === 0 ? 'var(--primary)' : 'var(--positive)'}}>⇜ </span>
                 <span style={{fontFamily: 'var(--main-font)', fontSize: '1.5rem'}}>
                 <font style={{color: peakRegen < 100 ? 'var(--primary)' : 'var(--text)'}}>{minAmpStr[0]}</font>
                 <font style={{color: peakRegen < 10 ? 'var(--primary)' : 'var(--text)'}}>{minAmpStr[1]}</font>
                 <font style={{color: peakRegen === 0 ? 'var(--primary)' : 'var(--text)'}}>{minAmpStr[2]}</font>
                 </span>
-              <span style={{fontSize: '1rem'}}>A</span>
+              <span style={{fontSize: '1rem'}}><font style={{color: peakRegen === 0 ? 'var(--primary)' : 'var(--text)'}}>A</font></span>
             </i></div>
           </div>
 

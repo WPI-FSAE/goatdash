@@ -41,7 +41,7 @@ img.icon {
 img#accel {
   top: 0;
   left: 50%;
-  transform: scale(.9);
+  transform: scale(.8);
 }
 
 img#regen {
