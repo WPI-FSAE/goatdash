@@ -173,7 +173,7 @@ p {
 #wheel-status {
   position: fixed;
   bottom: 0;
-  right: 0;
+  right: 2%;
   width: 20%;
   height: 30%;
 }
