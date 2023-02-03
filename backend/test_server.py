@@ -28,6 +28,9 @@ rtd, fault = [False] * 2
 
 odometer, trip = [0] * 2
 
+batt_pct = 0
+mi_est, lap_est, time_est = [0] * 3
+
 # Lap Values
 lap_timer = False
 timer_start = 0
@@ -112,7 +115,7 @@ async def send_tm(websocket):
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer, \
-    peak_amps, peak_regen, top_speed
+    peak_amps, peak_regen, top_speed, mi_est, lap_est, time_est, batt_pct
 
     i = 0
 
@@ -142,7 +145,11 @@ async def send_tm(websocket):
                              'fault': fault,
                              'peak_amps': peak_amps,
                              'peak_regen': peak_regen,
-                             'top_speed': top_speed
+                             'top_speed': top_speed,
+                             'mi_est': mi_est,
+                             'lap_est': lap_est,
+                             'time_est': time_est,
+                             'batt_pct': batt_pct
                              }}
 
         if (i >= 99):

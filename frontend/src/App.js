@@ -6,7 +6,7 @@ import BatteryStatus from './Components/BatteryStatus';
 import VehicleStatus from './Components/VehicleStatus';
 import WheelStatus from './Components/WheelStatus';
 import ConfigPane from './Components/ConfigPane';
-import Alerts from './Components/Alerts';
+import StateOfCharge from './Components/StateOfCharge';
 import LapStatus from './Components/LapStatus';
 
 function App() {
@@ -25,6 +25,9 @@ function App() {
 
   const batteryRef = useRef(null);
   const updateBattery = (tm) => batteryRef.current?.updateBattery(tm);
+
+  const socRef = useRef(null);
+  const updateSoc = (tm) => socRef.current?.updateSoc(tm);
 
   const statusRef = useRef(null);
   const updateStatus = (tm, conn) => statusRef.current?.updateStatus(tm, conn);
@@ -54,6 +57,7 @@ function App() {
          state is handled by the individual components. */
       updateSpeedo(tm);
       updateBattery(tm);
+      updateSoc(tm);
       updateStatus(tm, true);
       updateLap(tm);
     });
@@ -76,7 +80,7 @@ function App() {
 
       <Speedometer ref={speedoRef}/>
 
-      <Alerts/>
+      <StateOfCharge ref={socRef}/>
 
       <BatteryStatus ref={batteryRef} darkMode={darkMode}/>
 

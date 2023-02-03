@@ -157,11 +157,11 @@ p {
   pointer-events: none;
 }
 
-#alerts {
+#state-of-charge {
   position: absolute;
   width: 50%;
-  height: 18%;
-  top: 12%;
+  height: 20%;
+  top: 10%;
 }
 
 #conf-pane {

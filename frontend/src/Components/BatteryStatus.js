@@ -73,7 +73,7 @@ const BatteryStatus = forwardRef((props, ref) => {
             </div>
 
             <img className="icon" id="accel" src="rabbit1.png" style={{filter: `invert(${props.darkMode ? 1 : 0}) opacity(80%)`}}></img>
-            <img className="icon" id="regen" src="regen.png" style={{filter: `invert(${props.darkMode ? 1 : 0}) opacity(80%)`}}></img>
+            <img className="icon" id="regen" src="regen.png" style={{filter: `invert(${props.darkMode ? 1 : 0}) opacity(90%)`}}></img>
 
             <div id="voltages">
                 <p>
