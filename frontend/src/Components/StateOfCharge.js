@@ -98,7 +98,7 @@ const StateOfCharge = forwardRef((props, ref) => {
         datasets: [
             {
                 data: dcAmpsBuffer,
-                borderColor: dcAmpsBuffer[dcAmpsBuffer.length - 1] < 0 ? posColor : txtColor,
+                borderColor: dcAmpsBuffer[dcAmpsBuffer.length - 1] < 0 ? txtColor : txtColor,
             },
         ]
     }

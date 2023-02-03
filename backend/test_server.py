@@ -28,7 +28,7 @@ rtd, fault = [False] * 2
 
 odometer, trip = [0] * 2
 
-batt_pct = 0
+batt_pct = 100
 mi_est, lap_est, time_est = [0] * 3
 
 # Lap Values
