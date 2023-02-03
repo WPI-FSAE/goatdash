@@ -8,6 +8,7 @@ import WheelStatus from './Components/WheelStatus';
 import ConfigPane from './Components/ConfigPane';
 import StateOfCharge from './Components/StateOfCharge';
 import LapStatus from './Components/LapStatus';
+import ForceMeter from './Components/ForceMeter';
 
 function App() {
   const [ip, setIp] = useState("");
@@ -35,6 +36,9 @@ function App() {
   const lapRef = useRef(null);
   const updateLap = (tm) => lapRef.current?.updateLap(tm);
 
+  const forceMeterRef = useRef(null);
+  const updateForceMeter = (tm) => forceMeterRef.current?.updateForceMeter(tm);
+
   // Configure websocket
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000');
@@ -60,6 +64,7 @@ function App() {
       updateSoc(tm);
       updateStatus(tm, true);
       updateLap(tm);
+      updateForceMeter(tm);
     });
 
     ws.addEventListener('close', (event) => {
@@ -87,6 +92,8 @@ function App() {
       <WheelStatus fl={false} fr={false} rl={false} rr={false}/>
 
       <LapStatus ref={lapRef}/>
+
+      <ForceMeter ref={forceMeterRef}/>
       
       <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf} 
                   darkMode={darkMode} setDarkMode={setDarkMode}/>

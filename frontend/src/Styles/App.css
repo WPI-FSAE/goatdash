@@ -185,3 +185,11 @@ p {
   height: 100%;
   pointer-events: none;
 }
+
+#force-meter {
+  position: fixed;
+  bottom: 1%;
+  left: 2%;
+  width: 28vh;
+  height: 28vh;
+}
