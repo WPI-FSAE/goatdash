@@ -26,10 +26,25 @@ const ForceMeter = forwardRef((props, ref) => {
         }
     }));
 
+    const getCoords = (x, y) => {
+        let hyp = (x**2 + y**2);
+
+        if (hyp > 1) {
+            let scalar = 1 / hyp;
+            return {x: Math.sqrt(scalar) * x, y: Math.sqrt(scalar) * y};
+        }
+
+        return {x: x, y: y};
+        
+
+
+    } 
+
+    const coords = getCoords(posX, posY);
+
     return (
         <div id="force-meter">
             <div id="force-gauge">
-                <div id="force-indicator" style={{transform: `translate(${(posX * 600) - 50}%, ${(posY * 600) - 50}%)`}}/>
 
                 <div className="tick-mark" style={{top: "33%", left: "50%"}}></div>
                 <div className="tick-mark" style={{top: "15%", left: "50%"}}></div>
@@ -42,6 +57,8 @@ const ForceMeter = forwardRef((props, ref) => {
 
                 <div className="tick-mark" style={{bottom: "50%", left: "33%", transform: "rotate(90deg)"}}></div>
                 <div className="tick-mark" style={{bottom: "50%", left: "15%", transform: "rotate(90deg)"}}></div>
+
+                <div id="force-indicator" style={{transform: `translate(${(coords.x * 600) - 50}%, ${(-1 * coords.y * 600) - 50}%)`}}/>
 
             </div>
 
