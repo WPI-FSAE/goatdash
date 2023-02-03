@@ -77,46 +77,46 @@ const BatteryStatus = forwardRef((props, ref) => {
 
             <div id="voltages">
                 <p>
-                    <b>ACCUM</b>
+                    Accum (V)
                 </p>
                 <p>
-                    <span className="label">Min </span>
-                    <span className="value" style={{'backgroundColor': minCell < Constants.CELL_THRESHOLDS[0] ? color[0] : minCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
-                        <b>{padDecimal(minCell)}V</b>
+                    <span className="label" id="min-cell-label">Min </span>
+                    <span className="value" id="min-cell-val" style={{'backgroundColor': minCell < Constants.CELL_THRESHOLDS[0] ? color[0] : minCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{padDecimal(minCell)}</b>
                     </span>
                 </p>
                 <p>
-                    <span className="label">Total </span><b>{invVolts}V</b>
+                    <span className="label" id="total-label">Total </span><span id="total-val"><b>{invVolts}</b></span>
                 </p>
                 <p>
-                    <span className="label">Avg </span>
-                    <span className="value" style={{'backgroundColor': avgCell < Constants.CELL_THRESHOLDS[0] ? color[0] : avgCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
-                        <b>{padDecimal(avgCell)}V</b>
+                    <span className="label" id="avg-cell-label">Avg </span>
+                    <span className="value" id="avg-cell-val" style={{'backgroundColor': avgCell < Constants.CELL_THRESHOLDS[0] ? color[0] : avgCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{padDecimal(avgCell)}</b>
                     </span>
                 </p>
             </div>
 
             <div id="temps">
                 <p>
-                    <b>TEMP</b>
+                    Temp (C)
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': invTemp > Constants.INV_TEMP_THRESHOLDS[0] ? color[0] : invTemp > Constants.INV_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
-                        <b>{invTemp}F</b>
+                    <span className="value" id="inv-temp-val" style={{'backgroundColor': invTemp > Constants.INV_TEMP_THRESHOLDS[0] ? color[0] : invTemp > Constants.INV_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{invTemp}</b>
                     </span>
-                    <span className="label"> Inv</span>
+                    <span className="label" id="inv-temp-label"> Inv</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': accTemp > Constants.ACC_TEMP_THRESHOLDS[0] ? color[0] : accTemp > Constants.ACC_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
-                        <b>{accTemp}F</b>
+                    <span className="value" id="accum-temp-val" style={{'backgroundColor': accTemp > Constants.ACC_TEMP_THRESHOLDS[0] ? color[0] : accTemp > Constants.ACC_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{accTemp}</b>
                     </span>
-                    <span className="label"> Accum</span>
+                    <span className="label" id="accum-temp-label"> Accum</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': mtrTemp > Constants.MTR_TEMP_THRESHOLDS[0] ? color[0] : mtrTemp > Constants.MTR_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
-                        <b>{mtrTemp}F</b>
+                    <span className="value" id="mtr-temp-val" style={{'backgroundColor': mtrTemp > Constants.MTR_TEMP_THRESHOLDS[0] ? color[0] : mtrTemp > Constants.MTR_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{mtrTemp}</b>
                     </span>
-                    <span className="label"> Mtr</span>
+                    <span className="label" id="mtr-temp-label"> Mtr</span>
                 </p>
             </div>
         </div>

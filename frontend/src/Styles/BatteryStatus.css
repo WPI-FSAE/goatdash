@@ -17,6 +17,47 @@
   position: absolute;
   top: 35%;
   left: 0;
+  height: 30%;
+  width: 12%;
+}
+
+#min-cell-label {
+  margin: 0 0 0 5px;
+  position: absolute;
+  bottom: 57%;
+  left: 0%;
+}
+
+#min-cell-val {
+  position: absolute;
+  bottom: 57%;
+  right: -010%;
+}
+
+#total-label {
+  margin: 0 0 0 5px;
+  position: absolute;
+  bottom: 35%;
+  left: 0%;
+}
+
+#total-val {
+  position: absolute;
+  bottom: 35%;
+  right: 0%;
+}
+
+#avg-cell-label {
+  margin: 0 0 0 5px;
+  position: absolute;
+  bottom: 13%;
+  left: 0;
+}
+
+#avg-cell-val {
+  position: absolute;
+  bottom: 13%;
+  right: 10%;
 }
 
 #temps {
@@ -24,6 +65,47 @@
   top: 35%;
   right: 0;
   text-align: right;
+  height: 30%;
+  width: 12%;
+}
+
+#inv-temp-label {
+  margin: 0 5px 0 0;
+  position: absolute;
+  bottom: 57%;
+  right: 0%;
+}
+
+#inv-temp-val {
+  position: absolute;
+  bottom: 57%;
+  left: -10%;
+}
+
+#accum-temp-label {
+  margin: 0 5px 0 0;
+  position: absolute;
+  bottom: 35%;
+  right: 0%;
+}
+
+#accum-temp-val {
+  position: absolute;
+  bottom: 35%;
+  left: 0%;
+}
+
+#mtr-temp-label {
+  margin: 0 5px 0 0;
+  position: absolute;
+  bottom: 13%;
+  right: 0;
+}
+
+#mtr-temp-val {
+  position: absolute;
+  bottom: 13%;
+  left: 10%;
 }
 
 .value {

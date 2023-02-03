@@ -39,7 +39,7 @@ const StateOfCharge = forwardRef((props, ref) => {
             if (tm['batt_pct'] !== undefined && tm['batt_pct'] !== battPct) setBattPct(tm['batt_pct']);
             if (tm['mi_est'] !== undefined && tm['mi_est'] !== miEst) setMiEst(tm['mi_est']);
             if (tm['lap_est'] !== undefined && tm['lap_est'] !== lapEst) setLapEst(tm['lap_est']);
-            if (tm['time_est'] !== undefined && tm['time_est'] !== timeEst) { console.log("Updating time est"); setTimeEst(tm['time_est']);};
+            if (tm['time_est'] !== undefined && tm['time_est'] !== timeEst) setTimeEst(tm['time_est']);;
         }
     }));
 

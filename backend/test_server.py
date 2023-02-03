@@ -208,7 +208,7 @@ async def get_tm():
     rand_move = random.randint(-1, 1)
     f_x += rand_move * .01
 
-    if (abs(f_x) > 2):
+    if (abs(f_x) > 1):
         f_x = 0
 
     if (f_x > max_rt):
@@ -220,7 +220,7 @@ async def get_tm():
     rand_move = random.randint(-1, 1)
     f_y += rand_move * .01
 
-    if (abs(f_y) > 2):
+    if (abs(f_y) > 1):
         f_y = 0
 
     if (f_y > max_fr):
