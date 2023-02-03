@@ -28,12 +28,17 @@ rtd, fault = [False] * 2
 
 odometer, trip = [0] * 2
 
+# SoC values
 batt_pct = 100
 mi_est, lap_est, time_est = [0] * 3
 
 # Lap Values
 lap_timer = False
 timer_start = 0
+
+# Force Values
+f_x, f_y = [0] * 2
+max_fr, max_rr, max_lt, max_rt = [0] * 4
 
 # Derived values
 peak_amps = 0
@@ -97,7 +102,7 @@ async def message_handler(websocket):
                 timer_start = round(time.time() * 1000.0)
 
 async def animate(websocket):
-    inc = 1
+    inc = 4
     tick = 1
 
     while tick > 0:
@@ -105,7 +110,7 @@ async def animate(websocket):
         await asyncio.sleep(.01)
 
         if tick > 100:
-            inc = -1
+            inc = -4
 
         tick += inc
     
@@ -115,11 +120,12 @@ async def send_tm(websocket):
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer, \
-    peak_amps, peak_regen, top_speed, mi_est, lap_est, time_est, batt_pct
+    peak_amps, peak_regen, top_speed, mi_est, lap_est, time_est, batt_pct, \
+    f_x, f_y, max_fr, max_rr, max_lt, max_rt
 
     i = 0
 
-    # await animate(websocket)
+    await animate(websocket)
 
     while True:
         pkt = {}
@@ -130,7 +136,9 @@ async def send_tm(websocket):
                              'speed': round(speed, 1), 
                              'inv_volts': inv_voltage,
                              'dc_amps': dc_amps,
-                             'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0
+                             'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0,
+                             'f_x': f_x,
+                             'f_y': f_y
                              }}
         elif (i == 1):
             pkt = {**pkt, **{'avg_cell': avg_cell,
@@ -149,7 +157,11 @@ async def send_tm(websocket):
                              'mi_est': mi_est,
                              'lap_est': lap_est,
                              'time_est': time_est,
-                             'batt_pct': batt_pct
+                             'batt_pct': batt_pct,
+                             'max_fr': round(max_fr, 1),
+                             'max_rr': round(max_rr, 1),
+                             'max_lt': round(max_lt, 1),
+                             'max_rt': round(max_rt, 1),
                              }}
 
         if (i >= 99):
@@ -173,7 +185,7 @@ async def poll_tm():
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, last_time, dc_amps_dir, spd_dir, acc_temp, inv_temp, mtr_temp, \
-    rtd, fault, peak_amps, peak_regen, top_speed
+    rtd, fault, peak_amps, peak_regen, top_speed, f_x, f_y, max_fr, max_rr, max_lt, max_rt
 
     # Simulate waiting for message
     # Each message type 'read' every .1s avg
@@ -191,6 +203,33 @@ async def get_tm():
 
     if speed > top_speed:
         top_speed = speed
+
+    # Simulate force readings
+    rand_move = random.randint(-1, 1)
+    f_x += rand_move * .01
+
+    if (abs(f_x) > 2):
+        f_x = 0
+
+    if (f_x > max_rt):
+        max_rt = f_x
+
+    if (f_x < -1 * max_lt):
+        max_lt = abs(f_x)
+
+    rand_move = random.randint(-1, 1)
+    f_y += rand_move * .01
+
+    if (abs(f_y) > 2):
+        f_y = 0
+
+    if (f_y > max_fr):
+        max_fr = f_y
+
+    if (f_y < -1 * max_rr):
+        max_rr = abs(f_y)
+        
+
 
     # DTI_TelemetryA
     if rand_msg_type == 0:
@@ -210,7 +249,9 @@ async def get_tm():
         
     # DTI_TelemetryB
     elif rand_msg_type == 1:
-        dc_amps += dc_amps_dir
+
+        rand_scalar = random.randint(-1, 2)
+        dc_amps += dc_amps_dir * rand_scalar
 
         if dc_amps > 150:
             dc_amps_dir = -1
