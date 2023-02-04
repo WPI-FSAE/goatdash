@@ -1,9 +1,9 @@
 {
   "name": "FSAE-Dashboard",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "author": {
-    "name": "WPI FSAE",
+    "name": "Ted CliffordS",
     "email": "efclifford@wpi.edu"
   },
   "dependencies": {

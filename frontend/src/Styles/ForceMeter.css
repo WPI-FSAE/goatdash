@@ -33,7 +33,7 @@
     height: 2px;
     background-color: var(--text);
     transform: translate(-50%, -50%);
-    border-radius: 50%;
+    border-radius: 0%;
 }
 
 .force-val {
