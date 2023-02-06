@@ -27,27 +27,32 @@ from can.interface import Bus
 bus = Bus()
 parser = Parser()
 
-rpm = 0
-speed = 0
-inv_voltage = 0
-avg_cell = 0
-min_cell = 0
-max_cell = 0
-dc_amps = 0
+# TM Values
+rpm, speed, inv_voltage, avg_cell, min_cell, dc_amps = [0] * 6
+acc_temp, inv_temp, mtr_temp = [0] * 3
+rtd, fault = [False] * 2
 
-acc_temp = 0
-inv_temp = 0
-mtr_temp = 0
+odometer, trip = [0] * 2
 
-lat = 0
-long = 0
+# SoC values
+batt_pct = 0
+mi_est, lap_est, time_est = [0] * 3
 
-rtd = False
-fault = False
+# Lap Values
+lap_timer = False
+timer_start = 0
 
-odometer = 0
-trip = 0
+# Force Values
+f_x, f_y = [0] * 2
+max_fr, max_rr, max_lt, max_rt = [0] * 4
+
+# Derived values
+peak_amps = 0
+peak_regen = 0
+top_speed = 0
+
 last_time = datetime.utcnow()
+start_time = last_time
 
 # Load persistant car data
 try:
@@ -87,13 +92,26 @@ async def message_handler(websocket):
                 odometer = 0
             elif (data['opt'] == "RESET_TRIP"):
                 trip = 0
+            elif (data['opt'] == "RESET_DRAW"):
+                peak_amps = 0
+            elif (data['opt'] == "RESET_REGEN"):
+                peak_regen = 0
+            elif (data['opt'] == "RESET_TOP_SPEED"):
+                top_speed = 0
+            elif (data['opt'] == "SET_LAP"):
+                await websocket.send(json.dumps({"lap_total": data["laps"]}))
+            elif (data['opt'] == "START_TIME"):
+                lap_timer = True
+                timer_start = round(time.time() * 1000.0)
 
 async def send_tm(websocket):
     """
     Maintain telemetry connection with client
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault
+    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer, \
+    peak_amps, peak_regen, top_speed, mi_est, lap_est, time_est, batt_pct, \
+    f_x, f_y, max_fr, max_rr, max_lt, max_rt
 
     i = 0
 
@@ -106,7 +124,11 @@ async def send_tm(websocket):
                              'speed': speed, 
                              'inv_volts': inv_voltage,
                              'dc_amps': dc_amps}}
-        elif (i % 2 == 1):
+        if (i % 2 == 1):
+            pkt = {**pkt, **{'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0,
+                             'f_x': f_x,
+                             'f_y': f_y}}
+        if (i == 1):
             pkt = {**pkt, **{'avg_cell': avg_cell,
                              'min_cell': min_cell, 
                              'max_cell': max_cell,
@@ -116,9 +138,20 @@ async def send_tm(websocket):
                              'odometer': round(odometer, 1), 
                              'trip': round(trip, 3), 
                              'rtd': rtd, 
-                             'fault': fault}}
+                             'fault': fault,
+                             'peak_amps': peak_amps,
+                             'peak_regen': peak_regen,
+                             'top_speed': top_speed,
+                             'mi_est': mi_est,
+                             'lap_est': lap_est,
+                             'time_est': time_est,
+                             'batt_pct': batt_pct,
+                             'max_fr': round(max_fr, 1),
+                             'max_rr': round(max_rr, 1),
+                             'max_lt': round(max_lt, 1),
+                             'max_rt': round(max_rt, 1)}}
 
-        if (i >= 9):
+        if (i >= 99):
             i = 0
         else:
             i += 1
@@ -139,7 +172,8 @@ async def poll_tm():
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, last_time, acc_temp, inv_temp, mtr_temp, rtd, fault, \
-    lat, long
+    lat, long, peak_amps, peak_regen, \
+    f_x, f_y, max_fr, max_rr, max_lt, max_rt
 
     msg = bus.recv(.01)
 
@@ -168,6 +202,9 @@ async def get_tm():
             msg = parser.parse(msg)
             dc_amps = round(msg.DCDeciAmps / 10.0, 1)
 
+            peak_amps = max(dc_amps, peak_amps)
+            peak_regen = min(dc_amps, peak_regen)
+
     
         elif hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryC':
             msg = parser.parse(msg)
@@ -190,12 +227,23 @@ async def get_tm():
             long = msg.Longitude
             lat = msg.Latitude
 
+        elif hasattr(msgdef, 'name') and msgdef.name == 'IMUAccel':
+            msg = parser.parse(msg)
+
+            f_x = msg.AccelX
+            f_y = msg.AccelY
+
+            max_rt = max(f_x, max_rt)
+            max_lt = abs(min(f_x, -1 * max_lt))
+            max_fr = max(f_y, max_fr)
+            max_rr = abs(min(f_y, -1 * max_rr))
+
         elif hasattr(msgdef, 'name') and msgdef.name == "FrontIO_Heartbeat":
             msg = parser.parseBitfield(msg, "FrontIO_StatusFlags")
 
             rtd = bool(msg.ReadyToDrive)
 
-
+        
 
 #########
 # STATE #
@@ -210,6 +258,7 @@ async def write_state():
 
     with open('car_state.json', 'w') as f:
             f.write(json.dumps({'odometer': round(odometer, 3), 'trip': round(trip, 3)}))
+
 
 
 #########
