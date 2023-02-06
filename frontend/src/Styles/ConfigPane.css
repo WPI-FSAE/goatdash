@@ -6,7 +6,7 @@
 #menu-title {
     font-family: "Rajdhani Medium";
     font-size: 3em;
-    padding: 20px;
+    padding: 20px 20px 0 20px;
 }
 
 .menu {
@@ -42,7 +42,9 @@
 .button {
     display: flex;
     justify-content: space-between;
-    padding: 2% 2% 2% 2%;
+    padding: 20px 2% 20px 2%;
+    margin: 5px;
+    border-radius: 5px;
     text-align: center;
     user-select: none;
     cursor: pointer;
@@ -50,7 +52,7 @@
     background-color: var(--primary);
 }
 
-.button:hover {
+.button:hover, .button:active {
     filter: brightness(.9);
 }
 
@@ -83,8 +85,8 @@
 
 #alert {
     position: absolute;
-    left: 50%;
-    transform: translate(-50%, -80%);
+    right: 5px;
+    top: 5px;
     background-color: var(--positive);
     padding: 5px;
     border-radius: 5px;
@@ -97,4 +99,48 @@
     height: 100%;
     width: 100%;
     background-color: var(--bg);
+}
+
+.num-pad-wrap {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70%;
+    background-color: var(--bg);
+    border-radius: 5px;
+    /* outline: solid var(--text) 1px; */
+    box-shadow: 0px -5px 10px rgb(0, 0, 0);
+}
+
+.num-pad-val {
+    content: none;
+    width: 97%;
+    background-color: var(--primary);
+    border-radius: 5px;
+    margin: 1%;
+    padding: 5px;
+    font-size: 1.5em;
+}
+
+.num-pad {
+    position: absolute;
+    bottom: 20%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    row-gap: 10px;
+    column-gap: 10px;
+}
+
+.num-pad-key {
+    width: 32%;
+    text-align: center;
+    background-color: var(--primary);
+    border-radius: 5px;
+    font-size: 2em;
+}
+
+.num-pad-key:hover {
+    filter: brightness(.7);
 }

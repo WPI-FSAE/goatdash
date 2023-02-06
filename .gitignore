@@ -1,3 +1,4 @@
 dist/
 __pycache__/
 car_state.json
+car_state_test.json

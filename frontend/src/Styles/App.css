@@ -12,21 +12,64 @@
     url('./fonts/Russo_One/RussoOne-Regular.ttf') format("truetype");
 }
 
+@font-face {
+  font-family: "Dash Digital";
+  src:
+    local("Dash Digital"),
+    url('./fonts/Dash Digital/dash_digital-7.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: "Share Tech Mono";
+  src:
+    local("Share Tech Mono"),
+    url('./fonts/Share Tech Mono/ShareTechMono-Regular.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: "Ooh Bahn";
+  src:
+    local("Ooh Bahn"),
+    url('./fonts/Ooh Bahn/OohBahn-Regular.otf') format("truetype");
+}
+
+@font-face {
+  font-family: "Patopian 1986";
+  src:
+    local("Patopian 1986"),
+    url('./fonts/Patopian 1986/Patopian 1986.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: "LiquidCrystalNormal";
+  src:
+    local("LiquidCrystalNormal"),
+    url('./fonts/LiquidCrystal/LiquidCrystal-Normal.otf') format("truetype");
+}
+
+@font-face {
+  font-family: "LiquidCrystalBold";
+  src:
+    local("LiquidCrystalBold"),
+    url('./fonts/LiquidCrystal/LiquidCrystal-Bold.otf') format("truetype");
+}
+
+
 :root {
-  --black: rgb(0, 0, 0);
-  --white: rgb(255, 255, 255);
+  --black: #000000;
+  --white: #ffffff;
 
   /*Dark theme 1 - Deep*/
-  --deep-bg: var(--black);
-  --deep-text: var(--white);
-  --deep-gray: rgb(10, 15, 19);
-  --deep-green: rgb(50, 164, 133);
-  --deep-red: rgb(191, 52, 44);
+  --deep-bg: #181925;
+  --deep-text: #EDF2F4;
+  --deep-gray: #2B2D42;
+  --deep-green: #32908F;
+  --deep-red: #D90429;
 
   /*Dark theme 2 - Philly*/
   --philly-bg: #010f13;
   --philly-text: var(--white);
-  --philly-gray: #2b2a2c;
+  --philly-gray: #161f27;
   --philly-green: #08b2e3;
   --philly-red: #8c1c13;
 
@@ -38,28 +81,30 @@
   --toucan-red: #E15554;
 
   /*Dark theme 4 - Darker*/
-  --darker-bg: #181925;
-  --darker-text: #EDF2F4;
-  --darker-gray: #2B2D42;
-  --darker-green: #32908F;
-  --darker-red: #D90429;
+  --darker-bg: var(--black);
+  --darker-text: var(--white);
+  --darker-gray: rgb(10, 15, 19);
+  --darker-green: rgb(50, 164, 133);
+  --darker-red: rgb(191, 52, 44);
 
   /*Light theme*/
   --light-bg: var(--white);
   --light-text: var(--black);
-  --light-gray: rgb(213, 213, 213);
-  --light-green: rgb(66, 216, 175);
-  --light-red: rgb(242, 66, 57);
+  --light-gray: #d5d5d5;
+  --light-green: #42d8af;
+  --light-red: #f24239;
 
-  --yellow: rgb(247, 212, 23);
+  --yellow: rgb(255, 208, 0);
 
   /*Applied*/
-  --bg: var(--light-bg);
-  --text: var(--light-text);
-  --negative: var(--light-red);
-  --positive: var(--light-green);
-  --primary: var(--light-gray);
+  --bg: var(--deep-bg);
+  --text: var(--deep-text);
+  --negative: var(--deep-red);
+  --positive: var(--deep-green);
+  --primary: var(--deep-gray);
   --caution: var(--yellow);
+  --halo: var(--primary);
+  --main-font: "Dash Digital";
 }
 
 .App {
@@ -73,6 +118,11 @@
   font-size: calc(10px + 2vmin);
   font-family: "Rajdhani Medium";
   color: var(--text);
+  user-select: none;
+}
+
+h1 {
+  margin: 0;
 }
 
 p {
@@ -86,20 +136,20 @@ p {
 
 #status {
   position: fixed;
-  bottom: 0;
-  width: 60%;
-  height: 30%;
+  width: 100%;
+  height: 100%;
 }
 
 #speedo {
-  position: fixed;
+  position: absolute;
   width: 60%;
+  height: 35%;
   text-align: center;
   pointer-events: none;
 }
 
 #battery {
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
@@ -107,15 +157,39 @@ p {
   pointer-events: none;
 }
 
-#alerts {
-  position: fixed;
+#state-of-charge {
+  position: absolute;
   width: 50%;
-  height: 18%;
-  top: 12%;
+  height: 20%;
+  top: 10%;
 }
 
 #conf-pane {
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
+}
+
+#wheel-status {
+  position: fixed;
+  bottom: 0;
+  right: 2%;
+  width: 20%;
+  height: 30%;
+}
+
+#lap-status {
+  position: fixed;
+  top: 10%;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#force-meter {
+  position: fixed;
+  bottom: 1%;
+  left: 2%;
+  width: 28vh;
+  height: 28vh;
 }

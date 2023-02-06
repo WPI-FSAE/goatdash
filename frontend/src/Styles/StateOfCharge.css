@@ -1,0 +1,128 @@
+#state-of-charge {
+    border-radius: 5px;
+    background-color: var(--primary);
+    outline: solid var(--text) 1px;
+    text-align: center;
+}
+
+#soc-graph {
+    position: absolute;
+    left: 17%;
+    width: calc(83% + 1px);
+    height: 100%;
+}
+
+#timescale-label {
+    margin: 0 5px 0 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 1rem;
+}
+
+#regen-label {
+    margin: 0 0 0 5px;
+    position: absolute;
+    top: 66%;
+    left: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--positive);
+}
+
+#draw-label {
+    margin: 0 0 0 5px;
+    position: absolute;
+    bottom: 33%;
+    left: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--negative);
+}
+
+#range {
+    position: absolute;
+    left: 0;
+    top: 5%;
+    width: 17%;
+    height: 90%;
+    border-right: solid 1px;
+}
+
+#range-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0 0 0 5px;
+    font-size: 1.1rem;
+}
+
+.range-entry {
+    margin: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.range-entry-label {
+    margin: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+}
+
+#range-miles {
+    position: absolute;
+    bottom: 60%;
+    left: 10%;
+    font-weight: bold;
+}
+
+#range-miles-label {
+    position: absolute;
+    bottom: 60%;
+    right: 10%;
+}
+
+#range-laps {
+    position: absolute;
+    bottom: 42%;
+    left: 10%;
+    font-weight: bold;
+}
+
+#range-laps-label {
+    position: absolute;
+    bottom: 42%;
+    right: 10%;
+}
+
+#range-mins {
+    position: absolute;
+    bottom: 24%;
+    left: 10%;
+    font-weight: bold;
+}
+
+#range-mins-label {
+    position: absolute;
+    bottom: 24%;
+    right: 10%;
+}
+
+#batt-pct {
+    position: absolute;
+    bottom: -8%;
+    left: 10%;
+    margin: 0;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+#batt-pct-label {
+    position: absolute;
+    bottom: -6%;
+    right: 5%;
+    margin: 0;
+    font-size: 1.5rem;
+}

@@ -1,0 +1,81 @@
+#force-meter {
+
+}
+
+#force-gauge {
+    content: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    background-color: transparent;
+    outline: solid 1px;
+    border-radius: 50%;
+}
+
+#force-indicator {
+    content: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8%;
+    height: 8%;
+    background-color: var(--negative);
+    border-radius: 50%;
+}
+
+.tick-mark {
+    content: none;
+    position: absolute;
+    width: 5%;
+    height: 2px;
+    background-color: var(--text);
+    transform: translate(-50%, -50%);
+    border-radius: 0%;
+}
+
+.force-val {
+    position: absolute;
+    font-size: 1.5rem;
+}
+
+#fr-max {
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100px;
+}
+
+#rr-max {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100px;
+}
+
+#lt-max {
+    top: 50%;
+    right: 76%;
+    transform: translate(-20%, -60%);
+}
+
+#rt-max {
+    top: 50%;
+    left: 76%;
+    transform: translate(20%, -60%);
+}
+
+#force-label {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 1.2rem;
+}

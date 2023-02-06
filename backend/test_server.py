@@ -21,18 +21,32 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 PORT = int(config['TEST']['Port'])
 
-rpm = 0
-speed = 0
-inv_voltage = 0
-avg_cell = 0
-min_cell = 0
-max_cell = 0
-dc_amps = 0
+# TM Values
+rpm, speed, inv_voltage, avg_cell, min_cell, dc_amps = [0] * 6
+acc_temp, inv_temp, mtr_temp = [0] * 3
+rtd, fault = [False] * 2
 
-odometer = 0
-trip = 0
+odometer, trip = [0] * 2
+
+# SoC values
+batt_pct = 100
+mi_est, lap_est, time_est = [0] * 3
+
+# Lap Values
+lap_timer = False
+timer_start = 0
+
+# Force Values
+f_x, f_y = [0] * 2
+max_fr, max_rr, max_lt, max_rt = [0] * 4
+
+# Derived values
+peak_amps = 0
+peak_regen = 0
+top_speed = 0
 
 last_time = datetime.utcnow()
+start_time = last_time
 
 # Load persistant car data
 try:
@@ -45,7 +59,7 @@ except:
 
 # Testing only
 dc_amps_dir = 1
-
+spd_dir = 1
 
 ######
 # WS #
@@ -54,7 +68,7 @@ async def message_handler(websocket):
     """
     Handle incoming websocket messages
     """
-    global odometer, trip
+    global odometer, trip, lap_timer, timer_start, peak_amps, peak_regen, top_speed 
 
     async for message in websocket:
         print(f'RECEIVED: {message}')
@@ -75,15 +89,43 @@ async def message_handler(websocket):
                 odometer = 0
             elif (data['opt'] == "RESET_TRIP"):
                 trip = 0
+            elif (data['opt'] == "RESET_DRAW"):
+                peak_amps = 0
+            elif (data['opt'] == "RESET_REGEN"):
+                peak_regen = 0
+            elif (data['opt'] == "RESET_TOP_SPEED"):
+                top_speed = 0
+            elif (data['opt'] == "SET_LAP"):
+                await websocket.send(json.dumps({"lap_total": data["laps"]}))
+            elif (data['opt'] == "START_TIME"):
+                lap_timer = True
+                timer_start = round(time.time() * 1000.0)
 
+async def animate(websocket):
+    inc = 4
+    tick = 1
+
+    while tick > 0:
+        await websocket.send(json.dumps({'speed': tick * .6}))
+        await asyncio.sleep(.01)
+
+        if tick > 100:
+            inc = -4
+
+        tick += inc
+    
 async def send_tm(websocket):
     """
     Maintain telemetry connection with client
     """
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip
+    odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer, \
+    peak_amps, peak_regen, top_speed, mi_est, lap_est, time_est, batt_pct, \
+    f_x, f_y, max_fr, max_rr, max_lt, max_rt
 
     i = 0
+
+    await animate(websocket)
 
     while True:
         pkt = {}
@@ -91,23 +133,44 @@ async def send_tm(websocket):
         # Packet type switching (allows for some values to updated faster than others)
         if (i % 2 == 0):
             pkt = {**pkt, **{'rpm': rpm, 
-                             'speed': speed, 
-                             'inv_volts': inv_voltage, 
-                             'odometer': round(odometer, 1), 
-                             'trip': round(trip, 3)}}
-        elif (i % 2 == 1):
+                             'speed': round(speed, 1), 
+                             'inv_volts': inv_voltage,
+                             'dc_amps': dc_amps,
+                             'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0,
+                             'f_x': f_x,
+                             'f_y': f_y
+                             }}
+        elif (i == 1):
             pkt = {**pkt, **{'avg_cell': avg_cell,
                              'min_cell': min_cell, 
                              'max_cell': max_cell,
-                             'dc_amps': dc_amps}}
+                             'acc_temp': acc_temp, 
+                             'inv_temp': inv_temp,
+                             'mtr_temp': mtr_temp,
+                             'odometer': round(odometer, 1), 
+                             'trip': round(trip, 3), 
+                             'rtd': rtd, 
+                             'fault': fault,
+                             'peak_amps': peak_amps,
+                             'peak_regen': peak_regen,
+                             'top_speed': top_speed,
+                             'mi_est': mi_est,
+                             'lap_est': lap_est,
+                             'time_est': time_est,
+                             'batt_pct': batt_pct,
+                             'max_fr': round(max_fr, 1),
+                             'max_rr': round(max_rr, 1),
+                             'max_lt': round(max_lt, 1),
+                             'max_rt': round(max_rt, 1),
+                             }}
 
-        if (i >= 9):
+        if (i >= 99):
             i = 0
         else:
             i += 1
         
         await websocket.send(json.dumps(pkt))
-        await asyncio.sleep(.05)    # Define frontend refresh rate
+        await asyncio.sleep(.005)    # Define frontend refresh rate
 
 
 #######
@@ -121,7 +184,8 @@ async def poll_tm():
 # Read message from can bus, update internal state,
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
-    odometer, trip, last_time, dc_amps_dir
+    odometer, trip, last_time, dc_amps_dir, spd_dir, acc_temp, inv_temp, mtr_temp, \
+    rtd, fault, peak_amps, peak_regen, top_speed, f_x, f_y, max_fr, max_rr, max_lt, max_rt
 
     # Simulate waiting for message
     # Each message type 'read' every .1s avg
@@ -129,15 +193,49 @@ async def get_tm():
 
     rand_msg_type = random.randint(0, 3)
 
+    speed = speed + (.3 * spd_dir)
+
+    if speed > 80:
+        spd_dir = -1
+
+    if speed < 0:
+        spd_dir = 1
+
+    if speed > top_speed:
+        top_speed = speed
+
+    # Simulate force readings
+    rand_move = random.randint(-1, 1)
+    f_x += rand_move * .01
+
+    if (abs(f_x) > 1):
+        f_x = 0
+
+    if (f_x > max_rt):
+        max_rt = f_x
+
+    if (f_x < -1 * max_lt):
+        max_lt = abs(f_x)
+
+    rand_move = random.randint(-1, 1)
+    f_y += rand_move * .01
+
+    if (abs(f_y) > 1):
+        f_y = 0
+
+    if (f_y > max_fr):
+        max_fr = f_y
+
+    if (f_y < -1 * max_rr):
+        max_rr = abs(f_y)
+        
+
+
     # DTI_TelemetryA
     if rand_msg_type == 0:
         rpm = random.randint(0, 100000)
         rpm = rpm // 10;
         # speed = rpm * 0.0015763099 # erpm to mph
-        speed = speed + 1
-
-        if speed > 80:
-            speed = 0
         
         inv_voltage = random.randint(0, 100)
         nowtime = datetime.utcnow()
@@ -148,11 +246,12 @@ async def get_tm():
         trip += dx
 
         last_time = nowtime
-        speed = round(speed, 1)
         
     # DTI_TelemetryB
     elif rand_msg_type == 1:
-        dc_amps += dc_amps_dir
+
+        rand_scalar = random.randint(-1, 2)
+        dc_amps += dc_amps_dir * rand_scalar
 
         if dc_amps > 150:
             dc_amps_dir = -1
@@ -160,12 +259,24 @@ async def get_tm():
         if dc_amps < -50:
             dc_amps_dir = 1
 
+        if dc_amps > peak_amps:
+            peak_amps = dc_amps
+        
+        if dc_amps < peak_regen:
+            peak_regen = dc_amps
+
+        acc_temp = 90
+        inv_temp = 110
+        mtr_temp = 74
+
+        rtd = True
+        fault = False
+
     # BMS_Information
     elif rand_msg_type == 2:
         avg_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
         min_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
         max_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
-
 
 #########
 # STATE #

@@ -1,0 +1,38 @@
+#lap-status {
+}
+
+#lap {
+    width: 23%;
+    float: left;
+    padding: 10px;
+    text-align: right;
+}
+
+#total {
+    width: 23%;
+    float: right;
+    text-align: right;
+    padding: 10px;
+    text-align: left;
+}
+
+.time {
+    font-family:'LiquidCrystalNormal', sans-serif;
+    font-size: 2.1em;
+}
+
+.lap-val {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.time .label{
+    font-family: 'Rajdhani Medium';
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+
+.lap-val .label{
+    font-size: 1.5rem;
+    font-weight: normal;
+}

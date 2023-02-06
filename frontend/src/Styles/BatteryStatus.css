@@ -3,38 +3,119 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 10%;
+  height: 8%;
 }
 
 .segment {
   position: absolute;
   width: 1%;
   height: 100%;
-  border-radius: 0px;
   background-color: var(--negative);
 }
 
 #voltages {
   position: absolute;
-  top: 40%;
+  top: 35%;
   left: 0;
+  height: 30%;
+  width: 12%;
+}
+
+#min-cell-label {
+  margin: 0 0 0 5px;
+  position: absolute;
+  bottom: 57%;
+  left: 0%;
+}
+
+#min-cell-val {
+  position: absolute;
+  bottom: 57%;
+  right: -010%;
+}
+
+#total-label {
+  margin: 0 0 0 5px;
+  position: absolute;
+  bottom: 35%;
+  left: 0%;
+}
+
+#total-val {
+  position: absolute;
+  bottom: 35%;
+  right: 0%;
+}
+
+#avg-cell-label {
+  margin: 0 0 0 5px;
+  position: absolute;
+  bottom: 13%;
+  left: 0;
+}
+
+#avg-cell-val {
+  position: absolute;
+  bottom: 13%;
+  right: 10%;
 }
 
 #temps {
   position: absolute;
-  top: 40%;
+  top: 35%;
   right: 0;
   text-align: right;
+  height: 30%;
+  width: 12%;
+}
+
+#inv-temp-label {
+  margin: 0 5px 0 0;
+  position: absolute;
+  bottom: 57%;
+  right: 0%;
+}
+
+#inv-temp-val {
+  position: absolute;
+  bottom: 57%;
+  left: -10%;
+}
+
+#accum-temp-label {
+  margin: 0 5px 0 0;
+  position: absolute;
+  bottom: 35%;
+  right: 0%;
+}
+
+#accum-temp-val {
+  position: absolute;
+  bottom: 35%;
+  left: 0%;
+}
+
+#mtr-temp-label {
+  margin: 0 5px 0 0;
+  position: absolute;
+  bottom: 13%;
+  right: 0;
+}
+
+#mtr-temp-val {
+  position: absolute;
+  bottom: 13%;
+  left: 10%;
 }
 
 .value {
   display: inline;
   padding: 0px 10px 0px 10px;
   border-radius: 5px;
-  color: var(--text)
+  color: var(--text);
 }
 
-img {
+img.icon {
   position: absolute;
   height: 10%;
 }
@@ -42,13 +123,13 @@ img {
 img#accel {
   top: 0;
   left: 50%;
-  transform: scale(.8);
+  transform: scale(.7) translate(0, -12%);;
   filter: opacity(50%);
 }
 
 img#regen {
   top: 0;
   right: 50%;
-  transform: scale(.75);
-  filter: opacity(50%);
+  transform: scale(.6) translate(0, -15%);
+  filter: invert(0) opacity(50%);
 }

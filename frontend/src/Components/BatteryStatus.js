@@ -1,4 +1,6 @@
 import '../Styles/BatteryStatus.css';
+import * as Constants from '../constants';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 
 function padDecimal(val) {
     let val_str = val.toString();
@@ -10,14 +12,35 @@ function padDecimal(val) {
     return val_str;
 }
 
-function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mtrTemp}) {  
-    /* temps: acc inv mot */
+const BatteryStatus = forwardRef((props, ref) => {  
+    const [avgCell, setAvgCell] = useState(0);
+    const [minCell, setMinCell] = useState(0);
+    const [invVolts, setInvVolts] = useState(0);
+    const [dcAmps, setDcAmps] = useState(0);
+    const [accTemp, setAccTemp] = useState(0);
+    const [invTemp, setInvTemp] = useState(0);
+    const [mtrTemp, setMtrTemp] = useState(0);
+
+    useImperativeHandle(ref, () => ({
+        updateBattery(tm) {
+            if (tm['dc_amps'] !== undefined && tm['dc_amps'] !== dcAmps) setDcAmps(tm['dc_amps']);
+            if (tm['inv_volts'] !== undefined && tm['inv_volts'] !== invVolts) setInvVolts(tm['inv_volts']);
+
+            if (tm['avg_cell'] !== undefined && tm['avg_cell'] !== avgCell) setAvgCell(tm['avg_cell']);
+            if (tm['min_cell'] !== undefined && tm['min_cell'] !== minCell) setMinCell(tm['min_cell']);
+            
+            if (tm['acc_temp'] !== undefined && tm['acc_temp'] !== accTemp) setAccTemp(tm['acc_temp']);
+            if (tm['inv_temp'] !== undefined && tm['inv_temp'] !== invTemp) setInvTemp(tm['inv_temp']);
+            if (tm['mtr_temp'] !== undefined && tm['mtr_temp'] !== mtrTemp) setMtrTemp(tm['mtr_temp']);
+        }
+    }));
+
     const color = ['var(--negative)', 'var(--caution)', 'var(--positive)', 'var(--bg)', 'var(--text)'];
 
     // Power bar
     const power_segments = (amps, maxAccel, maxRegen) => {
-        // Define bins
-        let bins = Array.from(Array(200).keys());
+        // Define bins 0-198
+        let bins = Array.from(Array(199).keys());
         
         // Determine if regen is active (neg amp val)
         let regen = (amps < 0);
@@ -38,7 +61,7 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
           if (key === 99) color = 'var(--positive)';
           if (key === 100) color = 'var(--negative)';
   
-          return <div className="segment" key={key} style={{"left": `${key * .5}%`, "backgroundColor": color}}></div>
+          return <div className="segment" key={key} style={{left: `${key * .5}%`, backgroundColor: color}}></div>
         });
       }
 
@@ -49,55 +72,55 @@ function BatteryStatus({avgCell, minCell, invVolts, dcAmps, accTemp, invTemp, mt
                 {power_segments(dcAmps, 200, 50)}
             </div>
 
-            <img id="accel" src="accel.png"></img>
-            <img id="regen" src="regen.png"></img>
+            <img className="icon" id="accel" src="rabbit1.png" style={{filter: `invert(${props.darkMode ? 1 : 0}) opacity(80%)`}}></img>
+            <img className="icon" id="regen" src="regen.png" style={{filter: `invert(${props.darkMode ? 1 : 0}) opacity(90%)`}}></img>
 
             <div id="voltages">
                 <p>
-                    <b>BATT</b>
+                    Accum (V)
                 </p>
                 <p>
-                    <span className="label">Min </span>
-                    <span className="value" style={{'backgroundColor': minCell < 2.5 ? color[0] : minCell < 3 ? color[1] : color[2]}}>
-                        <b>{padDecimal(minCell)}V</b>
+                    <span className="label" id="min-cell-label">Min </span>
+                    <span className="value" id="min-cell-val" style={{'backgroundColor': minCell < Constants.CELL_THRESHOLDS[0] ? color[0] : minCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{padDecimal(minCell)}</b>
                     </span>
                 </p>
                 <p>
-                    <span className="label">Accum </span><b>{invVolts}V</b>
+                    <span className="label" id="total-label">Total </span><span id="total-val"><b>{invVolts}</b></span>
                 </p>
                 <p>
-                    <span className="label">Avg </span>
-                    <span className="value" style={{'backgroundColor': avgCell < 3 ? color[0] : avgCell < 3.2 ? color[1] : color[2]}}>
-                        <b>{padDecimal(avgCell)}V</b>
+                    <span className="label" id="avg-cell-label">Avg </span>
+                    <span className="value" id="avg-cell-val" style={{'backgroundColor': avgCell < Constants.CELL_THRESHOLDS[0] ? color[0] : avgCell < Constants.CELL_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{padDecimal(avgCell)}</b>
                     </span>
                 </p>
             </div>
 
             <div id="temps">
                 <p>
-                    <b>TEMP</b>
+                    Temp (C)
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': invTemp > 100 ? color[0] : invTemp > 50 ? color[1] : color[2]}}>
-                        <b>{invTemp}F</b>
+                    <span className="value" id="inv-temp-val" style={{'backgroundColor': invTemp > Constants.INV_TEMP_THRESHOLDS[0] ? color[0] : invTemp > Constants.INV_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{invTemp}</b>
                     </span>
-                    <span className="label"> Inv</span>
+                    <span className="label" id="inv-temp-label"> Inv</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': accTemp > 100 ? color[0] : accTemp > 50 ? color[1] : color[2]}}>
-                        <b>{accTemp}F</b>
+                    <span className="value" id="accum-temp-val" style={{'backgroundColor': accTemp > Constants.ACC_TEMP_THRESHOLDS[0] ? color[0] : accTemp > Constants.ACC_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{accTemp}</b>
                     </span>
-                    <span className="label"> Accum</span>
+                    <span className="label" id="accum-temp-label"> Accum</span>
                 </p>
                 <p>
-                    <span className="value" style={{'backgroundColor': mtrTemp > 100 ? color[0] : mtrTemp > 50 ? color[1] : color[2]}}>
-                        <b>{mtrTemp}F</b>
+                    <span className="value" id="mtr-temp-val" style={{'backgroundColor': mtrTemp > Constants.MTR_TEMP_THRESHOLDS[0] ? color[0] : mtrTemp > Constants.MTR_TEMP_THRESHOLDS[1] ? color[1] : color[2]}}>
+                        <b>{mtrTemp}</b>
                     </span>
-                    <span className="label"> Mtr</span>
+                    <span className="label" id="mtr-temp-label"> Mtr</span>
                 </p>
             </div>
         </div>
     )
-}
+});
 
 export default BatteryStatus;
