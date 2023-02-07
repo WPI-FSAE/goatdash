@@ -1,7 +1,8 @@
 import '../Styles/ConfigPane.css';
-import { useState } from 'react';
+import * as Constants from '../constants';
+import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 
-function ConfigPane({visible, sock, setShowConf, darkMode, setDarkMode}){
+const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMode}, ref) => {
     const [showGeneral, setShowGeneral] = useState(false);
     const [showTuning, setShowTuning] = useState(false);
     const [showGPS, setShowGPS] = useState(false);
@@ -9,6 +10,16 @@ function ConfigPane({visible, sock, setShowConf, darkMode, setDarkMode}){
     const [showCharge, setShowCharge] = useState(false);
     const [showDebug, setShowDebug] = useState(false);
     const [alertText, setAlertText] = useState("");
+
+    const [lat, setLat] = useState(0);
+    const [long, setLong] = useState(0);
+
+    useImperativeHandle(ref, () => ({
+        updateConfigPane(tm) {
+            if (tm['lat'] !== undefined && tm['lat'] !== lat) setLat(tm['lat']);
+            if (tm['long'] !== undefined && tm['long'] !== long) setLong(tm['long']);
+        }
+    }));
 
     function handleExit (e) {
         e.preventDefault();
@@ -20,6 +31,9 @@ function ConfigPane({visible, sock, setShowConf, darkMode, setDarkMode}){
         setShowDebug(false);
         setShowConf(false);
         setAlertText("");
+
+        let data = JSON.stringify({opt: "SET_STATE", state: Constants.DASH_STATE});
+        sock.send(data);
     }
 
     // Create a NumberPad component
@@ -96,15 +110,39 @@ function ConfigPane({visible, sock, setShowConf, darkMode, setDarkMode}){
             )
         }
 
+        function enterGPS(show) {
+            if (show) {
+                setShowGPS(true);
+                let data = JSON.stringify({opt: "SET_STATE", state: Constants.GPS_STATE});
+                sock.send(data);
+            }
+        }
+
+        function enterCharge(show) {
+            if (show) {
+                setShowCharge(true);
+                let data = JSON.stringify({opt: "SET_STATE", state: Constants.CHARGE_STATE});
+                sock.send(data);
+            }
+        }
+
+        function enterDebug(show) {
+            if (show) {
+                setShowDebug(true);
+                let data = JSON.stringify({opt: "SET_STATE", state: Constants.DEBUG_STATE});
+                sock.send(data);
+            }
+        }
+
         return (
             <div className="menu">
 
                 <MenuEntry title="General" icon="svg_icons/Settings.svg" showFn={setShowGeneral}/>
                 <MenuEntry title="Tuning" icon="svg_icons/Repair.svg" showFn={setShowTuning}/>
-                <MenuEntry title="GPS" icon="svg_icons/Globe.svg" showFn={setShowGPS}/>
+                <MenuEntry title="GPS" icon="svg_icons/Globe.svg" showFn={enterGPS}/>
                 <MenuEntry title="Trip" icon="svg_icons/ConstructionCone.svg" showFn={setShowTrip}/>
-                <MenuEntry title="Charge" icon="svg_icons/VerticalBatteryCharging0.svg" showFn={setShowCharge}/>
-                <MenuEntry title="Debug" icon="svg_icons/Bug.svg" showFn={setShowDebug}/>
+                <MenuEntry title="Charge" icon="svg_icons/VerticalBatteryCharging0.svg" showFn={enterCharge}/>
+                <MenuEntry title="Debug" icon="svg_icons/Bug.svg" showFn={enterDebug}/>
 
             </div>
         )
@@ -241,10 +279,12 @@ function ConfigPane({visible, sock, setShowConf, darkMode, setDarkMode}){
     }
 
     function GPSSettings() {
+
         return (            
             <div className="page" id="gps-settings" style={{display: showGPS ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} GPS</h1>
-
+                <p>lat: {lat}</p>
+                <p>long: {long}</p>
                 <div className="panel button" id="back" onClick={() => {setShowGPS(false); setAlertText("");}}>
                     Back
                 </div>
@@ -387,6 +427,6 @@ function ConfigPane({visible, sock, setShowConf, darkMode, setDarkMode}){
             </div>
         </div>
     );
-}
+});
 
 export default ConfigPane;

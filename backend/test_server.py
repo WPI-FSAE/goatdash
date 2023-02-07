@@ -40,10 +40,21 @@ timer_start = 0
 f_x, f_y = [0] * 2
 max_fr, max_rr, max_lt, max_rt = [0] * 4
 
+# Location
+lat = 0
+long = 0
+
 # Derived values
 peak_amps = 0
 peak_regen = 0
 top_speed = 0
+
+# Frontend state
+DASH = 0
+GPS = 1
+CHARGE = 2
+DEBUG = 3
+db_state = DASH
 
 last_time = datetime.utcnow()
 start_time = last_time
@@ -68,7 +79,7 @@ async def message_handler(websocket):
     """
     Handle incoming websocket messages
     """
-    global odometer, trip, lap_timer, timer_start, peak_amps, peak_regen, top_speed 
+    global db_state, odometer, trip, lap_timer, timer_start, peak_amps, peak_regen, top_speed
 
     async for message in websocket:
         print(f'RECEIVED: {message}')
@@ -100,6 +111,8 @@ async def message_handler(websocket):
             elif (data['opt'] == "START_TIME"):
                 lap_timer = True
                 timer_start = round(time.time() * 1000.0)
+            elif (data['opt'] == 'SET_STATE'):
+                db_state = data['state']
 
 async def animate(websocket):
     inc = 4
@@ -118,10 +131,10 @@ async def send_tm(websocket):
     """
     Maintain telemetry connection with client
     """
-    global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
+    global db_state, rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, acc_temp, inv_temp, mtr_temp, rtd, fault, time_start, lap_timer, \
     peak_amps, peak_regen, top_speed, mi_est, lap_est, time_est, batt_pct, \
-    f_x, f_y, max_fr, max_rr, max_lt, max_rt
+    f_x, f_y, max_fr, max_rr, max_lt, max_rt, lat, long \
 
     i = 0
 
@@ -131,38 +144,46 @@ async def send_tm(websocket):
         pkt = {}
 
         # Packet type switching (allows for some values to updated faster than others)
-        if (i % 2 == 0):
-            pkt = {**pkt, **{'rpm': rpm, 
-                             'speed': round(speed, 1), 
-                             'inv_volts': inv_voltage,
-                             'dc_amps': dc_amps,
-                             'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0,
-                             'f_x': f_x,
-                             'f_y': f_y
-                             }}
-        elif (i == 1):
-            pkt = {**pkt, **{'avg_cell': avg_cell,
-                             'min_cell': min_cell, 
-                             'max_cell': max_cell,
-                             'acc_temp': acc_temp, 
-                             'inv_temp': inv_temp,
-                             'mtr_temp': mtr_temp,
-                             'odometer': round(odometer, 1), 
-                             'trip': round(trip, 3), 
-                             'rtd': rtd, 
-                             'fault': fault,
-                             'peak_amps': peak_amps,
-                             'peak_regen': peak_regen,
-                             'top_speed': top_speed,
-                             'mi_est': mi_est,
-                             'lap_est': lap_est,
-                             'time_est': time_est,
-                             'batt_pct': batt_pct,
-                             'max_fr': round(max_fr, 1),
-                             'max_rr': round(max_rr, 1),
-                             'max_lt': round(max_lt, 1),
-                             'max_rt': round(max_rt, 1),
-                             }}
+        if (db_state == DASH):
+            if (i % 2 == 0):
+                pkt = {**pkt, **{'rpm': rpm, 
+                                'speed': round(speed, 1), 
+                                'inv_volts': inv_voltage,
+                                'dc_amps': dc_amps}}
+            if (i % 2 == 1):
+                pkt = {**pkt, **{'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0,
+                                'f_x': f_x,
+                                'f_y': f_y}}
+            if (i == 1):
+                pkt = {**pkt, **{'avg_cell': avg_cell,
+                                'min_cell': min_cell, 
+                                'max_cell': max_cell,
+                                'acc_temp': acc_temp, 
+                                'inv_temp': inv_temp,
+                                'mtr_temp': mtr_temp,
+                                'odometer': round(odometer, 1), 
+                                'trip': round(trip, 3), 
+                                'rtd': rtd, 
+                                'fault': fault,
+                                'peak_amps': peak_amps,
+                                'peak_regen': peak_regen,
+                                'top_speed': top_speed,
+                                'mi_est': mi_est,
+                                'lap_est': lap_est,
+                                'time_est': time_est,
+                                'batt_pct': batt_pct,
+                                'max_fr': round(max_fr, 1),
+                                'max_rr': round(max_rr, 1),
+                                'max_lt': round(max_lt, 1),
+                                'max_rt': round(max_rt, 1)}}
+
+        elif (db_state == GPS):
+            if (i == 1):
+                   pkt = {**pkt, **{'lat': lat,
+                                    'long': long}}
+
+        elif (db_state == DEBUG):
+            pass
 
         if (i >= 99):
             i = 0
@@ -185,7 +206,8 @@ async def poll_tm():
 async def get_tm():
     global rpm, speed, inv_voltage, avg_cell, min_cell, max_cell, dc_amps, \
     odometer, trip, last_time, dc_amps_dir, spd_dir, acc_temp, inv_temp, mtr_temp, \
-    rtd, fault, peak_amps, peak_regen, top_speed, f_x, f_y, max_fr, max_rr, max_lt, max_rt
+    rtd, fault, peak_amps, peak_regen, top_speed, f_x, f_y, max_fr, max_rr, max_lt, max_rt, \
+    lat, long
 
     # Simulate waiting for message
     # Each message type 'read' every .1s avg
@@ -228,8 +250,11 @@ async def get_tm():
 
     if (f_y < -1 * max_rr):
         max_rr = abs(f_y)
-        
 
+    # Simulate lat/long
+    lat = 70
+    long = -40
+    
 
     # DTI_TelemetryA
     if rand_msg_type == 0:

@@ -39,6 +39,9 @@ function App() {
   const forceMeterRef = useRef(null);
   const updateForceMeter = (tm) => forceMeterRef.current?.updateForceMeter(tm);
 
+  const configPaneRef = useRef(null);
+  const updateConfigPane = (tm) => configPaneRef.current?.updateConfigPane(tm);
+
   // Configure websocket
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000');
@@ -65,6 +68,7 @@ function App() {
       updateStatus(tm, true);
       updateLap(tm);
       updateForceMeter(tm);
+      updateConfigPane(tm);
     });
 
     ws.addEventListener('close', (event) => {
@@ -95,7 +99,7 @@ function App() {
 
       <ForceMeter ref={forceMeterRef}/>
       
-      <ConfigPane visible={showConf} sock={sock} setShowConf={setShowConf} 
+      <ConfigPane ref={configPaneRef} visible={showConf} sock={sock} setShowConf={setShowConf} 
                   darkMode={darkMode} setDarkMode={setDarkMode}/>
       
     </div>
