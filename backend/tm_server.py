@@ -16,7 +16,7 @@ STATE_REFRESH = 0
 
 # Load config
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('/home/pi/EV22-Dashboard/backend/config.ini')
 PORT = int(config['WS']['Port'])
 
 can.rc['interface'] = config['CAN']['Interface']
@@ -24,7 +24,7 @@ can.rc['channel'] = config['CAN']['Channel']
 
 from can.interface import Bus
 
-bus = Bus()
+bus = Bus(receive_own_messages=True)
 parser = Parser()
 
 # TM Values
@@ -178,7 +178,7 @@ async def get_tm():
     msg = bus.recv(.01)
 
     if msg != None:
-
+        
         msgdef = parser.getMsg(msg.arbitration_id)
 
         if hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryA':
