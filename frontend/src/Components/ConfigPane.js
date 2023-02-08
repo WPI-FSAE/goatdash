@@ -279,12 +279,52 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
     }
 
     function GPSSettings() {
+        const [showLapOptions, setShowLapOptions] = useState(true);
+        const [showLapNumber, setShowLapNumber] = useState(false);
+
+        function handleSetLapNumber (val) {
+            let data = JSON.stringify({opt: "SET_LAP", laps: val});
+            sock.send(data);
+            setShowLapNumber(false);
+            setAlertText(`Set Laps To ${val}`);
+        }
 
         return (            
             <div className="page" id="gps-settings" style={{display: showGPS ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} GPS</h1>
-                <p>lat: {lat}</p>
-                <p>long: {long}</p>
+                
+                <div className="option-page">
+                    <div className="option-select">
+                        <div className="panel button"  style={{filter: showLapOptions ? "brightness(.7)" : ""}} onClick={(e) => setShowLapOptions(!showLapOptions)}>
+                            Lap Options
+                        </div>
+
+                        <p>Latitude: {lat}</p>
+                        <p>Longitude: {long}</p>
+
+                        <p>Lap start lat: {lat}</p>
+                        <p>Lap start long: {long}</p>
+                    </div>
+
+                    <div className="option-pane" id="lap-set" style={{display: showLapOptions ? "" : "none"}}>
+
+                        <div className="panel button" onClick={() => setShowLapNumber(true)}>
+                            Set Lap Ammount
+                        </div>
+
+                        <div className="panel button" onClick={() => sock.send(JSON.stringify({opt: "SET_LAP_WP"}))}>
+                            Set Lap Start Location
+                        </div>
+
+                        <div className="panel button" onClick={() => sock.send(JSON.stringify({opt: "ARM_LAP"}))}>
+                            Arm Lapping
+                        </div>
+
+                    </div>
+                </div>
+
+                <NumberPad fn={handleSetLapNumber} name="Number of Laps" show={showLapNumber} setShow={setShowLapNumber}/>
+
                 <div className="panel button" id="back" onClick={() => {setShowGPS(false); setAlertText("");}}>
                     Back
                 </div>
@@ -293,8 +333,6 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
     }
 
     function TripSettings() {
-        const [showLapOptions, setShowLapOptions] = useState(false);
-        const [showLapNumber, setShowLapNumber] = useState(false);
 
         function handleResetOdo (e) {
             e.preventDefault();
@@ -324,13 +362,6 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
             setAlertText("Peak Regen Reset.");
         }
 
-        function handleSetLapNumber (val) {
-            let data = JSON.stringify({opt: "SET_LAP", laps: val});
-            sock.send(data);
-            setShowLapNumber(false);
-            setAlertText(`Set Laps To ${val}`)
-        }
-
         return (
             <div className="page" id="trip-settings" style={{display: showTrip ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Trip</h1>
@@ -353,24 +384,12 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                             ⇜ Reset Peak Regen 
                         </div>
 
-                        <div className="panel button"  style={{filter: showLapOptions ? "brightness(.7)" : ""}} onClick={() => setShowLapOptions(!showLapOptions)}>
-                            Lap Options
-                        </div>
-
-                    </div>
-
-                    <div className="option-pane" id="lap-set" style={{display: showLapOptions ? "" : "none"}}>
-                        <div className="panel button" onClick={() => setShowLapNumber(true)}>
-                            Set Lap Number
-                        </div>
-
                         <div className="panel button" onClick={() => sock.send(JSON.stringify({opt: "START_TIME"}))}>
-                            Start Time
+                            Start Stopwatch
                         </div>
+
                     </div>
                 </div>
-
-                <NumberPad fn={handleSetLapNumber} name="Number of Laps" show={showLapNumber} setShow={setShowLapNumber}/>
 
                 <div className="button" id="back" onClick={() => {setShowTrip(false); setAlertText("");}}>
                     Back

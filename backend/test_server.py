@@ -144,12 +144,13 @@ async def send_tm(websocket):
         pkt = {}
 
         # Packet type switching (allows for some values to updated faster than others)
+        if (i % 2 == 0):
+            pkt = {**pkt, **{'rpm': rpm, 
+                            'speed': round(speed, 1), 
+                            'inv_volts': inv_voltage,
+                            'dc_amps': dc_amps}}
+
         if (db_state == DASH):
-            if (i % 2 == 0):
-                pkt = {**pkt, **{'rpm': rpm, 
-                                'speed': round(speed, 1), 
-                                'inv_volts': inv_voltage,
-                                'dc_amps': dc_amps}}
             if (i % 2 == 1):
                 pkt = {**pkt, **{'race_time': round(time.time() * 1000 - timer_start) if lap_timer else 0,
                                 'f_x': f_x,
@@ -300,7 +301,7 @@ async def get_tm():
     # BMS_Information
     elif rand_msg_type == 2:
         avg_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
-        min_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
+        min_cell = round(((random.randint(5, 10)) * 0.01) + 2, 2)
         max_cell = round(((random.randint(0, 10)) * 0.01) + 2, 2)
 
 #########
