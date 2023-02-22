@@ -46,11 +46,11 @@ import math
 import time
 
 WAITING = 0
-ARMED = 1
-ACTIVE = 2
+ACTIVE = 1
+ARMED = 2
 DONE = 3
 
-START_LINE_R = .0002 # ~ 40 meter wide starting line
+START_LINE_R = .00027 # ~ 50 meter wide starting line
 
 class Race:
 
@@ -80,16 +80,23 @@ class Race:
         self.start_line_b = (0, 0)
 
         self.state = WAITING
+        self.ready = False
 
         self.lap_flag = 0
 
     # Returns time elapsed since race start
     def get_race_time(self):
-        return time.time() - self.race_time_start
+        if (self.state == ACTIVE or self.state == ARMED):
+            return time.time() - self.race_time_start
+        else:
+            return 0
 
     # Returns time elapsed since lap start
     def get_lap_time(self):
-        return time.time() - self.lap_time_start
+        if (self.state == ACTIVE or self.state == ARMED):
+            return time.time() - self.lap_time_start
+        else:
+            return 0
 
     # Returns voltage differential since last lap
     def get_lap_volt(self):
@@ -115,25 +122,26 @@ class Race:
             self.start_pos = self.current_pos
             self.last_pos = self.current_pos
 
-        # Armed state used to record initial points in order to establish starting line
-        elif (self.state == ARMED):
+        # Active state used to record initial points in order to establish starting line
+        elif (self.state == ACTIVE):
             self.last_pos = self.current_pos
             self.current_pos = pos
             self.pos_buffer.append(pos)
             
             # Fill buffer to create best fit line normal to start line
             if (len(self.pos_buffer) == 8):
-                self.state = ACTIVE
+                self.state = ARMED
 
                 _, drive_m = best_fit([x[0] for x in self.pos_buffer], [x[1] for x in self.pos_buffer]) # drive line slope (normal to starting line)
                 start_line_m = -1 / drive_m # Slope for starting line (normal to drive line)
 
                 self.start_line_a, self.start_line_b = endpoints(self.start_pos, START_LINE_R, start_line_m)    # derive starting line segment
+                self.pos_buffer = []
 
             self.update_distance()
 
-        # Active state used to update positional values and check if a new position triggers a lap
-        elif (self.state == ACTIVE):
+        # Armed state used to update positional values and check if a new position triggers a lap
+        elif (self.state == ARMED):
             self.last_pos = self.current_pos
             self.current_pos = pos
 
@@ -141,11 +149,10 @@ class Race:
             if (intersect(self.start_line_a, self.start_line_b, self.last_pos, self.current_pos)):
                 self.lap()
                 self.lap_flag = 1
+                self.current_lap += 1
 
                 # Check if final lap or inifinite mode (n = 0)
-                if (self.current_lap + 1 <= self.lap_n or self.lap_n == 0):
-                    self.current_lap += 1
-                else:
+                if (self.current_lap > self.lap_n and self.lap_n != 0):
                     self.state = DONE
                     self.race_time_end = time.time()
 
@@ -158,13 +165,25 @@ class Race:
     def update_volt(self, voltage):
         self.current_volt = voltage
 
+    def set_ready(self, readyness):
+        self.ready = readyness
+
+    def is_ready(self):
+        return self.ready
+
     # Set initial values
     def start_race(self):
-        self.state = ARMED
+        self.state = ACTIVE
         self.race_time_start = time.time()
         self.lap_time_start = self.race_time_start
         self.race_volt_start = self.current_volt
         self.lap_volt_start = self.race_volt_start
+
+    def waiting(self):
+        return self.state == WAITING
+    
+    def started(self):
+        return self.state == ACTIVE or self.state == ARMED
 
     def reset_race(self):
         self.__init__(self.lap_n)
@@ -178,18 +197,23 @@ class Race:
         self.lap_time = curr_time - self.lap_time_start 
         self.lap_time_start = curr_time
 
+        self.state = ACTIVE
+
     def lap_avail(self):
         return self.lap_flag
 
     def get_lap(self):
         self.lap_flag = 0
-        return (self.lap_time, self.lap_volt, self.current_lap)
+        return (self.lap_time, self.lap_volt, self.current_lap - 1)
 
     def race_complete(self):
         return self.state == DONE
 
     def get_race(self):
-        return (self.race_time_end - self.race_time_start, self.race_distance)
+        if (self.lap_n == 0 or self.state != DONE):
+            return (time.time() - self.race_time_start, self.race_distance)
+        else:
+            return (self.race_time_end - self.race_time_start, self.race_distance)
 
 
 def best_fit(X, Y):
@@ -256,38 +280,52 @@ def measure(lat1, lon1, lat2, lon2):
 def test_lap_man():
     import numpy as np
     import matplotlib.pyplot as plt
-    from matplotlib.animation import FuncAnimation
+    import random
 
-    lats = [42.23556085411675, 42.23564372097851, 42.23572639937239, 42.235797162458766, 42.23587586892326, 42.23596649045906, 42.23605711186474, 42.23615170485153, 42.23624232599125, 42.23633691870043, 42.2364235678803, 42.23652014616181, 42.23748353430751, 42.2387307017939, 42.2396506430571, 42.24024337240775, 42.239295280370555, 42.23868033164837, 42.236102082535396, 42.23827736939988, 42.23894150211235, 42.23800528909573, 42.236944125120345, 42.23516305088466, 42.23566657979207, 42.23387357014283, 42.23197341218783, 42.23239961894955, 42.23333155196803, 42.23417422652039, 42.23503473853451, 42.235264589829875, 42.2354765917052, 42.235748087925195, 42.235748087925195]
-    lons = [-72.24545060643, -72.24539671032036, -72.24534172503556, -72.24527869312371, -72.24522102562989, -72.24516335813607, -72.24510569064225, -72.24505338756646, -72.2450064489087, -72.24496219245995, -72.2449179360112, -72.24488440839852, -72.24455301332853, -72.24416328264387, -72.2423753429051, -72.2415757923253, -72.24125034711442, -72.24303828685315, -72.24342801753771, -72.24241150348404, -72.2401253513237, -72.240466867903, -72.24216641511532, -72.24290168022132, -72.24427980006489, -72.2441552469595, -72.2456699734347, -72.24775523348956, -72.24842621312185, -72.2469838078045, -72.24588693690859, -72.24571416969788, -72.24550122406609, -72.24529631411849, -72.24514765396043]
+    lap_lats = [42.23556085411675, 42.23564372097851, 42.23572639937239, 42.235797162458766, 42.23587586892326, 42.23596649045906, 42.23605711186474, 42.23615170485153, 42.23624232599125, 42.23633691870043, 42.2364235678803, 42.23652014616181, 42.23748353430751, 42.2387307017939, 42.2396506430571, 42.24024337240775, 42.239295280370555, 42.23868033164837, 42.236102082535396, 42.23827736939988, 42.23894150211235, 42.23800528909573, 42.236944125120345, 42.23516305088466, 42.23566657979207, 42.23387357014283, 42.23197341218783, 42.23239961894955, 42.23333155196803, 42.23417422652039, 42.23503473853451, 42.235264589829875, 42.2354765917052, 42.235748087925195]
+    lap_lons = [-72.24545060643, -72.24539671032036, -72.24534172503556, -72.24527869312371, -72.24522102562989, -72.24516335813607, -72.24510569064225, -72.24505338756646, -72.2450064489087, -72.24496219245995, -72.2449179360112, -72.24488440839852, -72.24455301332853, -72.24416328264387, -72.2423753429051, -72.2415757923253, -72.24125034711442, -72.24303828685315, -72.24342801753771, -72.24241150348404, -72.2401253513237, -72.240466867903, -72.24216641511532, -72.24290168022132, -72.24427980006489, -72.2441552469595, -72.2456699734347, -72.24775523348956, -72.24842621312185, -72.2469838078045, -72.24588693690859, -72.24571416969788, -72.24550122406609, -72.24529631411849]
     
-    plt.xlim(42.23, 42.242)
-    plt.ylim(-72.235, -72.255)
+    lats = [*lap_lats]
+    lons = [*lap_lons]
+
+    # Create additional laps with random noise
+    for i in range(9):
+        lats = [*lats, *[lat + ((random.random() * .0002) - .0001) for lat in lap_lats]]
+        lons = [*lons, *[lon + ((random.random() * .0002) - .0001) for lon in lap_lons]]
+
+    plt.xlim(42.23, 42.2425)
+    plt.ylim(-72.2375, -72.25)
     track, = plt.plot([], [])
+    start, = plt.plot([], [])
+    lap_txt = plt.text(42.2305, -72.238, 'Lap: -\nTime: -', fontsize=16)
+    race_txt = plt.text(42.237, -72.238, 'Total: -\nDistance: -', fontsize=16)
     plt.ion()
     plt.show()
 
-    lap_man = Race(1)
+    lap_man = Race(10)
     lap_man.update((lats[0], lons[0]), 4)
     lap_man.start_race()
 
     for i, lat in enumerate(lats):
         lon = lons[i]
-        print("\nHitting waypoint: ", lat, lon)
 
         lap_man.update((lat, lon), 3)
+
+        # Update plotter
         track.set_xdata(np.append(track.get_xdata(), lat))
         track.set_ydata(np.append(track.get_ydata(), lon))
+        start.set_xdata([lap_man.start_line_a[0], lap_man.start_line_b[0]])
+        start.set_ydata([lap_man.start_line_a[1], lap_man.start_line_b[1]])
+        race_txt.set_text(f'Total: {round(lap_man.get_race()[0],2)}s\nDistance: {round(lap_man.get_race()[1])}m')
         plt.draw()
         plt.pause(.001)
 
-        print("lap time: ", lap_man.get_lap_time())
-        print("lap voltage: ", lap_man.get_lap_volt())
-
         if (lap_man.lap_avail()):
             print("\nLap complete: ", lap_man.get_lap())
+            track, = plt.plot([], [])
+            lap_txt.set_text(f'Lap: {lap_man.get_lap()[2]}\nTime: {round(lap_man.get_lap()[0], 2)}s')
 
-        time.sleep(.1)
+        input()
 
     print("Race complete: ", lap_man.race_complete())
 
@@ -295,5 +333,8 @@ def test_lap_man():
     print("Race: ", race_time, "s", race_distance, "m")
 
     print("Starting line width: ", measure(lap_man.start_line_a[0], lap_man.start_line_a[1], lap_man.start_line_b[0], lap_man.start_line_b[1]), "meters")
+    
+    plt.ioff()
+    plt.show()
 
-test_lap_man()
+# test_lap_man()

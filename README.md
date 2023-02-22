@@ -12,7 +12,7 @@ The frontend is an Electron application using React as the GUI framework. This i
 
 ### Setup
 
-See [README](./frontend/README.md)
+See Frontend [README](./frontend/README.md)
 
 ## Backend
 
@@ -20,4 +20,8 @@ The backend is a Python websocket server that parses telemetry from the CAN netw
 
 ### Setup
 
-See [README](./backend/README.md)
+See Backend [README](./backend/README.md)
+
+## Developer Guide
+
+Check out the developer guide for a walkthrough of the Dashboard structure and tips for expanding [here](./DEV_GUIDE.md).
