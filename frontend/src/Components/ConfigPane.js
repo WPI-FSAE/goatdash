@@ -10,14 +10,25 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
     const [showCharge, setShowCharge] = useState(false);
     const [showDebug, setShowDebug] = useState(false);
     const [alertText, setAlertText] = useState("");
+    const [dbgMsgs, setDbgMsgs] = useState([]);
 
     const [lat, setLat] = useState(0);
     const [long, setLong] = useState(0);
+    const [lapArmed, setLapArmed] = useState(false);
+
+    const handleAddVal = (val) => {
+        setDbgMsgs((prevVals) => [
+                ...prevVals.slice((-1 * Constants.DBG_BUF_SIZE) - 1),
+                val
+            ]);
+    };
 
     useImperativeHandle(ref, () => ({
         updateConfigPane(tm) {
             if (tm['lat'] !== undefined && tm['lat'] !== lat) setLat(tm['lat']);
             if (tm['long'] !== undefined && tm['long'] !== long) setLong(tm['long']);
+            if (tm['lap_armed'] !== undefined && tm['lap_armed'] !== lapArmed) setLapArmed(tm['lap_armed']);
+            if (tm['dbg_msgs'] !== undefined) handleAddVal(tm['dbg_msgs']);
         }
     }));
 
@@ -139,8 +150,8 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
                 <MenuEntry title="General" icon="svg_icons/Settings.svg" showFn={setShowGeneral}/>
                 <MenuEntry title="Tuning" icon="svg_icons/Repair.svg" showFn={setShowTuning}/>
-                <MenuEntry title="GPS" icon="svg_icons/Globe.svg" showFn={enterGPS}/>
-                <MenuEntry title="Trip" icon="svg_icons/ConstructionCone.svg" showFn={setShowTrip}/>
+                <MenuEntry title="Lap" icon="svg_icons/ConstructionCone.svg" showFn={enterGPS}/>
+                <MenuEntry title="Trip" icon="svg_icons/Globe.svg" showFn={setShowTrip}/>
                 <MenuEntry title="Charge" icon="svg_icons/VerticalBatteryCharging0.svg" showFn={enterCharge}/>
                 <MenuEntry title="Debug" icon="svg_icons/Bug.svg" showFn={enterDebug}/>
 
@@ -291,7 +302,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
         return (            
             <div className="page" id="gps-settings" style={{display: showGPS ? "" : "none"}}>
-                <h1 id="menu-title">Menu {'>'} GPS</h1>
+                <h1 id="menu-title">Menu {'>'} Lap</h1>
                 
                 <div className="option-page">
                     <div className="option-select">
@@ -299,11 +310,13 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                             Lap Options
                         </div>
 
-                        <p>Latitude: {lat}</p>
-                        <p>Longitude: {long}</p>
+                        <ol style={{fontSize: "1.2rem"}}>
+                            <li>Set ammount of laps or 0.</li>
+                            <li>When car is at start line, Set Lap Start Location.</li>
+                            <li>Before starting, Arm Lapping. If armed, lap tracking will start when vehicle starts motion.</li>
+                        </ol>
 
-                        <p>Lap start lat: {lat}</p>
-                        <p>Lap start long: {long}</p>
+
                     </div>
 
                     <div className="option-pane" id="lap-set" style={{display: showLapOptions ? "" : "none"}}>
@@ -319,6 +332,14 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                         <div className="panel button" onClick={() => sock.send(JSON.stringify({opt: "ARM_LAP"}))}>
                             Arm Lapping
                         </div>
+
+                        <div className="panel button" onClick={() => sock.send(JSON.stringify({opt: "RESET_LAP"}))}>
+                            Reset Lapping
+                        </div>
+                        
+                        <p>Vehicle Position: {lat}, {long}</p>
+                        <p>Start Line Position {lat}, {long}</p>
+                        <p>Lap Armed: {lapArmed ? "Yes" : "No"}</p>
 
                     </div>
                 </div>
@@ -415,6 +436,14 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
         return (
             <div className="page" id="debug-settings" style={{display: showDebug ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Debug</h1>
+
+                <div id="debug-msgs-wrap">
+                    <div id="debug-msgs">
+                    {dbgMsgs.map((e, i)=>{
+                        return <p className="debug-msg" key={i}>{e}</p>
+                        })}
+                    </div>
+                </div>
  
                 <div className="button" id="back" onClick={() => {setShowDebug(false); setAlertText("");}}>
                     Back

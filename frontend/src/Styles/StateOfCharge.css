@@ -3,6 +3,7 @@
     background-color: var(--primary);
     outline: solid var(--text) 1px;
     text-align: center;
+    cursor: pointer;
 }
 
 #soc-graph {
