@@ -23,8 +23,14 @@ pip install -r requirements.txt
 ## Run the Server
 
 ```
-python tm_server.py
+python main.py
 ```
+
+Options:
+
+* `-t`: Test mode (uses virtual car data, not CAN interface)
+* `-c <config.ini>`: Use a specific config folder (defaults to `./config.ini`)
+* `-s <save_file.json>`: Use a specific car state save file (defaults to `./car_state.json`)
 
 ## Configuring Server to Run on Start
 
@@ -34,8 +40,8 @@ Currently, the ```../start.sh``` script is configured to run on boot, and starts
 
 ## Test Server
 
-```test_server.py``` emulates a live telemetry server without an active CAN bus. This is useful for testing the frontend with dummy values on a Windows machine, for example. The interface is the same as ```tm_server.py```.
+ Emulates a live telemetry server without an active CAN bus. This is useful for testing the frontend with dummy values on a Windows machine, for example.
 
 ```
-python test_server.py
+python main.py -t -s ./car_state_test.json
 ```
