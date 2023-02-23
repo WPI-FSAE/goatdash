@@ -54,7 +54,7 @@ START_LINE_R = .00027 # ~ 50 meter wide starting line
 
 class Race:
 
-    def __init__(self, lap_n):
+    def __init__(self, lap_n=0):
         self.lap_n = lap_n
         self.current_lap = 1
 

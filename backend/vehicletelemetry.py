@@ -1,5 +1,9 @@
+# WPI FSAE Vehiucle Telemetry Structure
+# Ted Clifford (c) 2023
+#
+# This module provides a structure for accessing and modifying the current state of a vehicle
 
-class Vehicle:
+class VehicleTelemetry:
 
     def __init__(self):
         self.erpm = 0

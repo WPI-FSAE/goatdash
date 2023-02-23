@@ -1,3 +1,5 @@
+# Depricated backend server for dashboard
+
 import websockets
 import asyncio
 import json

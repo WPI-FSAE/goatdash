@@ -8,18 +8,17 @@ import json
 
 class VehicleState:
 
-    def __init__(self, vehicle, logger, state_file):
-
+    def __init__(self, vehicle, logger, state_file, period=10):
         self.vic = vehicle
         self.dbg = logger
-
         self.state_file = state_file
+        self.period = period
 
 
     async def store_tm(self):
         while True:
             await self.write_state()
-            await asyncio.sleep(10) # state update refresh
+            await asyncio.sleep(self.period) # state update refresh
 
 
     async def write_state(self):

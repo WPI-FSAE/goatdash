@@ -12,15 +12,15 @@ GPS = 1
 CHARGE = 2
 DEBUG = 3
 
-class Dashboard:
+class DashboardInterface:
 
-    def __init__(self, vehicle, logger, race):
-
+    def __init__(self, vehicle, logger, race, refresh=60):
         self.vic = vehicle
         self.dbg = logger
         self.race = race
-
+        self.refresh = refresh
         self.state = DASH
+
 
     async def message_handler(self, websocket):
         """
@@ -134,10 +134,10 @@ class Dashboard:
                 if (self.dbg.msg_avail()):
                     pkt = {**pkt, **{'dbg_msgs': self.dbg.get_msgs(1)}}
 
-            if (i >= 99):
+            if (i >= 9):
                 i = 0
             else:
                 i += 1
             
             await websocket.send(json.dumps(pkt))
-            await asyncio.sleep(.005)    # Define frontend refresh rate
+            await asyncio.sleep(1 / self.refresh)    # Define frontend refresh rate

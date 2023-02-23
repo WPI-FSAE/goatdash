@@ -15,27 +15,31 @@ import parser
 # Generic vehicle interface
 class VehicleInterface:
 
-    def __init__(self, vehicle, logger, race):
+    def __init__(self, vehicle, logger, race, refresh=60):
         self.vic = vehicle
         self.dbg = logger
         self.race = race
+        self.refresh = refresh
 
     async def start_tm(self):
         while True:
             await self.get_tm()
-            await asyncio.sleep(.005)   # backend tm refresh rate
+            await asyncio.sleep(1 / self.refresh)   # backend tm refresh rate
         
 
 
 # CAN Interface
 class CANVehicleInterface(VehicleInterface):
     
-    def __init__(self, vehicle, logger, race):
+    def __init__(self, vehicle, logger, race, interface="socketcan", channel="can0", refresh=60):
 
-        super().__init__(vehicle, logger, race)
+        super().__init__(vehicle, logger, race, refresh)
+
+        can.rc['interface'] = interface
+        can.rc['channel'] = channel
 
         self.bus = Bus(receive_own_messages=True)
-        self.parser = Parser.Parser()
+        self.parser = parser.Parser()
 
         self.last_time = datetime.utcnow()
         self.start_time = self.last_time
@@ -119,8 +123,8 @@ class CANVehicleInterface(VehicleInterface):
 # Time delays between messages are emulated.
 class VirtualVehicleInterface(VehicleInterface):
 
-    def __init__(self, vehicle, logger, race):
-        super().__init__(vehicle, logger, race)
+    def __init__(self, vehicle, logger, race, refresh=60):
+        super().__init__(vehicle, logger, race, refresh)
 
         self.last_time = datetime.utcnow()
         self.start_time = self.last_time

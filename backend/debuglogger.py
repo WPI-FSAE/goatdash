@@ -1,9 +1,13 @@
+# WPI FSAE Debug Logging
+# Ted Clifford (c) 2023
+#
+# This module provides a datastructure to assist with passing debug messages to the frontend. It is essentially a circular buffer
 
 MAX_BUF_SIZE = 256
 
-class Debug:
+class DebugLogger:
 
-    def __init__(self, n):
+    def __init__(self, n=0):
         self.new_msg = False
 
         if n == 0:
