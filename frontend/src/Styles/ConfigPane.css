@@ -148,6 +148,7 @@
 div#debug-msgs-wrap {
     height: 70%;
     overflow-y: scroll;
+    overflow-wrap: "break-word";
     display: flex;
     flex-direction: column-reverse;
 }
