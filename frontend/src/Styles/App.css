@@ -88,9 +88,9 @@
   --darker-red: rgb(191, 52, 44);
 
   /*Light theme*/
-  --light-bg: var(--white);
+  --light-bg: #d5d5d5;
   --light-text: var(--black);
-  --light-gray: #d5d5d5;
+  --light-gray: var(--white);
   --light-green: #42d8af;
   --light-red: #f24239;
 
