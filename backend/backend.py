@@ -5,10 +5,7 @@
 
 import asyncio
 import websockets
-import json
 import configparser
-from datetime import datetime
-import time
 import race
 import vehicletelemetry
 import debuglogger
@@ -18,14 +15,16 @@ import vehiclestate
 
 class DashboardBackend:
 
-    def __init__(self, is_test=False, cfg_file='./config.ini', state_file='./car_state.json'):
+    def __init__(self, is_test=False, cfg_file='./config.ini', state_file='./car_state.json', debug=False):
         cfg = configparser.ConfigParser()
         cfg.read(cfg_file)
 
         # Instantiate logging, telemetry
-        self.dbg = debuglogger.DebugLogger(int(cfg['DEFAULT']['DebugBufferSize']))
+        self.dbg = debuglogger.DebugLogger(int(cfg['DEFAULT']['DebugBufferSize']), debug=debug)
         self.vic = vehicletelemetry.VehicleTelemetry()
         self.race = race.Race()
+
+        self.dbg.put_msg("[BACKEND] Initializing server...")
 
         # Establish mode, production or test. Interface is dependant
         if (is_test):
@@ -60,4 +59,5 @@ class DashboardBackend:
 
         # Start listening for connections from dashboard
         async with websockets.serve(self.dash.message_handler, "localhost", self.PORT):
+            self.dbg.put_msg("[BACKEND] Server started.")
             await asyncio.Future()

@@ -7,7 +7,7 @@ MAX_BUF_SIZE = 256
 
 class DebugLogger:
 
-    def __init__(self, n=0):
+    def __init__(self, n=0, debug=True):
         self.new_msg = False
 
         if n == 0:
@@ -17,6 +17,8 @@ class DebugLogger:
             
         self.idx_read = 0
         self.idx_write = 0
+
+        self.debug = debug
 
     def msg_avail(self):
         return not self.idx_read == self.idx_write
@@ -45,17 +47,19 @@ class DebugLogger:
         return msgs
 
     def put_msg(self, msg):
-        self.msgs[self.idx_write] = msg
-        self.idx_write += 1
 
-        if self.idx_write >= MAX_BUF_SIZE:
-            self.idx_write = 0
+        if (self.debug):
+            self.msgs[self.idx_write] = msg
+            self.idx_write += 1
 
-        # Handle overwriting last value
-        if self.idx_write == self.idx_read:
-            self.idx_read += 1
+            if self.idx_write >= MAX_BUF_SIZE:
+                self.idx_write = 0
 
-            if self.idx_read >= MAX_BUF_SIZE:
-                self.idx_read = 0
+            # Handle overwriting last value
+            if self.idx_write == self.idx_read:
+                self.idx_read += 1
+
+                if self.idx_read >= MAX_BUF_SIZE:
+                    self.idx_read = 0
 
         

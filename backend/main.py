@@ -14,8 +14,9 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-c', '--config', default='./config.ini')
 parser.add_argument('-s', '--state', default='./car_state.json')
 parser.add_argument('-t', '--test', action='store_true')
+parser.add_argument('-d', '--debug', action='store_true')
 args = parser.parse_args()
 
 # Start dashboard in eventloop
-db = backend.DashboardBackend(is_test=args.test, cfg_file=args.config, state_file=args.state)
+db = backend.DashboardBackend(is_test=args.test, cfg_file=args.config, state_file=args.state, debug=args.debug)
 asyncio.run(db.start())
