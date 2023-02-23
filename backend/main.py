@@ -17,5 +17,5 @@ parser.add_argument('-t', '--test', action='store_true')
 args = parser.parse_args()
 
 # Start dashboard in eventloop
-db = backend.DashboardBackend(is_test=args.test, cfg_file=args.config)
+db = backend.DashboardBackend(is_test=args.test, cfg_file=args.config, state_file=args.state)
 asyncio.run(db.start())

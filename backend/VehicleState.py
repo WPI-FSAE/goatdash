@@ -22,7 +22,7 @@ class VehicleState:
 
 
     async def write_state(self):
-        with open('car_state_test.json', 'w') as f:
+        with open(self.state_file, 'w') as f:
             f.write(json.dumps({'odometer': round(self.vic.odometer, 3), 'trip': round(self.vic.trip, 3)}))
         
         self.dbg.put_msg("[BACKEND] Writing vehicle state.")
@@ -35,4 +35,4 @@ class VehicleState:
                 
                 self.vic.odometer = car_state['odometer']
         except:
-            self.dbg.put_msg("[BACKEND] ERR State file not found.")
+            self.dbg.put_msg("[BACKEND] ERR State file not found: " + self.state_file)
