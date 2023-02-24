@@ -145,12 +145,58 @@
     filter: brightness(.7);
 }
 
-div#debug-msgs-wrap {
+div#msg-box {
+    position: absolute;
+    right: 5px;
+    bottom: 14%;
+    height: 65%;
+    width: calc(50% - 10px);
+    background-color: var(--primary);
+    border-radius: 5px;
+}
+
+div.scroll-button {
+    position: absolute;
+    display: flex;
+    background-color: var(--bg);
+    width: 10vh;
+    height: 10vh;
+    border-radius: 5px;
+    margin: 5px;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+div#scroll-up {
+    right: 0;
+    top: 0;
+}
+
+div#scroll-down {
+    right: 0;
+    bottom: 11vh;
+}
+
+div#scroll-bottom {
+    right: 0;
+    bottom: 0;
+}
+
+p#msg-count {
+    position: absolute;
+    margin: 10px;
+    font-size: 1rem;
+    right: 0;
+    bottom: 21vh;
+}
+
+div#debug-msgs {
     height: 70%;
     overflow-y: scroll;
     overflow-wrap: "break-word";
-    display: flex;
-    flex-direction: column-reverse;
 }
 
 p.debug-msg {

@@ -1,7 +1,3 @@
-#force-meter {
-
-}
-
 #force-gauge {
     content: none;
     position: absolute;
@@ -20,8 +16,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 8%;
-    height: 8%;
+    width: 8px;
+    height: 8px;
     background-color: var(--negative);
     border-radius: 50%;
 }

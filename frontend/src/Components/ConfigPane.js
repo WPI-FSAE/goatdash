@@ -1,6 +1,6 @@
 import '../Styles/ConfigPane.css';
 import * as Constants from '../constants';
-import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
+import { useState, forwardRef, useImperativeHandle, useEffect, useRef } from 'react';
 
 const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMode}, ref) => {
     const [showGeneral, setShowGeneral] = useState(false);
@@ -10,7 +10,10 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
     const [showCharge, setShowCharge] = useState(false);
     const [showDebug, setShowDebug] = useState(false);
     const [alertText, setAlertText] = useState("");
+
     const [dbgMsgs, setDbgMsgs] = useState([]);
+    const [bottomMsg, setBottomMsg] = useState(0);
+    const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
 
     const [lat, setLat] = useState(0);
     const [long, setLong] = useState(0);
@@ -18,9 +21,13 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
     const handleAddVal = (val) => {
         setDbgMsgs((prevVals) => [
-                ...prevVals.slice((-1 * Constants.DBG_BUF_SIZE) - 1),
+                ...prevVals.slice((-1 * Constants.DBG_BUF_SIZE) + 1),
                 val
             ]);
+        
+        if (dbgMsgs.length >= Constants.DBG_BUF_SIZE) {
+                setBottomMsg(bottomMsg - 1);
+        }
     };
 
     useImperativeHandle(ref, () => ({
@@ -346,7 +353,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
                 <NumberPad fn={handleSetLapNumber} name="Number of Laps" show={showLapNumber} setShow={setShowLapNumber}/>
 
-                <div className="panel button" id="back" onClick={() => {setShowGPS(false); setAlertText("");}}>
+                <div className="panel button" id="back" onClick={() => {setShowGPS(false); setAlertText(""); sock.send(JSON.stringify({opt: "SET_STATE", state: Constants.DASH_STATE}));}}>
                     Back
                 </div>
             </div>
@@ -412,7 +419,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                     </div>
                 </div>
 
-                <div className="button" id="back" onClick={() => {setShowTrip(false); setAlertText("");}}>
+                <div className="button" id="back" onClick={() => {setShowTrip(false); setAlertText(""); sock.send(JSON.stringify({opt: "SET_STATE", state: Constants.DASH_STATE}));}}>
                     Back
                 </div>
                 
@@ -432,20 +439,57 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
         )
     }
 
-    function DebugSettings() {
+    function DebugSettings({messages}) {
+
+        function MessageList({messages}) {
+
+            useEffect(() => {
+                if (shouldScrollToBottom) {
+                    setBottomMsg(messages.length - 1);
+                }
+            }, [bottomMsg, shouldScrollToBottom]);
+
+            function handleScrollUp() {
+                if (bottomMsg > Constants.DBG_MSG_CNT) {
+                    setBottomMsg(bottomMsg - 1);
+                    setShouldScrollToBottom(false);
+                }
+            }
+
+            function handleScrollDown() {
+                if (bottomMsg < messages.length && messages.length > Constants.DBG_MSG_CNT) {
+                    setBottomMsg(bottomMsg + 1);
+                }
+
+                if (bottomMsg == messages.length - 1) {
+                    setShouldScrollToBottom(true);
+                }
+            }
+
+            return (
+                <div id="msg-box">
+                    <div className="scroll-button" id="scroll-up" onClick={handleScrollUp}>🔼</div>
+                    <div className="scroll-button" id="scroll-down" onClick={handleScrollDown}>🔽</div>
+                    <div className="scroll-button" id="scroll-bottom" onClick={() => {setShouldScrollToBottom(true); setBottomMsg(messages.length - 1);}}>⏬</div>
+
+                    <div style={{width: "80%", height: "100%"}}> 
+                        {messages.slice(bottomMsg - Constants.DBG_MSG_CNT - 1 > 0 ? bottomMsg - Constants.DBG_MSG_CNT: 0, bottomMsg).map((message, index) => (
+                            <p key={index} className="debug-msg">{message}</p>
+                        ))}
+                    </div>
+
+                    <p id="msg-count">{bottomMsg + 1}/{messages.length}</p>
+                </div>
+            )
+        }
+
         return (
             <div className="page" id="debug-settings" style={{display: showDebug ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Debug</h1>
 
-                <div id="debug-msgs-wrap">
-                    <div id="debug-msgs">
-                    {dbgMsgs.map((e, i)=>{
-                        return <p className="debug-msg" key={i}>{e}</p>
-                        })}
-                    </div>
-                </div>
- 
-                <div className="button" id="back" onClick={() => {setShowDebug(false); setAlertText("");}}>
+                <MessageList messages={messages}/>
+        
+                <div className="button" id="back" onClick={() => {setShowDebug(false); setAlertText(""); sock.send(JSON.stringify({opt: "SET_STATE", state: Constants.DASH_STATE}));}}>
                     Back
                 </div>
             </div>
@@ -464,7 +508,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
             <GPSSettings/>
             <TripSettings/>
             <ChargeSettings/>
-            <DebugSettings/>
+            <DebugSettings messages={dbgMsgs}/>
 
             <div className="button" id="return" onClick={handleExit}>
                 Dashboard

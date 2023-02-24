@@ -18,3 +18,4 @@ export const AMP_TIME_SLICE = [60, 30, 15, 5];  // Avail timeslices (s)
 export const AMP_REFRESH = 4;   // Hz
 
 export const DBG_BUF_SIZE = 256;
+export const DBG_MSG_CNT = 15;
