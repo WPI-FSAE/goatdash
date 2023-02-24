@@ -461,7 +461,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                     setBottomMsg(bottomMsg + 1);
                 }
 
-                if (bottomMsg == messages.length - 1) {
+                if (bottomMsg + 1 == messages.length - 1) {
                     setShouldScrollToBottom(true);
                 }
             }
@@ -473,7 +473,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                     <div className="scroll-button" id="scroll-bottom" onClick={() => {setShouldScrollToBottom(true); setBottomMsg(messages.length - 1);}}>⏬</div>
 
                     <div style={{width: "80%", height: "100%"}}> 
-                        {messages.slice(bottomMsg - Constants.DBG_MSG_CNT - 1 > 0 ? bottomMsg - Constants.DBG_MSG_CNT: 0, bottomMsg).map((message, index) => (
+                        {messages.slice(bottomMsg - Constants.DBG_MSG_CNT - 1 > 0 ? bottomMsg - Constants.DBG_MSG_CNT + 1: 0, bottomMsg + 1).map((message, index) => (
                             <p key={index} className="debug-msg">{message}</p>
                         ))}
                     </div>

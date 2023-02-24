@@ -132,7 +132,7 @@ class DashboardInterface:
 
             elif (self.state == DEBUG):
                 if (self.dbg.msg_avail()):
-                    pkt = {**pkt, **{'dbg_msgs': self.dbg.get_msgs(1)}}
+                    pkt = {**pkt, **{'dbg_msgs': self.dbg.get_msg()}}
 
             if (i >= 9):
                 i = 0
