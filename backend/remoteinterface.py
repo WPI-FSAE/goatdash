@@ -16,19 +16,13 @@ class RemoteInterface:
         self.refresh = refresh
         self.websocket
         
-    async def connect(websocket):
+    async def connect(self, websocket):
         #connects to the websocket and maintains the connection
         # https://pypi.org/project/websocket-client/
         websocket.enableTrace(True)
-        ws = websocket.WebSocketApp("wss://api.gemini.com/v1/marketdata/BTCUSD",
-                                on_open=on_open,
-                                on_message=on_message,
-                                on_error=on_error,
-                                on_close=on_close)
-
-        ws.run_forever(dispatcher=rel, reconnect=5)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
-        rel.signal(2, rel.abort)  # Keyboard Interrupt
-        rel.dispatch()
+        url = 'wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self'
+        async with websockets.connect(url) as websocket:
+                await self.send_tm(websocket)
         
     async def send_tm(self, websocket):
         """
