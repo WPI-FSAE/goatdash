@@ -100,8 +100,6 @@ class CANVehicleInterface(VehicleInterface):
                 self.vic.long = msg.Longitude
                 self.vic.lat = msg.Latitude
 
-                self.dbg.put_msg("Lat recv:", msg.Latitude, "Lon recv:", msg.Longitude)
-
             elif hasattr(msgdef, 'name') and msgdef.name == 'IMUAccel':
                 msg = self.parser.parse(msg)
 
@@ -111,7 +109,7 @@ class CANVehicleInterface(VehicleInterface):
                 self.vic.accel_max["rt"] = max(self.vic.accel_x, self.vic.accel_max["rt"])
                 self.vic.accel_max["lt"] = abs(min(self.vic.accel_x, -1 * self.vic.accel_max["lt"]))
                 self.vic.accel_max["fr"] = max(self.vic.accel_y, self.vic.accel_max["fr"])
-                self.vic.accel_max["rr"] = abs(min(self.vic.accel_y, -1 * self.vic.accel_max["r4"]))
+                self.vic.accel_max["rr"] = abs(min(self.vic.accel_y, -1 * self.vic.accel_max["rr"]))
 
             elif hasattr(msgdef, 'name') and msgdef.name == "FrontIO_Heartbeat":
                 msg = self.parser.parseBitfield(msg, "FrontIO_StatusFlags")
