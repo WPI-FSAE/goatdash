@@ -100,6 +100,8 @@ class CANVehicleInterface(VehicleInterface):
                 self.vic.long = msg.Longitude
                 self.vic.lat = msg.Latitude
 
+                self.dbg.put_msg("Lat recv:", msg.Latitude, "Lon recv:", msg.Longitude)
+
             elif hasattr(msgdef, 'name') and msgdef.name == 'IMUAccel':
                 msg = self.parser.parse(msg)
 
