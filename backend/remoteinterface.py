@@ -16,10 +16,8 @@ class RemoteInterface:
         
     async def send_tm(self, websocket):
         """
-        Maintain telemetry connection with client
+        Maintain telemetry connection with remote telemetry server
         """
-
-        i = 0
 
         while True:
             pkt = {}
