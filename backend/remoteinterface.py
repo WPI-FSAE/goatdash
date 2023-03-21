@@ -18,6 +18,7 @@ class RemoteInterface:
         
     async def connect(websocket):
         #connects to the websocket and maintains the connection
+        # https://pypi.org/project/websocket-client/
         websocket.enableTrace(True)
         ws = websocket.WebSocketApp("wss://api.gemini.com/v1/marketdata/BTCUSD",
                                 on_open=on_open,
