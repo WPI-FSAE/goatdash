@@ -8,7 +8,7 @@ import websockets
 import configparser
 import race
 import vehicletelemetry
-import debuglogger
+import messagebuffer
 import dashboardinterface
 import vehicleinterface
 import vehiclestate
@@ -20,7 +20,7 @@ class DashboardBackend:
         cfg.read(cfg_file)
 
         # Instantiate logging, telemetry
-        self.dbg = debuglogger.DebugLogger(int(cfg['DEFAULT']['DebugBufferSize']), debug=debug)
+        self.dbg = messagebuffer.MessageBuffer(int(cfg['DEFAULT']['DebugBufferSize']), debug=debug)
         self.vic = vehicletelemetry.VehicleTelemetry()
         self.race = race.Race()
 
@@ -61,3 +61,21 @@ class DashboardBackend:
         async with websockets.serve(self.dash.message_handler, "localhost", self.PORT):
             self.dbg.put_msg("[BACKEND] Server started.")
             await asyncio.Future()
+
+
+if __name__ == '__main__':
+    import argparse
+
+    # Arg parse configuration
+    parser = argparse.ArgumentParser(
+        prog = 'py backend.py',
+        description = 'EV22 Dashboard Telemetry Server')
+    parser.add_argument('-c', '--config', default='./config.ini', help='Location of config file for backend (i.e. config.ini)')
+    parser.add_argument('-s', '--state', default='./car_state.json', help="Location of vehicle state persistance file (i.e. car_state.json)")
+    parser.add_argument('-t', '--test', action='store_true', help='Enable test interface (no CAN interaction, simulated telemetry)')
+    parser.add_argument('-d', '--debug', action='store_true', help='Enable debug messages over debug interface')
+    args = parser.parse_args()
+
+    # Start dashboard in eventloop
+    db = DashboardBackend(is_test=args.test, cfg_file=args.config, state_file=args.state, debug=args.debug)
+    asyncio.run(db.start())

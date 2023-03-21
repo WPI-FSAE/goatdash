@@ -44,6 +44,7 @@
 
 import math
 import time
+import messagebuffer
 
 WAITING = 0
 ACTIVE = 1
@@ -83,6 +84,8 @@ class Race:
         self.ready = False
 
         self.lap_flag = 0
+
+        self.lap_hist = messagebuffer.MessageBuffer()
 
     # Returns time elapsed since race start
     def get_race_time(self):
@@ -199,6 +202,8 @@ class Race:
 
         self.state = ACTIVE
 
+        self.lap_hist.put_msg(f'[Lap {self.current_lap}/{self.lap_n}] Time: {to_string(self.lap_time)} ({to_string(self.get_race_time())})')
+
     def lap_avail(self):
         return self.lap_flag
 
@@ -216,6 +221,31 @@ class Race:
             return (self.race_time_end - self.race_time_start, self.race_distance)
 
 
+# Convert ms to mm:ss string
+def to_string(ms):
+    mins = math.floor((ms / 1000) / 60 % 60)
+    secs = round(ms / 1000 % 60, 2)
+    
+    if (mins < 10):
+        mins = "0" + str(mins);
+    else:
+        mins = str(mins)
+
+    if (secs < 10):
+        secs = "0" + str(secs);
+    else:
+        secs = str(secs)
+
+    if ('.' in secs):
+        if (secs.index('.') + 2 == len(secs)):
+            secs = secs + '0'
+    else:
+        secs = secs + '.00'
+
+    return mins + ":" + secs 
+
+
+# Determine equation for line of best for for points ([X], [Y])
 def best_fit(X, Y):
 
     xbar = sum(X)/len(X)

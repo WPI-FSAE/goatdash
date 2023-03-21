@@ -5,7 +5,7 @@
 
 MAX_BUF_SIZE = 256
 
-class DebugLogger:
+class MessageBuffer:
 
     def __init__(self, n=0, debug=True):
         self.new_msg = False
