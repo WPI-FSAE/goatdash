@@ -9,27 +9,39 @@ import json
 
 class RemoteInterface:
 
-    def __init__(self, vehicle, logger, race, refresh=60):
+    def __init__(self, vehicle, logger, race, uri, refresh=60):
         self.vic = vehicle
         self.dbg = logger
         self.race = race
         self.refresh = refresh
-        self.websocket
+        self.active = False
+        self.websocket = None
+        self.uri = uri
         
-    async def connect(self, websocket):
-        #connects to the websocket and maintains the connection
-        # https://pypi.org/project/websocket-client/
-        websocket.enableTrace(True)
-        url = 'wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self'
-        async with websockets.connect(url) as websocket:
-                await self.send_tm(websocket)
+    async def connect(self):
+        try:
+            async with websockets.connect(self.uri) as websocket:
+                self.websocket = websocket
+                await asyncio.Future()
+        except:
+            self.dbg.put_msg("[BACKEND] Unable to connect to remote.")
+            return False
         
-    async def send_tm(self, websocket):
+        
+    async def send_tm(self):
         """
         Maintain telemetry connection with remote telemetry server
         """
 
         while True:
+
+            # Check if websocket available
+            if (not (self.websocket and self.websocket.open)):
+                 self.active = False
+                 await asyncio.sleep(1 / self.refresh)
+                 continue
+            
+            self.active = True
             pkt = {}
 
             # Packet type switching (allows for some values to updated faster than others)
@@ -67,5 +79,8 @@ class RemoteInterface:
                             'lap_armed': self.race.is_ready(),
                             'dbg_msgs': self.dbg.get_msg()}}
             
-            await websocket.send(json.dumps(pkt))
+            await self.websocket.send(json.dumps(pkt))
             await asyncio.sleep(1 / self.refresh)    # Define frontend refresh rate
+
+    def close(self):
+         self.websocket = None

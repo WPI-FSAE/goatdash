@@ -12,6 +12,7 @@ import messagebuffer
 import dashboardinterface
 import vehicleinterface
 import vehiclestate
+import remoteinterface
 
 class DashboardBackend:
 
@@ -40,9 +41,14 @@ class DashboardBackend:
 
         self.PORT = int(cfg[cfg_str]['Port'])
 
+        # Remote Telemetry Interface
+        self.remote = remoteinterface.RemoteInterface(self.vic, self.dbg, self.race, cfg['DEFAULT']['RemoteURI'],
+                                                      refresh=int(cfg['DEFAULT']['RemoteRefresh']))
+        
         # Dashboard Interface
-        self.dash = dashboardinterface.DashboardInterface(self.vic, self.dbg, self.race,
+        self.dash = dashboardinterface.DashboardInterface(self.vic, self.dbg, self.race, self.remote,
                                                           refresh=int(cfg['DEFAULT']['ClientRefresh']))
+
 
         # State Persistance
         self.state = vehiclestate.VehicleState(self.vic, self.dbg, state_file, period=int(cfg['DEFAULT']['StateSavePeriod']))
@@ -53,6 +59,9 @@ class DashboardBackend:
         
         # Start polling vehicle interface for telemetry
         asyncio.create_task(self.vi.start_tm())
+
+        # Start remote telemetry
+        asyncio.create_task(self.remote.send_tm())
 
         # Start saving vehicle state to disk
         asyncio.create_task(self.state.store_tm())

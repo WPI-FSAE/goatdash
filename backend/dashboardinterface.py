@@ -14,10 +14,11 @@ DEBUG = 3
 
 class DashboardInterface:
 
-    def __init__(self, vehicle, logger, race, refresh=60):
+    def __init__(self, vehicle, logger, race, remote, refresh=60):
         self.vic = vehicle
         self.dbg = logger
         self.race = race
+        self.remote = remote
         self.refresh = refresh
         self.state = DASH
 
@@ -33,6 +34,11 @@ class DashboardInterface:
             if message == 'START_DASH':
                 # Create new coroutine serving tm data to ws
                 asyncio.create_task(self.send_tm(websocket))
+            
+            elif message == 'START_REMOTE':
+                # Attempt to connect to remote server
+                await self.remote.connect()
+
             else:
                 # Handle incoming command
                 try:
@@ -44,23 +50,32 @@ class DashboardInterface:
                 # Handle message
                 if (data['opt'] == "RESET_ODO"):
                     self.vic.odometer = 0
+
                 elif (data['opt'] == "RESET_TRIP"):
                     self.vic.trip = 0
+
                 elif (data['opt'] == "RESET_DRAW"):
                     self.vic.amps_max["draw"] = 0
+
                 elif (data['opt'] == "RESET_REGEN"):
                     self.vic.amps_max["regen"] = 0
+
                 elif (data['opt'] == "SET_LAP"):
                     await websocket.send(json.dumps({"lap_total": data["laps"]}))
                     self.race.set_lap_n(data["laps"])
+
                 elif (data['opt'] == "SET_LAP_WP"):
                     self.race.update((self.vic.lat, self.vic.long), self.vic.inv_voltage)
+
                 elif (data['opt'] == 'ARM_LAP'):
                     self.race.set_ready(True)
+
                 elif (data['opt'] == 'RESET_LAP'):
                     self.race.reset_race()
+
                 elif (data['opt'] == 'SET_STATE'):
                     self.state = data['state']
+
 
     async def animate(self, websocket):
         inc = 4
