@@ -25,7 +25,7 @@ class VehicleState:
         with open(self.state_file, 'w') as f:
             f.write(json.dumps({'odometer': round(self.vic.odometer, 3), 'trip': round(self.vic.trip, 3)}))
         
-        self.dbg.put_msg("[BACKEND] Writing vehicle state.")
+        # self.dbg.put_msg("[BACKEND] Writing vehicle state.")
 
     
     def load_tm(self):
