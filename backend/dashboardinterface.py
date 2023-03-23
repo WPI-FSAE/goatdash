@@ -38,7 +38,7 @@ class DashboardInterface:
                 try:
                     data = json.loads(message)
                 except:
-                    self.dbg.put_msg("[BACKEND] ERR Ill formatted message: ", message)
+                    self.dbg.put_msg(f'[BACKEND] ERR Ill formatted message: {message}')
                     return
 
                 # Handle message

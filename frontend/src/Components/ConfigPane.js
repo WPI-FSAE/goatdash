@@ -1,6 +1,7 @@
 import '../Styles/ConfigPane.css';
 import * as Constants from '../constants';
-import { useState, forwardRef, useImperativeHandle, useEffect, useRef } from 'react';
+import { useState, forwardRef, useImperativeHandle } from 'react';
+import MessageList from './MessageList';
 
 const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMode}, ref) => {
     const [showGeneral, setShowGeneral] = useState(false);
@@ -11,22 +12,37 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
     const [showDebug, setShowDebug] = useState(false);
     const [alertText, setAlertText] = useState("");
 
+    const [lapMsgs, setLapMsgs] = useState([]);
+    const [bottomMsgLap, setBottomMsgLap] = useState(0);
+    const [shouldScrollToBottomLap, setShouldScrollToBottomLap] = useState(true);
+
     const [dbgMsgs, setDbgMsgs] = useState([]);
-    const [bottomMsg, setBottomMsg] = useState(0);
-    const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
+    const [bottomMsgDbg, setBottomMsgDbg] = useState(0);
+    const [shouldScrollToBottomDbg, setShouldScrollToBottomDbg] = useState(true);
 
     const [lat, setLat] = useState(0);
     const [long, setLong] = useState(0);
     const [lapArmed, setLapArmed] = useState(false);
 
-    const handleAddVal = (val) => {
+    const handleAddLap = (val) => {
+        setDbgMsgs((prevVals) => [
+                ...prevVals.slice((-1 * Constants.DBG_BUF_SIZE) + 1),
+                val
+            ]);
+        
+        if (lapMsgs.length >= Constants.DBG_BUF_SIZE) {
+                setBottomMsgLap(bottomMsgLap - 1);
+        }
+    };
+
+    const handleAddDbg = (val) => {
         setDbgMsgs((prevVals) => [
                 ...prevVals.slice((-1 * Constants.DBG_BUF_SIZE) + 1),
                 val
             ]);
         
         if (dbgMsgs.length >= Constants.DBG_BUF_SIZE) {
-                setBottomMsg(bottomMsg - 1);
+                setBottomMsgDbg(bottomMsgDbg - 1);
         }
     };
 
@@ -35,7 +51,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
             if (tm['lat'] !== undefined && tm['lat'] !== lat) setLat(tm['lat']);
             if (tm['long'] !== undefined && tm['long'] !== long) setLong(tm['long']);
             if (tm['lap_armed'] !== undefined && tm['lap_armed'] !== lapArmed) setLapArmed(tm['lap_armed']);
-            if (tm['dbg_msgs'] !== undefined) handleAddVal(tm['dbg_msgs']);
+            if (tm['dbg_msgs'] !== undefined) handleAddDbg(tm['dbg_msgs']);
         }
     }));
 
@@ -296,9 +312,10 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
         )
     }
 
-    function GPSSettings() {
+    function GPSSettings({laps}) {
         const [showLapOptions, setShowLapOptions] = useState(true);
         const [showLapNumber, setShowLapNumber] = useState(false);
+        const [showLaps, setShowLaps] = useState(false);
 
         function handleSetLapNumber (val) {
             let data = JSON.stringify({opt: "SET_LAP", laps: val});
@@ -307,14 +324,26 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
             setAlertText(`Set Laps To ${val}`);
         }
 
+        function togglePane(e, paneShowFn, paneState) {
+            e.preventDefault();
+            
+            setShowLapOptions(false);
+            setShowLaps(false);
+            paneShowFn(!paneState);
+        }
+
         return (            
             <div className="page" id="gps-settings" style={{display: showGPS ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Lap</h1>
                 
                 <div className="option-page">
                     <div className="option-select">
-                        <div className="panel button"  style={{filter: showLapOptions ? "brightness(.7)" : ""}} onClick={(e) => setShowLapOptions(!showLapOptions)}>
+                        <div className="panel button"  style={{filter: showLapOptions ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowLapOptions, showLapOptions)}>
                             Lap Options
+                        </div>
+
+                        <div className="panel button"  style={{filter: showLaps ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowLaps, showLaps)}>
+                            Previous Laps
                         </div>
 
                         <ol style={{fontSize: "1.2rem"}}>
@@ -349,6 +378,11 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                         <p>Lap Armed: {lapArmed ? "Yes" : "No"}</p>
 
                     </div>
+
+                    <div className="option-pane" id="lap-list" style={{display: showLaps ? "" : "none"}}>
+                        <MessageList messages={laps} idx={bottomMsgLap} scrollToBottom={shouldScrollToBottomLap} setIdxFunc={setBottomMsgLap} setShouldScrollFunc={setShouldScrollToBottomLap}/>
+                    </div>
+
                 </div>
 
                 <NumberPad fn={handleSetLapNumber} name="Number of Laps" show={showLapNumber} setShow={setShowLapNumber}/>
@@ -440,54 +474,11 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
     }
 
     function DebugSettings({messages}) {
-
-        function MessageList({messages}) {
-
-            useEffect(() => {
-                if (shouldScrollToBottom) {
-                    setBottomMsg(messages.length - 1);
-                }
-            }, [bottomMsg, shouldScrollToBottom]);
-
-            function handleScrollUp() {
-                if (bottomMsg > Constants.DBG_MSG_CNT) {
-                    setBottomMsg(bottomMsg - 1);
-                    setShouldScrollToBottom(false);
-                }
-            }
-
-            function handleScrollDown() {
-                if (bottomMsg < messages.length && messages.length > Constants.DBG_MSG_CNT) {
-                    setBottomMsg(bottomMsg + 1);
-                }
-
-                if (bottomMsg + 1 == messages.length - 1) {
-                    setShouldScrollToBottom(true);
-                }
-            }
-
-            return (
-                <div id="msg-box">
-                    <div className="scroll-button" id="scroll-up" onClick={handleScrollUp}>🔼</div>
-                    <div className="scroll-button" id="scroll-down" onClick={handleScrollDown}>🔽</div>
-                    <div className="scroll-button" id="scroll-bottom" onClick={() => {setShouldScrollToBottom(true); setBottomMsg(messages.length - 1);}}>⏬</div>
-
-                    <div style={{width: "80%", height: "100%"}}> 
-                        {messages.slice(bottomMsg - Constants.DBG_MSG_CNT - 1 > 0 ? bottomMsg - Constants.DBG_MSG_CNT + 1: 0, bottomMsg + 1).map((message, index) => (
-                            <p key={index} className="debug-msg">{message}</p>
-                        ))}
-                    </div>
-
-                    <p id="msg-count">{bottomMsg + 1}/{messages.length}</p>
-                </div>
-            )
-        }
-
         return (
             <div className="page" id="debug-settings" style={{display: showDebug ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Debug</h1>
 
-                <MessageList messages={messages}/>
+                <MessageList messages={messages} idx={bottomMsgDbg} scrollToBottom={shouldScrollToBottomDbg} setIdxFunc={setBottomMsgDbg} setShouldScrollFunc={setShouldScrollToBottomDbg}/>
         
                 <div className="button" id="back" onClick={() => {setShowDebug(false); setAlertText(""); sock.send(JSON.stringify({opt: "SET_STATE", state: Constants.DASH_STATE}));}}>
                     Back
@@ -505,7 +496,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
             <GeneralSettings/>
             <TuningSettings/>
-            <GPSSettings/>
+            <GPSSettings laps={lapMsgs}/>
             <TripSettings/>
             <ChargeSettings/>
             <DebugSettings messages={dbgMsgs}/>

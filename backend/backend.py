@@ -58,7 +58,7 @@ class DashboardBackend:
         asyncio.create_task(self.state.store_tm())
 
         # Start listening for connections from dashboard
-        async with websockets.serve(self.dash.message_handler, "localhost", self.PORT):
+        async with websockets.serve(self.dash.message_handler, port=self.PORT):
             self.dbg.put_msg("[BACKEND] Server started.")
             await asyncio.Future()
 
