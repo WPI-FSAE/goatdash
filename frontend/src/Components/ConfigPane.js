@@ -189,6 +189,11 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
             e.preventDefault();
             window.location.reload();
         }
+        
+        function handleRemoteStart (e) {
+            e.preventDefault();
+            sock.send("START_REMOTE");
+        }
 
         function setTheme(e, theme) {
             e.preventDefault();
@@ -233,9 +238,14 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                         ↻ Refresh Dashboard
                         </div>
 
+                        <div className="panel button" onClick={handleRemoteStart}>
+                            Start Remote Telemetry
+                        </div>
+
                         <div className="panel button"  style={{filter: showThemes ? "brightness(.7)" : ""}} onClick={() => setShowThemes(!showThemes)}>
                             Set Theme
                         </div>
+                        
                     </div>
 
                     <div className="option-pane" id="theme-set" style={{display: showThemes ? "" : "none"}}>
