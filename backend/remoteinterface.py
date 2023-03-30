@@ -23,7 +23,7 @@ class RemoteInterface:
             async with websockets.connect(self.uri) as websocket:
                 self.websocket = websocket
                 self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
-                asyncio.create_task(self.send_tm(websocket))
+                self.send_tm(websocket)
                 await asyncio.Future()
         except Exception as e:
             self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
@@ -36,7 +36,7 @@ class RemoteInterface:
         """
 
         while True:
-
+            print("sending pkt")
             pkt = {}
 
             # Packet type switching (allows for some values to updated faster than others)
