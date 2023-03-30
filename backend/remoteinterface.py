@@ -22,9 +22,10 @@ class RemoteInterface:
         try:
             async with websockets.connect(self.uri) as websocket:
                 self.websocket = websocket
+                self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
                 await asyncio.Future()
-        except:
-            self.dbg.put_msg("[BACKEND] Unable to connect to remote.")
+        except Exception as e:
+            self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + e)
             return False
         
         
