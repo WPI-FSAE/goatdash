@@ -30,14 +30,13 @@ class DashboardInterface:
 
         async for message in websocket:
             self.dbg.put_msg(f'[BACKEND] RECEIVED: {message}')
-
             if message == 'START_DASH':
                 # Create new coroutine serving tm data to ws
                 asyncio.create_task(self.send_tm(websocket))
             
             elif message == 'START_REMOTE':
                 # Attempt to connect to remote server
-                await self.remote.connect()
+                asyncio.create_task(self.remote.connect())
 
             else:
                 # Handle incoming command

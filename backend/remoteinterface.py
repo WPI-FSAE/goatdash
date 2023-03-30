@@ -22,26 +22,21 @@ class RemoteInterface:
         try:
             async with websockets.connect(self.uri) as websocket:
                 self.websocket = websocket
+                self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
+                asyncio.create_task(self.send_tm(websocket))
                 await asyncio.Future()
-        except:
-            self.dbg.put_msg("[BACKEND] Unable to connect to remote.")
+        except Exception as e:
+            self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
             return False
         
         
-    async def send_tm(self):
+    async def send_tm(self, websocket):
         """
         Maintain telemetry connection with remote telemetry server
         """
 
         while True:
 
-            # Check if websocket available
-            if (not (self.websocket and self.websocket.open)):
-                 self.active = False
-                 await asyncio.sleep(1 / self.refresh)
-                 continue
-            
-            self.active = True
             pkt = {}
 
             # Packet type switching (allows for some values to updated faster than others)
@@ -77,9 +72,9 @@ class RemoteInterface:
                             'lat': self.vic.lat,
                             'long': self.vic.long,
                             'lap_armed': self.race.is_ready(),
-                            'dbg_msgs': self.dbg.get_msg()}}
-            
-            await self.websocket.send(json.dumps(pkt))
+                            'dbg_msgs': ""}}
+
+            await websocket.send(json.dumps(pkt))
             await asyncio.sleep(1 / self.refresh)    # Define frontend refresh rate
 
     def close(self):

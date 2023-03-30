@@ -60,9 +60,6 @@ class DashboardBackend:
         # Start polling vehicle interface for telemetry
         asyncio.create_task(self.vi.start_tm())
 
-        # Start remote telemetry
-        asyncio.create_task(self.remote.send_tm())
-
         # Start saving vehicle state to disk
         asyncio.create_task(self.state.store_tm())
 
