@@ -82,8 +82,8 @@ class CANVehicleInterface(VehicleInterface):
             elif hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryC':
                 msg = self.parser.parse(msg)
 
-                self.temps["inv"] = round(msg.controllerTempDeciCelcius / 10.0, 1)
-                self.temps["mtr"] = round(msg.motorTempDeciCelcius / 10.0, 1)
+                self.vic.temps["inv"] = round(msg.controllerTempDeciCelcius / 10.0, 1)
+                self.vic.temps["mtr"] = round(msg.motorTempDeciCelcius / 10.0, 1)
 
             elif hasattr(msgdef, 'name') and msgdef.name == 'BMS_Information' and msgdef.schema.length == len(msg.data):
                 msg = self.parser.parse(msg)
