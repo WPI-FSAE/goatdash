@@ -33,7 +33,10 @@ class Parser:
         return M(*unpack(format, message.data))
 
     def getMsg(self, i):
-        return self.msgdefs[i]
+        if i in self.msgdefs:
+            return self.msgdefs[i]
+        else:
+            return None
 
     def parseBitfield(self, msg, name):
         """
