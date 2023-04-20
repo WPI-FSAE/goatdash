@@ -36,24 +36,21 @@ class CANVehicleInterface(VehicleInterface):
         super().__init__(vehicle, logger, race, refresh)
 
         can.rc['interface'] = interface
-        can.rc['channel'] = channel
+        # can.rc['channel'] = channel
 
-        self.bus = Bus(receive_own_messages=True)
+        self.bus0 = Bus('can0', receive_own_messages=True)
+        self.bus1 = Bus('can1', receive_own_messages=True)
         self.parser = parser.Parser()
 
         self.last_time = datetime.utcnow()
         self.start_time = self.last_time
 
 
-    # Read message from can bus, update internal state,
-    async def get_tm(self):
-    
-        msg = self.bus.recv(.01)
-
+    def handle_msg(self, msg):
+        
         if msg != None:
-            
             msgdef = self.parser.getMsg(msg.arbitration_id)
-
+            
             if hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryA':
                 msg = self.parser.parse(msg)
                 erpm = msg.ERPM
@@ -105,7 +102,7 @@ class CANVehicleInterface(VehicleInterface):
 
                 self.vic.accel_x = msg.AccelX
                 self.vic.accel_y = msg.AccelY
-
+                print("", self.vic.accel_x, self.vic.accel_y)
                 self.vic.accel_max["rt"] = max(self.vic.accel_x, self.vic.accel_max["rt"])
                 self.vic.accel_max["lt"] = abs(min(self.vic.accel_x, -1 * self.vic.accel_max["lt"]))
                 self.vic.accel_max["fr"] = max(self.vic.accel_y, self.vic.accel_max["fr"])
@@ -116,6 +113,14 @@ class CANVehicleInterface(VehicleInterface):
 
                 self.vic.rtd = bool(msg.ReadyToDrive)
 
+    # Read message from can bus, update internal state,
+    async def get_tm(self):
+    
+        msg0 = self.bus0.recv(.01)
+        msg1 = self.bus1.recv(.01) 
+        self.handle_msg(msg0)
+        self.handle_msg(msg1)
+        
 
 
 # Provide a virtual vehicle interface for testing.
