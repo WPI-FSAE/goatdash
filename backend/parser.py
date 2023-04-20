@@ -11,24 +11,28 @@ class Parser:
     def __init__(self):
         self.model = getConfiguration()
         self.msgdefs = {}
+        self.formats = {}
 
         for msg in self.model.messages:
             self.msgdefs[msg.canID] = msg
+
+            if msg.bigendian:
+                format = '>'
+            else:
+                format = '<'
+
+            for field in sorted(msg.schema.body, key=attrgetter('start_index')):
+                if (hasattr(field, 'field_type')):
+                    format += field.field_type.struct_format
+                else:
+                    format += 'B'
+            
+            self.formats[msg.canID] = format
     
     def parse(self, message):
         msgdef = self.getMsg(message.arbitration_id)
         if msgdef == 0: return
-
-        if msgdef.bigendian:
-            format = '>'
-        else:
-            format = '<'
-
-        for field in sorted(msgdef.schema.body, key=attrgetter('start_index')):
-            if (hasattr(field, 'field_type')):
-                format += field.field_type.struct_format
-            else:
-                format += 'B'
+        format = self.formats[message.arbitration_id]
         M = namedtuple(msgdef.name, [f.name for f in sorted(msgdef.schema.body, key=attrgetter('start_index'))])
         return M(*unpack(format, message.data))
 
