@@ -11,7 +11,15 @@ import can
 from can.interface import Bus
 import parser
 
-
+CAN_FILTER = [{'can_id': 6, 'can_mask': 0xFFFF, 'extended': True},      # DTI A
+              {'can_id': 262, 'can_mask': 0xFFFF, 'extended': True},    # DTI B
+              {'can_id': 518, 'can_mask': 0xFFFF, 'extended': True},    # DTI C
+              {'can_id': 35, 'can_mask': 0xFFFF, 'extended': True},     # BMS
+              {'can_id': 21, 'can_mask': 0xFFFF, 'extended': True},     # GPS
+              {'can_id': 22, 'can_mask': 0xFFFF, 'extended': True},     # IMU
+              {'can_id': 31, 'can_mask': 0xFFFF, 'extended': True},     # FrontIO
+              #{'can_id': 32, 'can_mask': 0xFFFF, 'extended': True},     # RearIO
+              ]
 # Generic vehicle interface
 class VehicleInterface:
 
@@ -38,8 +46,9 @@ class CANVehicleInterface(VehicleInterface):
         can.rc['interface'] = interface
         # can.rc['channel'] = channel
 
-        self.bus0 = Bus('can0', receive_own_messages=True)
-        self.bus1 = Bus('can1', receive_own_messages=True)
+        self.bus0 = Bus('can0', receive_own_messages=True, can_filters=CAN_FILTER)
+        self.bus1 = Bus('can1', receive_own_messages=True, can_filters=CAN_FILTER)
+
         self.parser = parser.Parser()
 
         self.last_time = datetime.utcnow()
@@ -66,7 +75,15 @@ class CANVehicleInterface(VehicleInterface):
                 self.vic.trip += dx
 
                 self.last_time = nowtime
+                
                 self.vic.speed = round(speed, 1)
+                
+                # Check for movement if lapping armed
+                if (self.race.is_ready()):
+                    if (self.vic.speed > .1):
+                        if (self.race.waiting()):
+                            self.race.start_race()
+
 
             elif hasattr(msgdef, 'name') and msgdef.name == 'DTI_TelemetryB':
                 msg = self.parser.parse(msg)
@@ -100,9 +117,8 @@ class CANVehicleInterface(VehicleInterface):
             elif hasattr(msgdef, 'name') and msgdef.name == 'IMUAccel':
                 msg = self.parser.parse(msg)
 
-                self.vic.accel_x = msg.AccelX
-                self.vic.accel_y = msg.AccelY
-                print("", self.vic.accel_x, self.vic.accel_y)
+                self.vic.accel_x = msg.AccelX / 9.8
+                self.vic.accel_y = msg.AccelY / 9.8
                 self.vic.accel_max["rt"] = max(self.vic.accel_x, self.vic.accel_max["rt"])
                 self.vic.accel_max["lt"] = abs(min(self.vic.accel_x, -1 * self.vic.accel_max["lt"]))
                 self.vic.accel_max["fr"] = max(self.vic.accel_y, self.vic.accel_max["fr"])
@@ -116,8 +132,8 @@ class CANVehicleInterface(VehicleInterface):
     # Read message from can bus, update internal state,
     async def get_tm(self):
     
-        msg0 = self.bus0.recv(.01)
-        msg1 = self.bus1.recv(.01) 
+        msg0 = self.bus0.recv(0)
+        msg1 = self.bus1.recv(0) 
         self.handle_msg(msg0)
         self.handle_msg(msg1)
         
