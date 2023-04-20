@@ -120,7 +120,7 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
                         </span>
 
                         <span className="label" id="version">
-                            {ip} v0.4.5
+                            {ip} v0.4.6
                         </span>
                     </p>
                 </div>
