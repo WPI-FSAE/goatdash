@@ -9,7 +9,7 @@ import json
 
 class RemoteInterface:
 
-    def __init__(self, vehicle, logger, race, uri, refresh=60):
+    def __init__(self, vehicle, logger, race, uri, refresh=60, is_remote=False):
         self.vic = vehicle
         self.dbg = logger
         self.race = race
@@ -17,17 +17,19 @@ class RemoteInterface:
         self.active = False
         self.websocket = None
         self.uri = uri
-        
+        self.is_remote = is_remote 
+
     async def connect(self):
-        try:
-            async with websockets.connect(self.uri) as websocket:
-                self.websocket = websocket
-                self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
-                await self.send_tm(websocket)
-                await asyncio.Future()
-        except Exception as e:
-            self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
-            return False
+        if not self.is_remote:
+            try:
+                async with websockets.connect(self.uri) as websocket:
+                    self.websocket = websocket
+                    self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
+                    await self.send_tm(websocket)
+                    await asyncio.Future()
+            except Exception as e:
+                self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
+                return False
         
         
     async def send_tm(self, websocket):

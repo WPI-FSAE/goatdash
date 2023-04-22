@@ -10,7 +10,8 @@ import random
 import can
 from can.interface import Bus
 import parser
-
+import websockets
+import json
 
 # Generic vehicle interface
 class VehicleInterface:
@@ -117,6 +118,39 @@ class CANVehicleInterface(VehicleInterface):
                 self.vic.rtd = bool(msg.ReadyToDrive)
 
 
+# Provides an interface for remote server.
+class RemoteVehicleInterface(VehicleInterface):
+
+    def __init__(self, vehicle, logger, race, uri, refresh=60):
+        super().__init__(vehicle, logger, race, refresh)
+        self.uri = uri
+        self.websocket = None
+ 
+    async def start_tm(self):
+        try:
+            async with websockets.connect(self.uri) as websocket:
+                self.websocket = websocket
+                await self.websocket.send("START_GROUND_STATION")
+                self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
+    
+                while(True):
+                    await self.get_tm()
+                    await asyncio.sleep(1 / self.refresh)
+
+        except Exception as e:
+            self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
+            return False
+ 
+    # Read message from can bus, update internal state,
+    async def get_tm(self):
+        print("Get remote tm...")
+
+        async for msg in self.websocket:
+            tm = json.loads(msg)
+            self.vic.speed = tm['speed']
+            await asyncio.sleep(.1)
+            
+        self.vic.rtd = True        
 
 # Provide a virtual vehicle interface for testing.
 # Random values are generated for demonstration purposes.

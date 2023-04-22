@@ -16,12 +16,14 @@ import remoteinterface
 
 class DashboardBackend:
 
-    def __init__(self, is_test=False, cfg_file='./config.ini', state_file='./car_state.json', debug=False):
+    def __init__(self, is_test=False, is_remote=False, cfg_file='./config.ini', state_file='./car_state.json', debug=False):
         cfg = configparser.ConfigParser()
         cfg.read(cfg_file)
 
         # Instantiate logging, telemetry
         self.dbg = messagebuffer.MessageBuffer(int(cfg['DEFAULT']['DebugBufferSize']), debug=debug)
+        self.dbg_remote = messagebuffer.MessageBuffer(int(cfg['DEFAULT']['DebugBufferSize']), debug=True)
+        
         self.vic = vehicletelemetry.VehicleTelemetry()
         self.race = race.Race()
 
@@ -32,6 +34,11 @@ class DashboardBackend:
             cfg_str = 'TEST'
             self.vi = vehicleinterface.VirtualVehicleInterface(self.vic, self.dbg, self.race,
                                                                refresh=int(cfg['DEFAULT']['CANRefresh']))                                           
+        elif (is_remote):
+            cfg_str = 'TEST'
+            self.vi = vehicleinterface.RemoteVehicleInterface(self.vic, self.dbg, self.race, cfg['DEFAULT']['RemoteURI'],
+                                                              refresh=int(cfg['DEFAULT']['RemoteRefresh']))
+                                                              
         else:
             cfg_str = 'PROD'
             self.vi = vehicleinterface.CANVehicleInterface(self.vic, self.dbg, self.race,
@@ -43,7 +50,8 @@ class DashboardBackend:
 
         # Remote Telemetry Interface
         self.remote = remoteinterface.RemoteInterface(self.vic, self.dbg, self.race, cfg['DEFAULT']['RemoteURI'],
-                                                      refresh=int(cfg['DEFAULT']['RemoteRefresh']))
+                                                      refresh=int(cfg['DEFAULT']['RemoteRefresh']),
+                                                      is_remote=is_remote)
         
         # Dashboard Interface
         self.dash = dashboardinterface.DashboardInterface(self.vic, self.dbg, self.race, self.remote,
@@ -80,8 +88,9 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--state', default='./car_state.json', help="Location of vehicle state persistance file (i.e. car_state.json)")
     parser.add_argument('-t', '--test', action='store_true', help='Enable test interface (no CAN interaction, simulated telemetry)')
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug messages over debug interface')
+    parser.add_argument('-r', '--remote', action='store_true', help='Use remote as source for vehicle telemetry')
     args = parser.parse_args()
 
     # Start dashboard in eventloop
-    db = DashboardBackend(is_test=args.test, cfg_file=args.config, state_file=args.state, debug=args.debug)
+    db = DashboardBackend(is_test=args.test, is_remote=args.remote, cfg_file=args.config, state_file=args.state, debug=args.debug)
     asyncio.run(db.start())
