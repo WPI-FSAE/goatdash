@@ -137,19 +137,11 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
         
         function MenuEntry({title, icon, showFn}) {
             return (
-                <div className="panel tile" onClick={() => showFn(true)}>
+                <div className="panel tile" style={{filter: showFn ? "" : "brightness(.5)"}} onClick={() => showFn(true)}>
                     <img className="menu-icon" src={icon} style={{filter: darkMode ? "invert(1)" : ""}}></img>
                     {title}
                 </div>
             )
-        }
-
-        function enterGPS(show) {
-            if (show) {
-                setShowGPS(true);
-                let data = JSON.stringify({opt: "SET_STATE", state: Constants.GPS_STATE});
-                sock.send(data);
-            }
         }
 
         function enterCharge(show) {
@@ -172,9 +164,9 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
             <div className="menu">
 
                 <MenuEntry title="General" icon="svg_icons/Settings.svg" showFn={setShowGeneral}/>
-                <MenuEntry title="Tuning" icon="svg_icons/Repair.svg" showFn={setShowTuning}/>
-                <MenuEntry title="Lap" icon="svg_icons/ConstructionCone.svg" showFn={enterGPS}/>
-                <MenuEntry title="Trip" icon="svg_icons/Globe.svg" showFn={setShowTrip}/>
+                <MenuEntry title="Tuning" icon="svg_icons/Repair.svg"/>
+                <MenuEntry title="Lap" icon="svg_icons/ConstructionCone.svg"/>
+                <MenuEntry title="Trip" icon="svg_icons/Globe.svg"/>
                 <MenuEntry title="Charge" icon="svg_icons/VerticalBatteryCharging0.svg" showFn={enterCharge}/>
                 <MenuEntry title="Debug" icon="svg_icons/Bug.svg" showFn={enterDebug}/>
 
@@ -188,11 +180,6 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
         function handleRefresh (e) {
             e.preventDefault();
             window.location.reload();
-        }
-        
-        function handleRemoteStart (e) {
-            e.preventDefault();
-            sock.send("START_REMOTE");
         }
 
         function setTheme(e, theme) {
@@ -238,7 +225,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                         ↻ Refresh Dashboard
                         </div>
 
-                        <div className="panel button" onClick={handleRemoteStart}>
+                        <div className="panel button" style={{filter: 'brightness(.5)'}}>
                             Start Remote Telemetry
                         </div>
 
@@ -440,11 +427,11 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
                 <div className="option-page">
                     <div className="option-select">
-                        <div className="panel button" onClick={handleResetOdo}>
+                        <div className="panel button" style={{filter: 'brightness(.5)'}} onClick={handleResetOdo}>
                             ↺ Reset Odomoeter
                         </div>
 
-                        <div className="panel button" onClick={handleResetTrip}>
+                        <div className="panel button" style={{filter: 'brightness(.5)'}} onClick={handleResetTrip}>
                             ↺ Reset Trip
                         </div>
 
