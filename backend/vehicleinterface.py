@@ -155,13 +155,14 @@ class RemoteVehicleInterface(VehicleInterface):
                 self.websocket = websocket
                 await self.websocket.send("START_GROUND_STATION")
                 self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
-    
+                self.vic.remote = True
                 while(True):
                     await self.get_tm()
                     await asyncio.sleep(1 / self.refresh)
 
         except Exception as e:
             self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
+            self.vic.remote = False
             return False
  
     # Read message from can bus, update internal state,
@@ -182,7 +183,7 @@ class RemoteVehicleInterface(VehicleInterface):
             self.vic.trip = tm['trip']
             self.vic.rtd = tm['rtd']
             self.vic.fault = tm['fault']
-            self.vic.amps_max['draw'] = {'draw': tm['peak_draw'], 'regen': tm['peak_regen']}
+            self.vic.amps_max = {'draw': tm['peak_amps'], 'regen': tm['peak_regen']}
             self.vic.range_est = {'mi': tm['mi_est'], 'lap': tm['lap_est'], 'time': tm['time_est']}
             self.vic.batt_pct = tm['batt_pct']
             self.vic.accel_max = {'fr': tm['max_fr'], 'rr': tm['max_rr'], 'lt': tm['max_lt'], 'rt': tm['max_rt']}

@@ -34,3 +34,5 @@ class VehicleTelemetry:
         self.lat = 0
         self.long = 0
 
+        self.remote = False
+
