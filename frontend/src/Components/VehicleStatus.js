@@ -68,6 +68,9 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
 
             if (conn !== isConnected) {
                 setIsConnected(conn);
+                if (!conn) {
+                    setRemoteConnected(false);
+                }
             }
         }
     }));
