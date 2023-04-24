@@ -103,8 +103,8 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
                     </span>
                 </div>
 
-                <div className="panel" id="fault-status" style={{'backgroundColor': fault ? 'var(--negative)' : 'var(--positive)'}}>
-                    <b>FAULTS:</b> {fault ? "FAULT DETECTED" : "NONE"}
+                <div className="panel" id="fault-status" style={{'backgroundColor': fault ? 'var(--negative)' : 'var(--bg)'}}>
+                    <b>FAULTS:</b> {fault ? "FAULT DETECTED" : "-"}
                 </div>
 
                 <div className="panel" id="rtd-status" style={{'backgroundColor': rtd ? 'var(--positive)' :'var(--negative)'}}>
@@ -125,7 +125,7 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
                         </span>
 
                         <span className="label" id="version">
-                            {ip} v0.4.6
+                            {ip} v1.0.0
                         </span>
                     </p>
                 </div>
