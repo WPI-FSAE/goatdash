@@ -59,6 +59,9 @@ class DashboardInterface:
                 elif (data['opt'] == "RESET_REGEN"):
                     self.vic.amps_max["regen"] = 0
 
+                elif (data['opt'] == "RESET_FORCE"):
+                    self.vic.accel_max = {'fr': 0, 'rr': 0, 'lt': 0, 'rt':0}
+
                 elif (data['opt'] == "SET_LAP"):
                     await websocket.send(json.dumps({"lap_total": data["laps"]}))
                     self.race.set_lap_n(data["laps"])
