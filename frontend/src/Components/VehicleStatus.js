@@ -18,6 +18,7 @@ function padDecimal(val, decs) {
 
 const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
     const[isConnected, setIsConnected] = useState(0);
+    const[remoteConnected, setRemoteConnected] = useState(0);
     const[odometer, setOdometer] = useState(0);
     const[trip, setTrip] = useState(0);
     const[rtd, setRtd] = useState(false);
@@ -31,6 +32,7 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
             if (tm['trip'] !== undefined && tm['trip'] !== trip) setTrip(tm['trip']);
             if (tm['rtd'] !== undefined && tm['rtd'] !== rtd) setRtd(tm['rtd']);
             if (tm['fault'] !== undefined && tm['fault'] !== fault) setFault(tm['fault']);
+            if (tm['remote'] !== undefined && tm['remote'] !== remoteConnected) setRemoteConnected(tm['remote']);
 
             // Check if vehicle is moving
             if (tm['speed'] !== undefined) {
@@ -94,7 +96,7 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
                     </span>
 
                     <span className="label" id="lte-status">
-                        LTE <b>{isConnected ? 'Connected' : 'Disconnected'}</b>
+                        RMTE <b>{remoteConnected ? 'Connected' : 'Disconnected'}</b>
                     </span>
                 </div>
 

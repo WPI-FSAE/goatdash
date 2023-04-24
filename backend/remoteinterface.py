@@ -25,6 +25,7 @@ class RemoteInterface:
                 async with websockets.connect(self.uri) as websocket:
                     self.websocket = websocket
                     self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
+                    self.active = True
                     await self.send_tm(websocket)
                     await asyncio.Future()
             except Exception as e:
@@ -80,3 +81,4 @@ class RemoteInterface:
 
     def close(self):
          self.websocket = None
+         self.active = False

@@ -136,7 +136,8 @@ class DashboardInterface:
                                     'max_fr': round(self.vic.accel_max["fr"], 1),
                                     'max_rr': round(self.vic.accel_max["rr"], 1),
                                     'max_lt': round(self.vic.accel_max["lt"], 1),
-                                    'max_rt': round(self.vic.accel_max["rt"], 1)}}
+                                    'max_rt': round(self.vic.accel_max["rt"], 1),
+                                    'remote': self.remote.active}}
 
             elif (self.state == GPS):
                 if (i == 1):
