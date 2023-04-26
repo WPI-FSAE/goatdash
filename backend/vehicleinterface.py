@@ -19,6 +19,7 @@ CAN_FILTER = [{'can_id': 6, 'can_mask': 0xFFFF, 'extended': True},      # DTI A
               {'can_id': 35, 'can_mask': 0xFFFF, 'extended': True},     # BMS
               {'can_id': 21, 'can_mask': 0xFFFF, 'extended': True},     # GPS
               {'can_id': 22, 'can_mask': 0xFFFF, 'extended': True},     # IMU
+              {'can_id': 82, 'can_mask': 0xFFFF, 'extended': True},     # Battery Pct
               {'can_id': 31, 'can_mask': 0xFFFF, 'extended': True},     # FrontIO
               #{'can_id': 32, 'can_mask': 0xFFFF, 'extended': True},     # RearIO
               ]
@@ -131,6 +132,11 @@ class CANVehicleInterface(VehicleInterface):
                 msg = self.parser.parseBitfield(msg, "FrontIO_StatusFlags")
 
                 self.vic.rtd = bool(msg.ReadyToDrive)
+            
+            elif hasattr(msgdef, 'name' and msgdef.name == 'Battery_Percent'):
+                msg = self.parser.parse(msg)
+
+                self.vic.batt_pct = msg.Percent
 
     # Read message from can bus, update internal state,
     async def get_tm(self):
