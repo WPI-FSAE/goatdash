@@ -137,7 +137,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
         
         function MenuEntry({title, icon, showFn}) {
             return (
-                <div className="panel tile" onClick={() => showFn(true)}>
+                <div className="panel tile" style={{filter: showFn ? "" : "brightness(.5)"}} onClick={() => showFn(true)}>
                     <img className="menu-icon" src={icon} style={{filter: darkMode ? "invert(1)" : ""}}></img>
                     {title}
                 </div>
@@ -175,7 +175,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                 <MenuEntry title="Tuning" icon="svg_icons/Repair.svg" showFn={setShowTuning}/>
                 <MenuEntry title="Lap" icon="svg_icons/ConstructionCone.svg" showFn={enterGPS}/>
                 <MenuEntry title="Trip" icon="svg_icons/Globe.svg" showFn={setShowTrip}/>
-                <MenuEntry title="Charge" icon="svg_icons/VerticalBatteryCharging0.svg" showFn={enterCharge}/>
+                <MenuEntry title="Charge" icon="svg_icons/VerticalBatteryCharging0.svg"/>
                 <MenuEntry title="Debug" icon="svg_icons/Bug.svg" showFn={enterDebug}/>
 
             </div>
@@ -274,7 +274,8 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
         function togglePane(e, paneShowFn, paneState) {
             e.preventDefault();
-            
+            setAlertText("");
+
             setShowACLim(false);
             setShowDCLim(false);
             setShowTCS(false);
@@ -307,7 +308,7 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
                     <NumberPad fn={(val) => alert(val)} show={showACLim} setShow={setShowACLim} name="Set AC Max"/>
                     <NumberPad fn={(val) => alert(val)} show={showDCLim} setShow={setShowDCLim} name="Set DC Max"/>
-                    <NumberPad fn={(val) => alert(val)} show={showTCS} setShow={setShowTCS} name="Set TCS Strength (%)"/>
+                    <NumberPad fn={(val) => {sock.send(JSON.stringify({opt: "SET_TCS", strength: val}));}} show={showTCS} setShow={setShowTCS} name="Set TCS Strength (%)"/>
                     <NumberPad fn={(val) => alert(val)} show={showRegen} setShow={setShowRegen} name="Set Regen Strength (%)"/>
 
                     <div className="option-pane" id="" style={{display: showDCLim ? "" : "none"}}>
