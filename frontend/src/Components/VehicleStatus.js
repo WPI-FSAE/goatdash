@@ -18,6 +18,7 @@ function padDecimal(val, decs) {
 
 const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
     const[isConnected, setIsConnected] = useState(0);
+    const[remoteConnected, setRemoteConnected] = useState(0);
     const[odometer, setOdometer] = useState(0);
     const[trip, setTrip] = useState(0);
     const[rtd, setRtd] = useState(false);
@@ -31,6 +32,7 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
             if (tm['trip'] !== undefined && tm['trip'] !== trip) setTrip(tm['trip']);
             if (tm['rtd'] !== undefined && tm['rtd'] !== rtd) setRtd(tm['rtd']);
             if (tm['fault'] !== undefined && tm['fault'] !== fault) setFault(tm['fault']);
+            if (tm['remote'] !== undefined && tm['remote'] !== remoteConnected) setRemoteConnected(tm['remote']);
 
             // Check if vehicle is moving
             if (tm['speed'] !== undefined) {
@@ -66,6 +68,9 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
 
             if (conn !== isConnected) {
                 setIsConnected(conn);
+                if (!conn) {
+                    setRemoteConnected(false);
+                }
             }
         }
     }));
@@ -94,12 +99,12 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
                     </span>
 
                     <span className="label" id="lte-status">
-                        LTE <b>{isConnected ? 'Connected' : 'Disconnected'}</b>
+                        RMTE <b>{remoteConnected ? 'Connected' : 'Disconnected'}</b>
                     </span>
                 </div>
 
-                <div className="panel" id="fault-status" style={{'backgroundColor': fault ? 'var(--negative)' : 'var(--positive)'}}>
-                    <b>FAULTS:</b> {fault ? "FAULT DETECTED" : "NONE"}
+                <div className="panel" id="fault-status" style={{'backgroundColor': fault ? 'var(--negative)' : 'var(--bg)'}}>
+                    <b>FAULTS:</b> {fault ? "FAULT DETECTED" : "-"}
                 </div>
 
                 <div className="panel" id="rtd-status" style={{'backgroundColor': rtd ? 'var(--positive)' :'var(--negative)'}}>
@@ -120,7 +125,7 @@ const VehicleStatus = forwardRef(({ip, setShowConf}, ref) =>{
                         </span>
 
                         <span className="label" id="version">
-                            {ip} v0.4.6
+                            {ip} v1.0.0
                         </span>
                     </p>
                 </div>

@@ -161,13 +161,14 @@ class RemoteVehicleInterface(VehicleInterface):
                 self.websocket = websocket
                 await self.websocket.send("START_GROUND_STATION")
                 self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
-    
+                self.vic.remote = True
                 while(True):
                     await self.get_tm()
                     await asyncio.sleep(1 / self.refresh)
 
         except Exception as e:
             self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
+            self.vic.remote = False
             return False
  
     # Read message from can bus, update internal state,
@@ -176,10 +177,25 @@ class RemoteVehicleInterface(VehicleInterface):
 
         async for msg in self.websocket:
             tm = json.loads(msg)
+
             self.vic.speed = tm['speed']
-            await asyncio.sleep(.1)
-            
-        self.vic.rtd = True        
+            self.vic.inv_voltage = tm['inv_volts']
+            self.vic.amps = tm['dc_amps']
+            self.vic.accel_x = tm['f_x']
+            self.vic.accel_y = tm['f_y']
+            self.vic.cell_voltages = {'avg': tm['avg_cell'], 'min': tm['min_cell'], 'max': tm['max_cell']}
+            self.vic.temps = {'acc': tm['acc_temp'], 'inv': tm['inv_temp'], 'mtr': tm['mtr_temp']}
+            self.vic.odometer = tm['odometer']
+            self.vic.trip = tm['trip']
+            self.vic.rtd = tm['rtd']
+            self.vic.fault = tm['fault']
+            self.vic.amps_max = {'draw': tm['peak_amps'], 'regen': tm['peak_regen']}
+            self.vic.range_est = {'mi': tm['mi_est'], 'lap': tm['lap_est'], 'time': tm['time_est']}
+            self.vic.batt_pct = tm['batt_pct']
+            self.vic.accel_max = {'fr': tm['max_fr'], 'rr': tm['max_rr'], 'lt': tm['max_lt'], 'rt': tm['max_rt']}
+    
+            await asyncio.sleep(1 / self.refresh)
+                    
 
 # Provide a virtual vehicle interface for testing.
 # Random values are generated for demonstration purposes.

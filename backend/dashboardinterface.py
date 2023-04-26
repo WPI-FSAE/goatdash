@@ -59,6 +59,9 @@ class DashboardInterface:
                 elif (data['opt'] == "RESET_REGEN"):
                     self.vic.amps_max["regen"] = 0
 
+                elif (data['opt'] == "RESET_FORCE"):
+                    self.vic.accel_max = {'fr': 0, 'rr': 0, 'lt': 0, 'rt':0}
+
                 elif (data['opt'] == "SET_LAP"):
                     await websocket.send(json.dumps({"lap_total": data["laps"]}))
                     self.race.set_lap_n(data["laps"])
@@ -136,7 +139,8 @@ class DashboardInterface:
                                     'max_fr': round(self.vic.accel_max["fr"], 1),
                                     'max_rr': round(self.vic.accel_max["rr"], 1),
                                     'max_lt': round(self.vic.accel_max["lt"], 1),
-                                    'max_rt': round(self.vic.accel_max["rt"], 1)}}
+                                    'max_rt': round(self.vic.accel_max["rt"], 1),
+                                    'remote': self.vic.remote}}
 
             elif (self.state == GPS):
                 if (i == 1):

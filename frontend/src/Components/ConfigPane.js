@@ -434,6 +434,13 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
             setAlertText("Peak Regen Reset.");
         }
 
+        function handleResetForce (e) {
+            e.preventDefault();
+            let data = JSON.stringify({opt: "RESET_FORCE"});
+            sock.send(data);
+            setAlertText("Force Meter Reset.");
+        }
+
         return (
             <div className="page" id="trip-settings" style={{display: showTrip ? "" : "none"}}>
                 <h1 id="menu-title">Menu {'>'} Trip</h1>
@@ -456,8 +463,8 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                             ⇜ Reset Peak Regen 
                         </div>
 
-                        <div className="panel button" onClick={() => sock.send(JSON.stringify({opt: "START_TIME"}))}>
-                            Start Stopwatch
+                        <div className="panel button" onClick={handleResetForce}>
+                            ⊙ Reset Force Meter
                         </div>
 
                     </div>
