@@ -5,6 +5,8 @@
 
 import asyncio
 import json
+import can
+import struct
 
 # Frontend state
 DASH = 0
@@ -14,8 +16,9 @@ DEBUG = 3
 
 class DashboardInterface:
 
-    def __init__(self, vehicle, logger, race, remote, refresh=60):
+    def __init__(self, vehicle, interface, logger, race, remote, refresh=60):
         self.vic = vehicle
+        self.vi = interface
         self.dbg = logger
         self.race = race
         self.remote = remote
@@ -65,6 +68,12 @@ class DashboardInterface:
                 elif (data['opt'] == "SET_LAP"):
                     await websocket.send(json.dumps({"lap_total": data["laps"]}))
                     self.race.set_lap_n(data["laps"])
+
+                elif (data['opt'] == 'SET_TCS'):
+                    bus = 0
+                    data = struct.pack('<B', data['strength'])
+                    msg = can.Message(arbitration_id=81, data=data, is_extended_id=True)
+                    self.vi.send_can_msg(bus, msg)
 
                 elif (data['opt'] == "SET_LAP_WP"):
                     self.race.update((self.vic.lat, self.vic.long), self.vic.inv_voltage)

@@ -145,6 +145,12 @@ class CANVehicleInterface(VehicleInterface):
         msg1 = self.bus1.recv(0) 
         self.handle_msg(msg0)
         self.handle_msg(msg1)
+
+    def send_msg(self, bus, msg):
+        if bus == 0:
+            self.bus0.send(msg)
+        elif bus == 1:
+            self.bus1.send(msg)
         
 
 # Provides an interface for remote server.
@@ -196,6 +202,8 @@ class RemoteVehicleInterface(VehicleInterface):
     
             await asyncio.sleep(1 / self.refresh)
                     
+    def send_msg(self, bus, msg):
+        pass
 
 # Provide a virtual vehicle interface for testing.
 # Random values are generated for demonstration purposes.
@@ -310,3 +318,6 @@ class VirtualVehicleInterface(VehicleInterface):
             self.vic.cell_voltages["avg"] = round(((random.randint(0, 10)) * 0.01) + 2, 2)
             self.vic.cell_voltages["min"] = round(((random.randint(5, 10)) * 0.01) + 2, 2)
             self.vic.cell_voltages["max"] = round(((random.randint(0, 10)) * 0.01) + 2, 2)
+        
+    def send_msg(self, bus, msg):
+        pass

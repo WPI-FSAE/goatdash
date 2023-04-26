@@ -54,7 +54,7 @@ class DashboardBackend:
                                                       is_remote=is_remote)
         
         # Dashboard Interface
-        self.dash = dashboardinterface.DashboardInterface(self.vic, self.dbg, self.race, self.remote,
+        self.dash = dashboardinterface.DashboardInterface(self.vic, self.vi, self.dbg, self.race, self.remote,
                                                           refresh=int(cfg['DEFAULT']['ClientRefresh']))
 
 
