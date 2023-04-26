@@ -289,11 +289,13 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
                 <div className="option-page">
                     <div className="option-select">
-                        <div className="panel button"  style={{filter: showACLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowACLim, showACLim)}>
+                        {/* <div className="panel button"  style={{filter: showACLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowACLim, showACLim)}> */}
+                        <div className="panel button"  style={{filter: "brightness(.5)"}}>
                             Set AC Current Limit
                         </div>
 
-                        <div className="panel button"  style={{filter: showDCLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowDCLim, showDCLim)}>
+                        {/* <div className="panel button"  style={{filter: showDCLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowDCLim, showDCLim)}> */}
+                        <div className="panel button"  style={{filter: "brightness(.5)"}}>
                             Set DC Current Limit
                         </div>
 
@@ -301,7 +303,8 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                             Set TCS Strength
                         </div>
 
-                        <div className="panel button"  style={{filter: showRegen ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowRegen, showRegen)}>
+                        {/* <div className="panel button"  style={{filter: showRegen ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowRegen, showRegen)}> */}
+                        <div className="panel button"  style={{filter: "brightness(.5)"}}>
                             Set Regen Braking Strength
                         </div>
                     </div>
