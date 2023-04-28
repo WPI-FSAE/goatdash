@@ -289,13 +289,13 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
 
                 <div className="option-page">
                     <div className="option-select">
-                        {/* <div className="panel button"  style={{filter: showACLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowACLim, showACLim)}> */}
-                        <div className="panel button"  style={{filter: "brightness(.5)"}}>
+                        <div className="panel button"  style={{filter: showACLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowACLim, showACLim)}>
+                        {/* <div className="panel button"  style={{filter: "brightness(.5)"}}> */}
                             Set AC Current Limit
                         </div>
 
-                        {/* <div className="panel button"  style={{filter: showDCLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowDCLim, showDCLim)}> */}
-                        <div className="panel button"  style={{filter: "brightness(.5)"}}>
+                        <div className="panel button"  style={{filter: showDCLim ? "brightness(.7)" : ""}} onClick={(e) => togglePane(e, setShowDCLim, showDCLim)}>
+                        {/* <div className="panel button"  style={{filter: "brightness(.5)"}}> */}
                             Set DC Current Limit
                         </div>
 
@@ -309,9 +309,9 @@ const ConfigPane = forwardRef(({visible, sock, setShowConf, darkMode, setDarkMod
                         </div>
                     </div>
 
-                    <NumberPad fn={(val) => alert(val)} show={showACLim} setShow={setShowACLim} name="Set AC Max"/>
-                    <NumberPad fn={(val) => alert(val)} show={showDCLim} setShow={setShowDCLim} name="Set DC Max"/>
-                    <NumberPad fn={(val) => {sock.send(JSON.stringify({opt: "SET_TCS", strength: val}));}} show={showTCS} setShow={setShowTCS} name="Set TCS Strength (%)"/>
+                    <NumberPad fn={(val) => {sock.send(JSON.stringify({opt: "SET_AC_LIM", ac_limit: val}));}} show={showACLim} setShow={setShowACLim} name="Set AC Max (A)"/>
+                    <NumberPad fn={(val) => {sock.send(JSON.stringify({opt: "SET_DC_LIM", dc_limit: val}));}} show={showDCLim} setShow={setShowDCLim} name="Set DC Max (A)"/>
+                    <NumberPad fn={(val) => {sock.send(JSON.stringify({opt: "SET_TCS", strength: val}));}} show={showTCS} setShow={setShowTCS} name="Set TCS Strength (%, 0 to disable)"/>
                     <NumberPad fn={(val) => alert(val)} show={showRegen} setShow={setShowRegen} name="Set Regen Strength (%)"/>
 
                     <div className="option-pane" id="" style={{display: showDCLim ? "" : "none"}}>
