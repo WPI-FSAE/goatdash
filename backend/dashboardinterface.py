@@ -69,6 +69,18 @@ class DashboardInterface:
                     await websocket.send(json.dumps({"lap_total": data["laps"]}))
                     self.race.set_lap_n(data["laps"])
 
+                elif (data['opt'] == 'SET_DC_LIM'):
+                    bus = 0
+                    data = struct.pack('>h', data['dc_limit'] * 10)
+                    msg = can.Message(arbitration_id=8710, data=data, is_extended_id=True)
+                    self.vi.send_can_msg(bus, msg)
+
+                elif (data['opt'] == 'SET_AC_LIM'):
+                    bus = 0
+                    data = struct.pack('>h', data['ac_limit'] * 10)
+                    msg = can.Message(arbitration_id=8198, data=data, is_extended_id=True)
+                    self.vi.send_can_msg(bus, msg)
+
                 elif (data['opt'] == 'SET_TCS'):
                     bus = 0
                     data = struct.pack('<B', data['strength'])
