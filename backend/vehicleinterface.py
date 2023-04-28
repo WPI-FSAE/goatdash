@@ -19,6 +19,7 @@ CAN_FILTER = [{'can_id': 6, 'can_mask': 0xFFFF, 'extended': True},      # DTI A
               {'can_id': 35, 'can_mask': 0xFFFF, 'extended': True},     # BMS
               {'can_id': 21, 'can_mask': 0xFFFF, 'extended': True},     # GPS
               {'can_id': 22, 'can_mask': 0xFFFF, 'extended': True},     # IMU
+              {'can_id': 82, 'can_mask': 0xFFFF, 'extended': True},     # Battery Pct
               {'can_id': 31, 'can_mask': 0xFFFF, 'extended': True},     # FrontIO
               #{'can_id': 32, 'can_mask': 0xFFFF, 'extended': True},     # RearIO
               ]
@@ -131,6 +132,11 @@ class CANVehicleInterface(VehicleInterface):
                 msg = self.parser.parseBitfield(msg, "FrontIO_StatusFlags")
 
                 self.vic.rtd = bool(msg.ReadyToDrive)
+            
+            elif hasattr(msgdef, 'name' and msgdef.name == 'Battery_Percent'):
+                msg = self.parser.parse(msg)
+
+                self.vic.batt_pct = msg.Percent
 
     # Read message from can bus, update internal state,
     async def get_tm(self):
@@ -139,6 +145,12 @@ class CANVehicleInterface(VehicleInterface):
         msg1 = self.bus1.recv(0) 
         self.handle_msg(msg0)
         self.handle_msg(msg1)
+
+    def send_msg(self, bus, msg):
+        if bus == 0:
+            self.bus0.send(msg)
+        elif bus == 1:
+            self.bus1.send(msg)
         
 
 # Provides an interface for remote server.
@@ -155,13 +167,14 @@ class RemoteVehicleInterface(VehicleInterface):
                 self.websocket = websocket
                 await self.websocket.send("START_GROUND_STATION")
                 self.dbg.put_msg("[BACKEND] Connected to Remote TM Server.")
-    
+                self.vic.remote = True
                 while(True):
                     await self.get_tm()
                     await asyncio.sleep(1 / self.refresh)
 
         except Exception as e:
             self.dbg.put_msg("[BACKEND] Unable to connect to remote:\n" + str(e))
+            self.vic.remote = False
             return False
  
     # Read message from can bus, update internal state,
@@ -170,10 +183,27 @@ class RemoteVehicleInterface(VehicleInterface):
 
         async for msg in self.websocket:
             tm = json.loads(msg)
+
             self.vic.speed = tm['speed']
-            await asyncio.sleep(.1)
-            
-        self.vic.rtd = True        
+            self.vic.inv_voltage = tm['inv_volts']
+            self.vic.amps = tm['dc_amps']
+            self.vic.accel_x = tm['f_x']
+            self.vic.accel_y = tm['f_y']
+            self.vic.cell_voltages = {'avg': tm['avg_cell'], 'min': tm['min_cell'], 'max': tm['max_cell']}
+            self.vic.temps = {'acc': tm['acc_temp'], 'inv': tm['inv_temp'], 'mtr': tm['mtr_temp']}
+            self.vic.odometer = tm['odometer']
+            self.vic.trip = tm['trip']
+            self.vic.rtd = tm['rtd']
+            self.vic.fault = tm['fault']
+            self.vic.amps_max = {'draw': tm['peak_amps'], 'regen': tm['peak_regen']}
+            self.vic.range_est = {'mi': tm['mi_est'], 'lap': tm['lap_est'], 'time': tm['time_est']}
+            self.vic.batt_pct = tm['batt_pct']
+            self.vic.accel_max = {'fr': tm['max_fr'], 'rr': tm['max_rr'], 'lt': tm['max_lt'], 'rt': tm['max_rt']}
+    
+            await asyncio.sleep(1 / self.refresh)
+                    
+    def send_msg(self, bus, msg):
+        pass
 
 # Provide a virtual vehicle interface for testing.
 # Random values are generated for demonstration purposes.
@@ -288,3 +318,6 @@ class VirtualVehicleInterface(VehicleInterface):
             self.vic.cell_voltages["avg"] = round(((random.randint(0, 10)) * 0.01) + 2, 2)
             self.vic.cell_voltages["min"] = round(((random.randint(5, 10)) * 0.01) + 2, 2)
             self.vic.cell_voltages["max"] = round(((random.randint(0, 10)) * 0.01) + 2, 2)
+        
+    def send_msg(self, bus, msg):
+        pass
